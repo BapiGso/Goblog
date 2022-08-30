@@ -1,0 +1,59 @@
+{{template "header.template"}}
+<body class="">
+<div id="loader"></div>
+<div class="nav">
+    <p>&copy; 2020 <a href="/">晓梦</a>. Power By <a href="https://github.com/BapiGso/smoe"
+                                                   rel="external nofollow">Smoe</a>.
+        Theme <a href="https://github.com/LoeiFy/Diaspora">Diaspora</a>.
+    </p>
+</div>
+
+<div class="page" id="single">
+    <div id="top">
+        <a class="image-icon" href="javascript:history.back()"></a>
+    </div>
+
+    <div class="section" style="left: 0;">
+        <div class="article">
+            <div class="content">
+                <div class="bangumi">
+                    <h2><strong>看过</strong></h2>
+                <ul>
+                    {{range slice . 0 2}}
+                    {{range .List}}
+                    {{with .Subject}}
+                    <li>
+                        <a href="{{.URL}}" target="_blank">
+                        <img alt="{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}{{.NameCn}}" class="cover" src="{{with .Images}}{{.Medium}}{{end}}">
+                        </a>
+                        <p>{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}</p>
+                    </li>
+                    {{end}}
+                    {{end}}
+                    {{end}}
+                </ul>
+                </div>
+                <div class="bangumi">
+                    <h2><strong>在看</strong></h2>
+                    <ul>
+                        {{range slice . 2 3}}
+                        {{range .List}}
+                        {{with .Subject}}
+                        <li>
+                            <a href="{{.URL}}" target="_blank">
+                            <img alt="{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}" class="cover" src="{{with .Images}}{{.Medium}}{{end}}">
+                            </a>
+                            <p>{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}</p>
+                        </li>
+                        {{end}}
+                        {{end}}
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{template "footer.template"}}
+</body>
+</html>

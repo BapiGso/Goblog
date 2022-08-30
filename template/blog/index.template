@@ -1,0 +1,30 @@
+{{template "header.template"}}
+<body class="loading">
+<div id="loader"></div>
+<div class="nav">
+    <ul id="menu-menu" class="menu">
+        {{ range .PageItem }}
+        <li class="pview menu-item menu-item-type-post_type menu-item-object-page {{.Slug}}">
+            <a href="/{{.Slug}}" class="pviewa">{{.Title}}</a>
+        </li>
+
+        {{ end }}
+    </ul>
+    <p>&copy; 2020 <a href="/">晓梦</a>. Power By <a rel="external nofollow" href="https://github.com/BapiGso/smoe">Smoe</a>.
+        Theme <a href="https://github.com/LoeiFy/Diaspora">Diaspora</a>.
+    </p>
+</div>
+
+<div id="container">
+    {{- template "index-container.template" index .IndexPost 0 -}}
+    <div id="primary">
+        {{- template "index-primary.template" .IndexPost -}}
+    </div>
+    <div id="pager">
+        <a href="/page/{{.PageNext}}" data-url="/page/{{.PageNext}}" class="more">加载更多</a>
+    </div>
+</div>
+
+<div id="preview" class="trans"></div>
+{{template "footer.template"}}
+</body></html>

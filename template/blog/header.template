@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html class="loading">
+<head>
+    <meta charset="UTF-8">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+    <meta content="notranslate" name="google"/>
+    <meta content="cAxZabdI51N2Ay_U5QovlF3rH3-UrIvch5fgqgE2Xr8" name="google-site-verification"/>
+    <title>{{ if .}}{{ . }} | {{end}}晓梦</title>
+    <link href="/usr/assets/css/Diaspora.css" rel="stylesheet">
+    <meta content="世界上每个角落都有人过着相似的人生" name="description"/>
+    <meta content="素锦, inspiration, customization, rainmeter, design, web, 壁纸, 设计, 收集, wallpaper, collection, jaku, icon"
+          name="keywords"/>
+    <meta content="Smoe" name="generator"/>
+    <meta content="Smoe-master" name="template"/>
+    <link href="https://www.mihoyo.ltd/feed/" rel="alternate" title="素锦 &raquo; RSS 2.0" type="application/rss+xml"/>
+    <link href="https://www.mihoyo.ltd/feed/rss/" rel="alternate" title="素锦 &raquo; RSS 1.0"
+          type="application/rdf+xml"/>
+    <link href="https://www.mihoyo.ltd/feed/atom/" rel="alternate" title="素锦 &raquo; ATOM 1.0"
+          type="application/atom+xml"/>
+</head>
+<script>
+    window['LocalConst'] = {
+        MAX_PAGES: 5
+    };
+</script>

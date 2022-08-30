@@ -1,0 +1,90 @@
+{{template "header.template" .Title }}
+<body class="">
+<div id="loader"></div>
+<div class="nav">
+    <p>&copy; 2020 <a href="/">晓梦</a>. Power By <a href="https://github.com/BapiGso/smoe"
+                                                   rel="external nofollow">Smoe</a>.
+        Theme <a href="https://github.com/LoeiFy/Diaspora">Diaspora</a>.
+    <p>
+</div>
+
+<div data-id="166" id="single">
+    <div id="top">
+        <div class="bar"></div>
+        <a class="image-icon" href="javascript:history.back()"></a>
+        <div class="icon-play" data-id="166" title="播放/暂停"></div>
+        <h3 class="subtitle">{{.Title}}</h3>
+        <div class="social">
+            <div class="like-icon">
+                <a class="likeThis" href="javascript:" id="like-166"><span class="icon-like"></span><span
+                        class="count likeNum">0</span>
+                </a>
+            </div>
+            <div>
+                <div class="share">
+                    <a class="icon-wechat" href="javascript:" title="获取二维码"></a>
+                </div>
+                <div id="qr">
+                </div>
+            </div>
+        </div>
+        <div class="scrollbar"></div>
+    </div>
+
+    <div class="section" style="left: 0;">
+        <!--<div class="images"></div>-->
+        <div class="article">
+            <div>
+                <h1 class="title">{{.Title}}</h1>
+                <div class="stuff">
+                    <span>六月 23, 2022</span>
+                    <span>阅读 <span id="readNum">57</span></span>
+                    <span>字数 <span id="wordNum">526</span></span>
+                    <span>喜欢 <span class="count likeNum">0</span></span>
+                </div>
+
+                <div class="content">
+                    <p>{{ .Text }}
+                    </p>
+                </div>
+
+                <div class="comment-wrap">
+
+                    <div class="comment-respond" id="respond-post-166">
+                        <h2 class="comment-reply-title" id="reply-title">
+                            发表评论
+                            <small><a href="https://smoe.cc/archives/166/#respond-post-166"
+                                      id="cancel-comment-reply-link" onclick="return TypechoComment.cancelReply();"
+                                      rel="nofollow"
+                                      style="display:none">取消回复</a></small>
+                        </h2>
+                        <form action="https://smoe.cc/archives/166/comment" class="comment-form" id="commentform"
+                              method="post">
+                            <p class="comment-form-comment">
+                                <label for="comment">评论</label>
+                                <textarea cols="45" id="textarea" maxlength="65525" name="text" required="required"
+                                          rows="8"></textarea>
+                            </p>
+                            <div class="logged-in-as">
+                                <p>Logged in as <a href="https://smoe.cc/admin/">Bapi</a>.
+                                    <a href="https://smoe.cc/Logout.do" title="Logout">Logout &raquo;</a></p>
+                            </div>
+                            <p class="form-submit">
+                                <input class="submit" data-empty-comment="必须填写评论内容" data-init="提交评论" data-now="刚刚"
+                                       data-posted="评论提交成功" data-posting="提交评论中..." id="submit"
+                                       type="submit" value="发表评论">
+                            </p>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <audio controls="controls" id="audio-166-1" preload="auto">
+        <source src="https://music.163.com/song/media/outer/url?id=26085473.mp3" type="audio/mpeg">
+    </audio>
+</div>
+{{template "footer.template"}}
+</body>
+</html>

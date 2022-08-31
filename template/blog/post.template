@@ -87,7 +87,7 @@
                             <p class="form-submit">
                                 <input type="submit" class="submit" data-now="刚刚" data-init="提交评论"
                                        data-posting="提交评论中..." data-posted="评论提交成功" data-empty-comment="必须填写评论内容"
-                                       id="submit" value="发表评论">
+                                       id="submit" value="评论功能维护中">
                             </p>
                         </form>
                     </div>
@@ -101,16 +101,16 @@
                             {{range .Comm}}
                             {{range slice . 0 1}}
                             <li class="comment comment-parent comment-odd" id="comment-{{.Coid}}">
-                                <div id="div-comment-38" class="comment-body">
+                                <div id="div-comment-{{.Coid}}" class="comment-body">
                                     <div class="comment-author vcard">
                                         <img class="avatar"
                                              src="https://gravatar.loli.net/avatar/{{.MailMD5}}?s=40&amp;r=G&amp;d=identicon"
-                                             alt="呼啦啦" width="40" height="40"> <cite class="fn">{{.Author}}</cite>
+                                             alt="{{.Author}}" width="40" height="40"> <cite class="fn">{{.Author}}</cite>
                                         <span class="says">说道：</span>
                                     </div>
                                     <div class="comment-meta commentmetadata">
                                         <a href="#comment-comment-38">
-                                            2021-06-24 23:23 </a>
+                                            {{.CreatedStr}} </a>
                                     </div>
                                     <div class="comment-content"><p>{{.Text}}</p></div>
                                     <div class="reply"><a

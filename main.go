@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"embed"
 	"flag"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
@@ -17,6 +18,9 @@ import (
 )
 
 var db *sql.DB
+
+//go:embed template
+var tempfile embed.FS
 
 func init() {
 	checkDB()
@@ -70,7 +74,7 @@ func main() {
 	e := echo.New()
 
 	e.Renderer = &TemplateRenderer{
-		templates: template.Must(template.ParseGlob("template/*/*.template")),
+		templates: template.Must(template.ParseFS(tempfile, "template/*/*.template")),
 	}
 
 	//e.Logger.SetLevel(log.DEBUG)
@@ -99,7 +103,9 @@ func main() {
 	//e.Use(s.Process)
 	//自定义404
 	e.HTTPErrorHandler = func(err error, c echo.Context) { c.Render(http.StatusNotFound, "404.template", err) } //自定义404
+	e.Static("/Background", "./Background")
 	e.Static("/usr/assets", "./usr/assets")
+	e.Static("/usr/uploads", "./usr/uploads")
 	e.GET("/", Index)
 	e.GET("/page/:num", Index)
 	e.POST("/page/:num", IndexAjax)
@@ -107,6 +113,7 @@ func main() {
 	e.GET("/archives/:cid", Post)
 	e.GET("/bangumi", Bangumi)
 	e.GET("/:page", Page)
+	e.File("/favicon.ico", "favicon.ico")
 	//e.GET("/test", test)
 	g := e.Group("/admin")
 	g.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))

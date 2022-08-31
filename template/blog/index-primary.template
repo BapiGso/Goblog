@@ -3,7 +3,7 @@
         {{if .Cid }}
             <div class="post">
                 <a data-id="{{ .Cid }}" href="./archives/{{ .Cid }}" title="{{ .Title}}">
-                    <img width="680" height="440" src="/usr/1.webp" class="cover" alt="illustration">
+                    <img width="680" height="440" src="{{.Cover}}" class="cover" alt="illustration">
                 </a>
                 <div class="else">
                     <p>{{ .CreatedStr }}</p>

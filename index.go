@@ -20,7 +20,7 @@ type IndexPostData struct {
 	Title       string
 	TextSub     string //截取
 	CreatedStr  string //十二月 23,2022
-	CoverMusic  string //封面或者音乐
+	Cover       string //封面或者音乐
 }
 
 // IndexData template模板渲染的类要首字母大写，坑了我半天
@@ -56,7 +56,7 @@ func queryPost(data *[5]IndexPostData, postStatus string, pageNum uint64, limit 
 		WHERE typecho_contents.type='post' and typecho_contents.status=? and typecho_fields.name='coverList' 
 		ORDER BY typecho_contents.cid DESC LIMIT ? OFFSET ?`, postStatus, limit, pageNum*limit-limit)
 	for i := 0; rows.Next(); i++ {
-		_ = rows.Scan(&data[i].Cid, &data[i].Title, &data[i].CreatedUnix, &data[i].TextSub, &data[i].TextLen, &data[i].Views, &data[i].Likes, &data[i].CoverMusic)
+		_ = rows.Scan(&data[i].Cid, &data[i].Title, &data[i].CreatedUnix, &data[i].TextSub, &data[i].TextLen, &data[i].Views, &data[i].Likes, &data[i].Cover)
 		data[i].CreatedStr = unix2time(data[i].CreatedUnix)
 		//fmt.Println(data[i].Title)
 	}
@@ -95,5 +95,6 @@ func IndexAjax(c echo.Context) error {
 	pageNum, _ := isNum(c.Param("num"))
 	indexData := new(IndexData)
 	queryPost(&indexData.IndexPost, "publish", pageNum, 5)
+	indexData.PageNext = pageNum + 1
 	return c.Render(http.StatusOK, "index-primary_ajax.template", indexData)
 }

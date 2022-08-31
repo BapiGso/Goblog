@@ -8,7 +8,7 @@
 {{if .Cid }}
 <div class="post">
     <a data-id="{{ .Cid }}" href="./archives/{{ .Cid }}" title="{{ .Title}}">
-        <img width="680" height="440" src="/usr/1.webp" class="cover" alt="illustration">
+        <img width="680" height="440" src="{{.Cover}}" class="cover" alt="illustration">
     </a>
     <div class="else">
         <p>{{ .CreatedStr }}</p>
@@ -25,7 +25,7 @@
 {{- end }}
 </div>>
     <div id="pager">
-        <a href="/page/3/" data-url="/page/3/" class="more">加载更多</a>
+        <a href="/page/{{.PageNext}}" data-url="/page/{{.PageNext}}" class="more">加载更多</a>
     </div>
 </div>
 <div id="preview" class="trans"></div>

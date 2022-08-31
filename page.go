@@ -3,6 +3,7 @@ package main
 import "github.com/labstack/echo/v4"
 
 type PageData struct {
+	Cid       int
 	Title     string
 	Text      []byte
 	Text2HTML string
@@ -10,9 +11,9 @@ type PageData struct {
 
 func queryPage(slug string) PageData {
 	data := PageData{}
-	_ = db.QueryRow(`SELECT title,text
+	_ = db.QueryRow(`SELECT cid,title,text
 		FROM typecho_contents
-		WHERE slug=?`, slug).Scan(&data.Title, &data.Text)
+		WHERE slug=?`, slug).Scan(&data.Cid, &data.Title, &data.Text)
 	data.Text2HTML = md2html(data.Text)
 	return data
 }
@@ -20,5 +21,8 @@ func queryPage(slug string) PageData {
 func Page(c echo.Context) error {
 	slug := c.Param("page")
 	data := queryPage(slug)
+	if data.Cid == 0 {
+		return echo.ErrNotFound
+	}
 	return c.Render(200, "page.template", data)
 }

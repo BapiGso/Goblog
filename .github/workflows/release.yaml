@@ -1,0 +1,31 @@
+# .github/workflows/release.yaml
+
+on:
+  push: # 每次 push 的时候触发
+  workflow_dispatch:
+
+name: Build Release
+jobs:
+  release:
+    if: startsWith(github.ref, 'refs/tags/') # 只有这次 Commit 是 创建 Tag 时，才进行后续发布操作
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master # checkout 代码
+      - uses: actions/setup-go@v2 # 配置 Go 环境
+        with:
+          go-version: "1.19" # 改成自己的版本
+      - run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o SMOE_linux_amd64 # 这 3 条是交叉编译 Go 的指令，酌情修改。
+      - run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o SMOE_windows_amd64.exe
+      - run: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o SMOE_mac_amd64
+      - run: CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o SMOE_linux_arm
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with: # 将下述可执行文件 release 上去
+          files: |
+            SMOE-windows-amd64.exe
+            SMOE-linux-amd64
+            SMOE-mac-amd64
+            SMOE-linux-arm
+            #SMOE-linux-arm
+            #SMOE-mac-arm

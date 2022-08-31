@@ -106,6 +106,7 @@ func main() {
 	e.Static("/Background", "./Background")
 	e.Static("/usr/assets", "./usr/assets")
 	e.Static("/usr/uploads", "./usr/uploads")
+	e.Static("/usr", "./usr")
 	e.GET("/", Index)
 	e.GET("/page/:num", Index)
 	e.POST("/page/:num", IndexAjax)

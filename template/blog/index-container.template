@@ -2,7 +2,7 @@
     <div id="screen">
         <div id="mark">
             <div class="layer" data-depth="0.4">
-                <img id="cover" crossorigin="anonymous" src="https://smoe.cc/Background/post0/1.webp" width="2500" height="1637" alt="illustration">
+                <img id="cover" crossorigin="anonymous" src="/usr/1.webp" width="2500" height="1637" alt="illustration">
             </div>
         </div>
 

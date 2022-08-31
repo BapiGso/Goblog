@@ -20,7 +20,7 @@ body {
     overflow-x: hidden;
     display: flex;
     /* 渐变方向从左到右 */
-    background: linear-gradient(to right, rgb(247, 209, 215), rgb(191, 227, 241));
+    background: linear-gradient(to right, rgb(247, 209, 215), rgb(219, 191, 241));
 }
 
 span {

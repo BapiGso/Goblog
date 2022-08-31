@@ -64,6 +64,7 @@ func queryPost(data *[5]IndexPostData, postStatus string, pageNum uint64, limit 
 }
 
 //TODO 加载更多、ajax
+//TODO 文章载入动画
 func Index(c echo.Context) error {
 	//判断页数查数据库
 	pageNum, _ := isNum(c.Param("num"))

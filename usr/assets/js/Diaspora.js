@@ -12,7 +12,7 @@ var Home = location.href,
 
 if(document.getElementById("mark")){var parallax=new Parallax(document.getElementById("mark"))}//Parallax Plugin js
 
-
+console.time("1");
 let Diaspora = {
 
     L: function (url, f, err) {
@@ -26,8 +26,9 @@ let Diaspora = {
             xhr.abort()
         }
 
+
         xhr = $.ajax({
-            type: 'POST',
+            type: 'GET',
             url: url,
             timeout: 10000,
             success: function (data) {
@@ -48,7 +49,7 @@ let Diaspora = {
     P: function () {
         return !!('ontouchstart' in window);
     },
-    //注释
+
     PS: function () {
         if (!(window.history && history.pushState)) return;
 
@@ -240,11 +241,11 @@ let Diaspora = {
     },
 
 
-
-
 }
+console.timeEnd("1");
 
 
+console.time("2");
 $(function () {
 
     if (Diaspora.P()) {
@@ -383,13 +384,13 @@ $(function () {
         }
     })
 
-    $(window).on('scroll', scrollFunction = function (e) {
-        if ($('#single').length) {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-                // Diaspora.loadDisqus ();
-            }
-        }
-    })
+    // $(window).on('scroll', scrollFunction = function (e) {
+    //     if ($('#single').length) {
+    //         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+    //             // Diaspora.loadDisqus ();
+    //         }
+    //     }
+    // })
 
 
     $(window).on('touchmove', function (e) {
@@ -397,6 +398,7 @@ $(function () {
             e.preventDefault()
         }
     })
+
 
     $('body').on('click', function (e) {
 
@@ -457,53 +459,72 @@ $(function () {
 
             // qrcode这里要改成vue的
             case (tag.indexOf('icon-wechat') != -1):
-                var qrcode = new QRCode(document.getElementById("qrcode"), {
-                  width: 80,
-                  height: 80,
-                  useSVG: true,
-                  text: window.location.href
+                var qrcode = new QRCode(document.getElementById("qr"), {
+                    width: 80,
+                    height: 80,
+                    useSVG: true,
+                    text: window.location.href
                 });
                 $('#qr').toggle()
                 break;
 
             // audio play
-            case (tag.indexOf('icon-play') !== -1):
+            case (tag.indexOf('icon-play') != -1):
                 $('#audio-' + $('.icon-play').data('id') + '-1')[0].play()
                 $('.icon-play').removeClass('icon-play').addClass('icon-pause')
                 break;
 
             // audio pause
-            case (tag.indexOf('icon-pause') !== -1):
+            case (tag.indexOf('icon-pause') != -1):
                 $('#audio-' + $('.icon-pause').data('id') + '-1')[0].pause()
                 $('.icon-pause').removeClass('icon-pause').addClass('icon-play')
                 break;
 
             // post like
-            case (tag.indexOf('icon-like') !== -1):
+            case (tag.indexOf('icon-like') != -1):
                 let t = $(e.target).parent(),
                     classes = t.attr('class'),
                     id = t.attr('id').split('like-');
 
                 if (t.prev().hasClass('icon-view')) return;
+                //if ((t.prev()).classList.contains('icon-view')) return;
 
                 classes = classes.split(' ');
                 if (classes[1] == 'active') return;
 
-                $.ajax({
-                    type: 'POST',
-                    url: window.location.origin + '/action/like',
-                    data: {
-                        cid: id[1]
-                    },
-                    dataType: 'json',
-                    success: function (ret) {
-                        let text = $('#like-' + id[1]).html();
-
+                fetch(window.location.origin + '/action/like', {
+                    "headers": {"content-type": "application/x-www-form-urlencoded; charset=UTF-8"},
+                    "body": "cid="+id[1],
+                    "method": "POST",
+                })
+                    .then(function(response) {
+                        return response.text();
+                    })
+                    .then(function(text) {
+                        console.log('Request successful', text);
+                        let text1 = $('#like-' + id[1]).html();
                         localStorage.setItem('isLike-' + id[1], 1);
                         t.addClass('active');
-                        $('.count').html(ret.data.count);
-                    }
-                })
+                        $('.count').html(JSON.parse(text).data.count);
+                    })
+                    .catch(function(error) {
+                        console.log('Request failed', error)
+                    });;
+                // $.ajax({
+                //     type: 'POST',
+                //     url: window.location.origin + '/action/like',
+                //     data: {
+                //         cid: id[1]
+                //     },
+                //     dataType: 'json',
+                //     success: function (ret) {
+                //         let text = $('#like-' + id[1]).html();
+
+                //         localStorage.setItem('isLike-' + id[1], 1);
+                //         t.addClass('active');
+                //         $('.count').html(ret.data.count);
+                //     }
+                // })
                 break;
 
             // history state
@@ -533,7 +554,8 @@ $(function () {
 
             // quick view
             case (tag.indexOf('pviewa') != -1):
-                $('body').removeClass('mu')
+                //$('body').removeClass('mu')
+                document.body.classList.remove('mu');
 
                 setTimeout(function () {
                     Diaspora.HS($(e.target), 'push')
@@ -552,3 +574,4 @@ $(function () {
     console.log("\n %c Diaspora For Typecho %c Jin < https://jcl.moe/ > \n", "color:rgb(255, 242, 242);background:rgb(244, 164, 164);padding:5px 0;border-radius:3px 0 0 3px;", "color:rgb(244, 164, 164);background:rgb(255, 242, 242);padding:5px 0;border-radius:0 3px 3px 0;")
 
 });
+console.timeEnd("2");

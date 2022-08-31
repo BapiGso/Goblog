@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- 引入css文件 -->
+        <link rel="stylesheet" href="/usr/assets/css/login.css">
+        <title>Welcome</title>
+    </head>
+    <body>
+        <!-- 最外层的大盒子 -->
+       <div class="box">
+        <!-- 滑动盒子 -->
+        <div class="pre-box">
+            <h1>WELCOME</h1>
+            <p>SMOE!</p>
+            <div class="img-box">
+                <img src="/usr/assets/images/waoku.jpg" alt="">
+            </div>
+        </div>
+        <!-- 注册盒子 -->
+        <div class="register-form">
+            <!-- 标题盒子 -->
+            <div class="title-box">
+                <h1>瞬きでさえも</h1>
+            </div>
+            <!-- 输入框盒子 -->
+            <form class="input-box" action="/admin" method="post">
+                <input type="password" placeholder="挽き留めるのならば" name="illsions">
+                <div class="btn-box">
+                    <input type="submit" value="語ろう">
+                    <!-- 绑定点击事件 -->
+                    <p onclick="mySwitch()">SWITCH</p>
+                </div>
+            </form>
+        </div>
+        <!-- 登录盒子 -->
+        <div class="login-form">
+            <!-- 标题盒子 -->
+            <div class="title-box">
+                <h1>LOGIN</h1>
+            </div>
+            <!-- 输入框盒子 -->
+            <form  class="input-box" action="/admin" method="post">
+                <input type="text" placeholder="別離は時には" name="user">
+                <input type="password" placeholder="物語の終焉を意味しない" name="pwd">
+                <!-- 按钮盒子 -->
+                <div class="btn-box">
+                <input type="submit" value="語ろう">
+                    <!-- 绑定点击事件 -->
+                    <p onclick="mySwitch()">SWITCH</p>
+                </div>
+            </form >
+        </div>
+       </div>
+       <script>
+            // 滑动的状态
+             let flag=true
+             let prebox =document.getElementsByClassName('pre-box')[0]
+             let img=document.getElementsByTagName('img')[0]
+             const mySwitch=()=>{
+                if(flag){
+                    // 获取到滑动盒子的dom元素并修改它移动的位置
+                    prebox.style.transform='translateX(100%)'
+                    // 获取到滑动盒子的dom元素并修改它的背景颜色
+                    prebox.style.backgroundColor ='#c9e0ed'
+                    //修改图片的路径
+                    img.setAttribute("src","/usr/assets/images/wuwu.jpeg")
+                }
+                else {
+                    prebox.style.transform='translateX(0%)'
+                    prebox.style.backgroundColor ='#edd4dc'
+                    img.setAttribute("src","/usr/assets/images/waoku.jpg")
+                }
+                flag=!flag
+             }
+       </script>
+       <script>
+            const bubleCreate=()=>{
+                // 获取body元素
+                const body = document.body
+                // 创建泡泡元素
+                const buble = document.createElement('span')
+                // 设置泡泡半径
+                let r = Math.random()*5 + 25 //半径大小为25~30
+                // 设置泡泡的宽高
+                buble.style.width=r+'px'
+                buble.style.height=r+'px'
+                // 设置泡泡的随机起点
+                buble.style.left=Math.random()*innerWidth+'px'
+                // 为body添加buble元素
+                body.append(buble)
+                // 4s清除一次泡泡
+                setTimeout(()=>{
+                    buble.remove()
+                },4000)
+            }
+            // 每200ms生成一个泡泡
+            setInterval(() => {
+                bubleCreate()
+            }, 200);
+        </script>
+    </body>
+</html>

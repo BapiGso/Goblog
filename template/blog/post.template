@@ -1,0 +1,238 @@
+{{template "header.template" .Title }}
+<body class="">
+<div id="loader"></div>
+<div class="nav">
+    <p>&copy; 2020 <a href="/">晓梦</a>. Power By <a href="https://github.com/BapiGso/smoe"
+                                                   rel="external nofollow">Smoe</a>.
+        Theme <a href="https://github.com/LoeiFy/Diaspora">Diaspora</a>.
+    <p>
+</div>
+
+<div data-id="{{.Cid}}" id="single">
+    <div id="top">
+        <div class="bar"></div>
+        <a class="image-icon" href="javascript:history.back()"></a>
+        <div class="icon-play" data-id="{{.Cid}}" title="播放/暂停"></div>
+        <h3 class="subtitle">{{.Title}}</h3>
+        <div class="social">
+            <div class="like-icon">
+                <a class="likeThis" href="javascript:" id="like-{{.Cid}}"><span class="icon-like"></span><span
+                        class="count likeNum">0</span>
+                </a>
+            </div>
+            <div>
+                <div class="share">
+                    <a class="icon-wechat" href="javascript:" title="获取二维码"></a>
+                </div>
+                <div id="qr">
+                </div>
+            </div>
+        </div>
+        <div class="scrollbar"></div>
+    </div>
+
+    <div class="section" style="left: 0;">
+        <!--<div class="images"></div>-->
+        <div class="article">
+            <div>
+                <h1 class="title">{{.Title}}</h1>
+                <div class="stuff">
+                    <span>{{.CreatedStr}}</span>
+                    <span>阅读 <span id="readNum">{{.Views}}</span></span>
+                    <span>字数 <span id="wordNum">{{.TextLen}}</span></span>
+                    <span>喜欢 <span class="count likeNum">{{.Likes}}</span></span>
+                </div>
+
+                <div class="content">
+                    <p>{{ .Text2HTML }}
+                    </p>
+                </div>
+
+                <div class="comment-wrap">
+
+                    <div id="respond-post-64" class="comment-respond">
+                        <h2 id="reply-title" class="comment-reply-title">
+                            发表评论
+                            <small><a id="cancel-comment-reply-link" href="https://smoe.cc/archives/{{.Cid}}/#respond-post-{{.Cid}}"
+                                      rel="nofollow" style="display: none;"
+                                      onclick="return TypechoComment.cancelReply();">取消回复</a></small>
+                        </h2>
+                        <form action="https://smoe.cc/archives/{{.Cid}}/comment" method="post" id="commentform"
+                              class="comment-form">
+                            <p class="comment-form-comment">
+                                <label for="comment">评论</label>
+                                <textarea id="textarea" name="text" cols="45" rows="8" maxlength="65525"
+                                          required="required"></textarea>
+                            </p>
+                            <p class="comment-notes">
+                                <span id="email-notes">电子邮件地址不会被公开。</span>必填项已用
+                                <span class="required">*</span>标注
+                            </p>
+                            <p class="comment-form-author">
+                                <label for="author">姓名
+                                    <span class="required">*</span></label>
+                                <input id="author" name="author" type="text" value="" size="30" maxlength="245"
+                                       required="required">
+                            </p>
+                            <p class="comment-form-email">
+                                <label for="email">电子邮件
+                                    <span class="required">*</span></label>
+                                <input id="mail" name="mail" type="text" value="" size="30" maxlength="100"
+                                       aria-describedby="email-notes" required="required">
+                            </p>
+                            <p class="comment-form-url">
+                                <label for="url">站点</label>
+                                <input id="url" name="url" type="text" value="" size="30" maxlength="200">
+                            </p>
+                            <p class="form-submit">
+                                <input type="submit" class="submit" data-now="刚刚" data-init="提交评论"
+                                       data-posting="提交评论中..." data-posted="评论提交成功" data-empty-comment="必须填写评论内容"
+                                       id="submit" value="发表评论">
+                            </p>
+                        </form>
+                    </div>
+                    <div id="comment-form-place-holder"></div>
+
+                    <div id="comments" class="comments-area">
+                        <h2>评论列表</h2>
+
+                        <ol class="comment-list">
+
+                            {{range .Comm}}
+                            {{range slice . 0 1}}
+                            <li class="comment comment-parent comment-odd" id="comment-{{.Coid}}">
+                                <div id="div-comment-38" class="comment-body">
+                                    <div class="comment-author vcard">
+                                        <img class="avatar"
+                                             src="https://gravatar.loli.net/avatar/{{.MailMD5}}?s=40&amp;r=G&amp;d=identicon"
+                                             alt="呼啦啦" width="40" height="40"> <cite class="fn">{{.Author}}</cite>
+                                        <span class="says">说道：</span>
+                                    </div>
+                                    <div class="comment-meta commentmetadata">
+                                        <a href="#comment-comment-38">
+                                            2021-06-24 23:23 </a>
+                                    </div>
+                                    <div class="comment-content"><p>{{.Text}}</p></div>
+                                    <div class="reply"><a
+                                            href="https://smoe.cc/archives/{{.Cid}}/comment-page-1?replyTo={{.Coid}}#respond-post-{{.Cid}}"
+                                            rel="nofollow"
+                                            onclick="return TypechoComment.reply('comment-{{.Coid}}', {{.Coid}});">回复</a></div>
+                                </div>
+                                {{end}}
+                                {{range slice . 1}}
+                                <ol class="children">
+                                    <ol class="comment-list">
+                                        <li class="comment comment-child comment-level-odd comment-odd" id="comment-{{.Coid}}">
+                                            <div id="div-comment-{{.Coid}}" class="comment-body">
+                                                <div class="comment-author vcard">
+                                                    <img class="avatar"
+                                                         src="https://gravatar.loli.net/avatar/{{.MailMD5}}?s=40&amp;r=G&amp;d=identicon"
+                                                         alt="{{.Author}}" width="40" height="40"> <cite class="fn"><a
+                                                        href="{{.Url}}"
+                                                        rel="external nofollow">{{.Author}}</a></cite>
+                                                    <span class="says">说道：</span>
+                                                </div>
+                                                <div class="comment-meta commentmetadata">
+                                                    <a href="#comment-comment-42">
+                                                        {{.CreatedStr}} </a>
+                                                </div>
+                                                <div class="comment-content"><p>{{.Text}}</p></div>
+                                                <div class="reply"><a
+                                                        href="https://smoe.cc/archives/{{.Cid}}/comment-page-1?replyTo={{.Coid}}#respond-post-{{.Cid}}"
+                                                        rel="nofollow"
+                                                        onclick="return TypechoComment.reply('comment-{{.Coid}}', {{.Coid}});">回复</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ol>
+                                </ol>
+                                {{end}}
+                            </li>
+                            {{end}}
+
+
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <audio controls="controls" id="audio-{{.Cid}}-1" preload="auto">
+        <source src="{{.Music}}" type="audio/mpeg">
+    </audio>
+</div>
+{{template "footer.template"}}
+<script type="text/javascript">
+    (function () {
+        window.TypechoComment = {
+            dom: function (id) {
+                return document.getElementById(id);
+            },
+
+            create: function (tag, attr) {
+                var el = document.createElement(tag);
+
+                for (var key in attr) {
+                    el.setAttribute(key, attr[key]);
+                }
+
+                return el;
+            },
+
+            reply: function (cid, coid) {
+                var comment = this.dom(cid), parent = comment.parentNode,
+                    response = this.dom('respond-post-64'), input = this.dom('comment-parent'),
+                    form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+                    textarea = response.getElementsByTagName('textarea')[0];
+
+                if (null == input) {
+                    input = this.create('input', {
+                        'type': 'hidden',
+                        'name': 'parent',
+                        'id': 'comment-parent'
+                    });
+
+                    form.appendChild(input);
+                }
+
+                input.setAttribute('value', coid);
+
+                if (null == this.dom('comment-form-place-holder')) {
+                    var holder = this.create('div', {
+                        'id': 'comment-form-place-holder'
+                    });
+
+                    response.parentNode.insertBefore(holder, response);
+                }
+
+                comment.appendChild(response);
+                this.dom('cancel-comment-reply-link').style.display = '';
+
+                if (null != textarea && 'text' == textarea.name) {
+                    textarea.focus();
+                }
+
+                return false;
+            },
+
+            cancelReply: function () {
+                var response = this.dom('respond-post-64'),
+                    holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+                if (null != input) {
+                    input.parentNode.removeChild(input);
+                }
+
+                if (null == holder) {
+                    return true;
+                }
+
+                this.dom('cancel-comment-reply-link').style.display = 'none';
+                holder.parentNode.insertBefore(response, holder);
+                return false;
+            }
+        };
+    })();
+</script>
+</body>
+</html>

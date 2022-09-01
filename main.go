@@ -22,6 +22,9 @@ var db *sql.DB
 //go:embed template
 var tempfile embed.FS
 
+//go:embed usr/assets
+var assets embed.FS
+
 func init() {
 	checkDB()
 	//test()
@@ -106,7 +109,8 @@ func main() {
 	e.Static("/Background", "./Background")
 	e.Static("/usr/assets", "./usr/assets")
 	e.Static("/usr/uploads", "./usr/uploads")
-	e.Static("/usr", "./usr")
+	//e.Static("/usr", "./usr")
+	//e.(tempfile, "/usr/assets")
 	e.GET("/", Index)
 	e.GET("/page/:num", Index)
 	e.POST("/page/:num", IndexAjax)

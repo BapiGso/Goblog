@@ -76,7 +76,7 @@ func queryComment(data *PostData, cid uint64) {
 }
 
 //TODO 查不到文章的抛出404
-//TODO 评论样式，邮件提醒
+//TODO 评论样式，邮件提醒，author标识、url
 
 func Post(c echo.Context) error {
 	cid, _ := isNum(c.Param("cid"))

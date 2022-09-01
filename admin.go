@@ -9,7 +9,7 @@ import (
 type loginReq struct {
 	Username string `xml:"user" json:"user" form:"user" query:"user"`
 	Password string `xml:"pwd" json:"pwd" form:"pwd" query:"pwd"`
-	Illsions string `xml:"pwd" json:"pwd" form:"pwd" query:"pwd"`
+	Illsions string `xml:"illsions" json:"illsions" form:"illsions" query:"illsions"`
 }
 
 type loginSql struct {
@@ -32,6 +32,7 @@ func LoginGet(c echo.Context) error {
 	return c.Render(http.StatusOK, "login.template", nil)
 }
 
+//TODO 防爆破
 func LoginPost(c echo.Context) error {
 	req := new(loginReq)
 	//调用echo.Context的Bind函数将请求参数和User对象进行绑定。

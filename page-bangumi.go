@@ -95,6 +95,7 @@ func queryBGM() string {
 	return b.String()
 }
 
+//todo https://freefrontend.com/css-cards/
 func Bangumi(c echo.Context) error {
 	timeUnix := time.Now().Unix()
 	if timeUnix-bgmcache.Cache > 604800 {

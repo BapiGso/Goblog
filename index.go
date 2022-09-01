@@ -38,6 +38,7 @@ func queryMaxPage() uint64 {
 	return num
 }
 
+//TODO hover
 //查询页面的路由路径，返回一个slice切片
 func queryIndexPage(data *[10]IndexPageData) {
 	rows, _ := db.Query(`SELECT cid,title,slug FROM typecho_contents WHERE type='page' ORDER BY "order"`)

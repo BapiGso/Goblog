@@ -119,3 +119,6 @@ func hash(passwd string) string {
 	passwdhash := hex.EncodeToString(bs) //转16进制
 	return passwdhash
 }
+
+//todo random covermusic
+//todo backup

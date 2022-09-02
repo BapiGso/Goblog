@@ -32,7 +32,8 @@ func LoginGet(c echo.Context) error {
 	return c.Render(http.StatusOK, "login.template", nil)
 }
 
-//TODO 防爆破
+//todo 防爆破
+//todo monitor
 func LoginPost(c echo.Context) error {
 	req := new(loginReq)
 	//调用echo.Context的Bind函数将请求参数和User对象进行绑定。

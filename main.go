@@ -5,6 +5,7 @@ import (
 	"embed"
 	"flag"
 	"github.com/gorilla/sessions"
+	_ "github.com/jmoiron/sqlx"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -68,6 +69,7 @@ func IsLogin(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
+//todo auto tls
 func main() {
 	go http.ListenAndServe(":8080", nil)
 	//s := souin_echo.New(souin_echo.DevDefaultConfiguration)

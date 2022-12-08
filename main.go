@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"embed"
 	"flag"
 	"github.com/gorilla/sessions"
 	_ "github.com/jmoiron/sqlx"
@@ -10,24 +9,23 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"io"
-	"io/ioutil"
 	"log"
+	"main/smoe"
+	_ "main/smoe"
 	_ "modernc.org/sqlite"
 	"net/http"
 	_ "net/http/pprof"
+	"os"
 	"text/template"
 )
 
 var db *sql.DB
 
-//go:embed template
-var tempfile embed.FS
-
-//go:embed usr/assets
-var assets embed.FS
+var s = Smoe.New()
 
 func init() {
 	checkDB()
+
 	//test()
 }
 
@@ -39,7 +37,7 @@ func checkDB() {
 		log.Fatalf("创建数据库失败，请检查读写权限%v\n", err)
 	}
 	//读取sql文件创建表
-	sqlTable, err := ioutil.ReadFile("usr/smoe.sql")
+	sqlTable, err := os.ReadFile("usr/smoe.sql")
 	if err != nil {
 		log.Fatalf("读取sql文件失败，请检查读写权限%v\n", err)
 	}
@@ -69,17 +67,16 @@ func IsLogin(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-//todo auto tls
+// todo auto tls
 func main() {
-	go http.ListenAndServe(":8080", nil)
+	//go http.ListenAndServe(":8080", nil)
 	//s := souin_echo.New(souin_echo.DevDefaultConfiguration)
 	//c := freecache.NewCache(1024 * 1024 * 0)
 	bind := flag.String("http", ":8081", "bind address")
 	flag.Parse()
 	e := echo.New()
-
-	e.Renderer = &TemplateRenderer{
-		templates: template.Must(template.ParseFS(tempfile, "template/*/*.template")),
+	e.Renderer = &Smoe.TEmplateRender{
+		TemplateRender: template.Must(template.ParseFS(s.ThemeFS, "*/*.template")),
 	}
 
 	//e.Logger.SetLevel(log.DEBUG)
@@ -90,7 +87,7 @@ func main() {
 		HSTSExcludeSubdomains: true,
 	}))
 
-	e.Use(middleware.Logger())
+	//e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
 	//echoV5更新时换成broitil编码
@@ -103,25 +100,16 @@ func main() {
 	e.Use(middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
 		RedirectCode: http.StatusMovedPermanently,
 	}))
-	//souin_echo cache
-	//e.Use(cache.New(&cache.Config{}, c))
-	//e.Use(s.Process)
 	//自定义404
 	e.HTTPErrorHandler = func(err error, c echo.Context) { c.Render(http.StatusNotFound, "404.template", err) } //自定义404
-	e.Static("/Background", "./Background")
-	e.Static("/usr/assets", "./usr/assets")
-	e.Static("/usr/uploads", "./usr/uploads")
-	//e.Static("/usr", "./usr")
-	//e.(tempfile, "/usr/assets")
+	//e.HTTPErrorHandler = errdel
+	e.StaticFS("/", s.ThemeFS)
 	e.GET("/", Index)
 	e.GET("/page/:num", Index)
 	e.POST("/page/:num", IndexAjax)
 	e.GET("/archives", Archive)
 	e.GET("/archives/:cid", Post)
 	e.GET("/bangumi", Bangumi)
-	e.GET("/:page", Page)
-	e.File("/favicon.ico", "favicon.ico")
-	//e.GET("/test", test)
 	g := e.Group("/admin")
 	g.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))
 	g.Use(IsLogin)
@@ -136,4 +124,8 @@ func main() {
 	g.POST("/upload", Upload)
 	g.GET("/uploadtest", UploadTest)
 	e.Start(*bind)
+}
+
+func errdel(err error, c echo.Context) {
+
 }

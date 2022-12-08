@@ -1,0 +1,20 @@
+
+        {{range slice . 1}}
+        {{if .Cid }}
+            <div class="post">
+                <a data-id="{{ .Cid }}" href="./archives/{{.Cid}}" title="{{.Title}}">
+                    <img width="680" height="440" src="wait" class="cover" alt="illustration">
+                </a>
+                <div class="else">
+                    <p>{{ .UnixToStr }}</p>
+                    <h3><a data-id="{{ .Cid }}" class="posttitle" href="./archives/{{ .Cid }}">{{ .Title }}</a></h3>
+                    <div><p>{{- .MDSub -}}...</p></div>
+                    <p class="here">
+                        <span class="icon-letter">{{ .MDCount }}</span>
+                        <span class="icon-view">{{ .Views }}</span>
+                        <span class="icon-like">{{ .Likes }}</span>
+                    </p>
+                </div>
+            </div>
+        {{- end }}
+        {{- end }}

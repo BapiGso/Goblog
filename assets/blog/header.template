@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html class="loading">
+<head>
+    <meta charset="UTF-8">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+    <meta content="notranslate" name="google"/>
+    <meta content="cAxZabdI51N2Ay_U5QovlF3rH3-UrIvch5fgqgE2Xr8" name="google-site-verification"/>
+    <title>{{ if .}}{{ . }} | {{end}}晓梦</title>
+    <link href="/blog/css/Diaspora.css" rel="stylesheet">
+    <meta content="遁隐缥缈霞云, 就此声销迹灭" name="description"/>
+    <meta content="smoe.cc,晓梦,曉夢"
+          name="keywords"/>
+    <meta content="Smoe" name="generator"/>
+    <meta content="Smoe-master" name="template"/>
+    <link rel="alternate" type="application/rss+xml" title="晓梦 &raquo; RSS 2.0" href="https://smoe.cc/feed/" />
+    <link rel="alternate" type="application/rdf+xml" title="晓梦 &raquo; RSS 1.0" href="https://smoe.cc/feed/rss/" />
+    <link rel="alternate" type="application/atom+xml" title="晓梦 &raquo; ATOM 1.0" href="https://smoe.cc/feed/atom/" />
+</head>
+<script>
+    window['LocalConst'] = {
+        MAX_PAGES: 5
+    };
+</script>

@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"github.com/labstack/echo/v4"
+	"main/smoe"
 	"net/http"
 	"time"
 )
@@ -41,11 +42,10 @@ func queryArchive(data *PostData, cid uint64) {
 		inner join typecho_fields on typecho_contents.cid=typecho_fields.cid 
 		WHERE typecho_contents.cid=? and typecho_contents.status='publish' 
 		and typecho_fields.name='bgMusicList' `, cid).Scan(&data.Cid, &data.Title, &data.CreatedUnix, &data.Text, &data.TextLen, &data.Views, &data.Likes, &data.Music)
-	data.Text2HTML = md2html(data.Text)
-	data.CreatedStr = unix2time(data.CreatedUnix)
+
 }
 
-//TODO 倒序
+// TODO 倒序
 func queryComment(data *PostData, cid uint64) {
 	rows, _ := db.Query(`SELECT cid,coid,created,author,authorId,mail,url,text,parent
 		FROM typecho_comments
@@ -53,7 +53,7 @@ func queryComment(data *PostData, cid uint64) {
 	for rows.Next() {
 		tmpdata := CommentData{}
 		_ = rows.Scan(&tmpdata.Cid, &tmpdata.Coid, &tmpdata.CreatedUnix, &tmpdata.Author, &tmpdata.AuthorID, &tmpdata.Mail, &tmpdata.Url, &tmpdata.Text, &tmpdata.Parent)
-		tmpdata.MailMD5 = md5v(tmpdata.Mail)
+
 		tmpdata.CreatedStr = (time.Unix(tmpdata.CreatedUnix, 0)).Format("2006-01-02 15:04")
 		//fmt.Println(tmpdata.Parent)
 		if tmpdata.Parent == 0 { //如果是新的一组评论
@@ -79,7 +79,7 @@ func queryComment(data *PostData, cid uint64) {
 //TODO 评论样式，邮件提醒，author标识、url
 
 func Post(c echo.Context) error {
-	cid, _ := isNum(c.Param("cid"))
+	cid, _ := Smoe.IsNum(c.Param("cid"))
 	data := PostData{}
 	queryArchive(&data, cid)
 	queryComment(&data, cid)

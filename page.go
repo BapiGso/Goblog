@@ -14,7 +14,7 @@ func queryPage(slug string) PageData {
 	_ = db.QueryRow(`SELECT cid,title,text
 		FROM typecho_contents
 		WHERE slug=?`, slug).Scan(&data.Cid, &data.Title, &data.Text)
-	data.Text2HTML = md2html(data.Text)
+
 	return data
 }
 

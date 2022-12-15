@@ -16,7 +16,12 @@ func Index(c echo.Context) error {
 		PostArr    []Smoe.Contents
 		PageNum    uint64
 		MaxPageNum uint64
-	}{s.QueryPageArr(), s.QueryPostArr("publish", 5, PageNum), PageNum, s.QueryCount("post", "publish")}
+	}{
+		s.QueryPageArr(),
+		s.QueryPostArr("publish", 5, PageNum),
+		PageNum,
+		s.QueryCount("post", "publish"),
+	}
 	return c.Render(http.StatusOK, "index.template", data)
 }
 

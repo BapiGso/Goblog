@@ -1,0 +1,36 @@
+{{template "admin-header.template"}}
+
+
+<div id="mdedit"></div>
+<script  src="https://unpkg.com/bytemd"></script>
+<script  src="https://unpkg.com/@bytemd/plugin-gfm"></script>
+<script  src="https://unpkg.com/@bytemd/plugin-highlight"></script>
+<script  src="https://unpkg.com/@bytemd/plugin-highlight-ssr"></script>
+<script  src="https://unpkg.com/@bytemd/plugin-math"></script>
+<script  src="https://unpkg.com/@bytemd/plugin-medium-zoom"></script>
+<script  src="https://unpkg.com/@bytemd/plugin-mermaid"></script>
+<script>
+    let content=[]
+    {{range .Page}}
+    content=[{{- printf "%q," .Text -}}]
+    {{end}}
+    const editor = new bytemd.Editor({
+        target: document.getElementById('mdedit'),
+        props: {
+            value: content[0]||"",
+            plugins:[
+                bytemdPluginMermaid(),
+                bytemdPluginMediumZoom(),
+                bytemdPluginGfm(),
+                bytemdPluginHighlight(),
+                bytemdPluginHighlightSsr(),
+                bytemdPluginMath(),
+            ]
+        },
+    })
+    editor.$on('change', (e) => {
+        editor.$set({value: e.detail.value})
+    })
+</script>
+
+{{template "admin-footer.template"}}

@@ -29,13 +29,13 @@ func LoginPost(c echo.Context) error {
 	if err := c.Bind(req); err != nil {
 		return c.JSON(200, err)
 	}
-	loginsess, _ := session.Get("smoesession", c)
+	sess, _ := session.Get("smoesession", c)
 	//TODO 发邮件提醒和防爆破
 	for _, v := range s.QueryUser() {
 		if v.Name == req.Name && v.Password == Smoe.Hash(req.Pwd+v.AuthCode) {
-			loginsess.Values["isLogin"] = true
+			sess.Values["isLogin"] = true
 		}
 	}
-	_ = loginsess.Save(c.Request(), c.Response())
+	_ = sess.Save(c.Request(), c.Response())
 	return c.Redirect(302, "/admin")
 }

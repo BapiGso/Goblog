@@ -60,7 +60,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {{range .}}
+                            {{range .PageArr}}
                             {{if .Title}}
                             <tr id="page-13">
                                 <td class="kit-hidden-mb"><input name="cid[]" type="checkbox"
@@ -82,7 +82,7 @@
                                 <td>{{.Slug}}</td>
                                 <td class="kit-hidden-mb">Bapi</td>
                                 <td>
-                                    日期就无所谓啦
+                                    {{.UnixFormat}}
                                 </td>
                             </tr>
                             {{- end}}

@@ -80,12 +80,13 @@ func queryComment(data *PostData, cid uint64) {
 
 func Post(c echo.Context) error {
 	cid, _ := Smoe.IsNum(c.Param("cid"))
-	data := PostData{}
-	queryArchive(&data, cid)
-	queryComment(&data, cid)
-	if data.Cid == 0 {
-		return echo.ErrNotFound
+	data := struct {
+		Post     []Smoe.Contents
+		TestPost Smoe.Contents
+		//Comm Smoe.Comments
+	}{
+		s.QueryWithCid(cid),
+		s.TestQueryPostWithCid(cid),
 	}
-	//fmt.Println(data.Comm[3])
-	return c.Render(http.StatusOK, "post.template", data)
+	return c.Render(http.StatusOK, "testpost.template", data)
 }

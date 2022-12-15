@@ -71,7 +71,7 @@
                             </thead>
                             <tbody>
 
-                            {{range .}}
+                            {{range .CommArr}}
                             {{if .Mail}}
                             <tr id="comment-{{.Coid}}" data-comment="被我删掉了">
                                 <td valign="top" class="kit-hidden-mb">
@@ -79,7 +79,7 @@
                                 </td>
                                 <td valign="top" class="kit-hidden-mb">
                                     <div class="comment-avatar">
-                                        <img class="avatar" src="https://secure.gravatar.com/avatar/{{.MailMD5}}?s=40&amp;r=G" alt="{{.Author}}" width="40" height="40">                                                                                                        </div>
+                                        <img class="avatar" src="https://secure.gravatar.com/avatar/{{.MD5Mail}}?s=40&amp;r=G" alt="{{.Author}}" width="40" height="40">                                                                                                        </div>
                                 </td>
                                 <td valign="top" class="comment-head">
                                     <div class="comment-meta">
@@ -89,9 +89,9 @@
                                     </div>
                                 </td>
                                 <td valign="top" class="comment-body">
-                                    <div class="comment-date">{{.CreatedStr}} 于 <a href="https://smoe.cc/archives/{{.Cid}}/comment-page-1#comment-{{.Coid}}" target="_blank" rel="noopener noreferrer">{{.Title}}</a></div>
+                                    <div class="comment-date">{{.UnixFormat}} 于 <a href="https://smoe.cc/archives/{{.Cid}}/comment-page-1#comment-{{.Coid}}" target="_blank" rel="noopener noreferrer">{{.Title}}</a></div>
                                     <div class="comment-content">
-                                        <p>{{.Text}}</p>                                </div>
+                                        <p>{{.Text}}</p></div>
                                     <div class="comment-action hidden-by-mouse">
                                         <span class="weak">通过</span>
 

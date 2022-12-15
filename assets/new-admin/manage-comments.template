@@ -1,0 +1,48 @@
+{{template "admin-header.template"}}
+<table class="table is-hoverable is-striped">
+    <thead>
+    <tr>
+        <th class="is-narrow">
+            <input type="checkbox">
+        </th>
+        <th>作者</th>
+        <th>内容</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range .CommArr}}
+    <tr>
+        <td>
+            <input type="checkbox">
+        </td>
+        <td>
+            <div class="comment-author" style="display: flex">
+                <img src="" width="40" height="40" alt="">
+                <div class="comment-head" style="display: flex;flex-direction: column">
+                    <strong><a href="http://smoe.cc" rel="noopener noreferrer" target="_blank">{{.Author}}</a></strong>
+                    <span><a href="mailto:{{.Mail}}" target="_blank" rel="noopener noreferrer">{{.Mail}}</a></span>
+                    <span>{{.Ip}}</span>
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="comment-body">
+                <div class="comment-date">{{.UnixFormat}} 于 <a href="https://smoe.cc/archives/145/comment-page-1#comment-94" target="_blank" rel="noopener noreferrer">QUEST2串流的又一选择——NVIDIA CloudXR</a></div>
+                <div class="comment-content">
+                    <p>你好 能否将CloudXR-Setup.exe和 quest2的安装包发我一份 ,谢谢！<br>
+                        邮箱：*@gmail.com</p>                                </div>
+                <div class="buttons">
+                    <a class="button is-small">通过</a>
+                    <a class="button is-small">待审核</a>
+                    <a class="button is-small">垃圾</a>
+                    <a class="button is-small">编辑</a>
+                    <a class="button is-small">回复</a>
+                    <a class="button is-small">删除</a>
+                </div>
+            </div>
+        </td>
+    </tr>
+    {{end}}
+    </tbody>
+</table>
+{{template "admin-footer.template"}}

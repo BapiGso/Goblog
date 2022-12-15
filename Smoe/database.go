@@ -26,6 +26,7 @@ type (
 		Text     string         `db:"text"`
 		Type     string         `db:"type"`
 		Status   string         `db:"status"`
+		Title    string         `db:"title"`
 		AuthorId uint8          `db:"authorId"`
 		Url      sql.NullString `db:"url"`
 	}
@@ -43,13 +44,13 @@ type (
 		Type         string         `db:"type"`
 		Status       string         `db:"status"`
 		Password     sql.NullString `db:"password"`
-		CommentsNum  uint8          `db:"commentsNum"`
 		AllowComment uint8          `db:"allowComment"`
 		AllowPing    uint8          `db:"allowPing"`
 		AllowFeed    uint8          `db:"allowFeed"`
-		Parent       uint8          `db:"parent"`
+		CommentsNum  uint16         `db:"commentsNum"`
+		Parent       uint16         `db:"parent"`
 		Views        uint16         `db:"views"`
-		Likes        uint16         `db:"likes"`
+		Likes        uint32         `db:"likes"`
 	}
 
 	Fields struct {
@@ -119,7 +120,12 @@ func (c *Contents) UnixToStr() string {
 }
 
 func (c *Contents) UnixFormat() string {
-	format := (time.Unix(c.Created, 0)).Format("01 02, 2006")
+	format := (time.Unix(c.Created, 0)).Format("2006年01月02日")
+	return format
+}
+
+func (c *Comments) UnixFormat() string {
+	format := (time.Unix(c.Created, 0)).Format("2006年01月02日")
 	return format
 }
 

@@ -60,8 +60,7 @@
                             </thead>
                             <tbody>
 
-                            {{range .}}
-                            {{if .Cid}}
+                            {{range .MediaArr}}
                             <tr id="attachment-{{.Cid}}">
                                 <td class="kit-hidden-mb"><input name="cid[]"
                                                                  type="checkbox"
@@ -81,9 +80,9 @@
                                 <td class="kit-hidden-mb">
                                     <a href="https://smoe.cc/admin/write-post.php?cid={{.Parent}}">文章标题</a>
                                 </td>
-                                <td>{{.CreatedStr}}</td>
+                                <td>{{.UnixFormat}}</td>
                             </tr>
-                            {{- end }}
+
                             {{ end }}
                             </tbody>
                         </table><!-- end .typecho-list-table -->

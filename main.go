@@ -75,8 +75,8 @@ func main() {
 	bind := flag.String("http", ":8081", "bind address")
 	flag.Parse()
 	e := echo.New()
-	e.Renderer = &Smoe.TEmplateRender{
-		TemplateRender: template.Must(template.ParseFS(s.ThemeFS, "*/*.template")),
+	e.Renderer = &Smoe.TemplateRender{
+		Template: template.Must(template.ParseFS(s.ThemeFS, "*/*.template")),
 	}
 
 	//e.Logger.SetLevel(log.DEBUG)

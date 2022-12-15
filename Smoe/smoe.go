@@ -5,8 +5,11 @@ import (
 	"embed"
 	"encoding/hex"
 	"fmt"
+	mermaid "github.com/abhinav/goldmark-mermaid"
+	latex "github.com/aziis98/goldmark-latex"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
+	mathjax "github.com/litao91/goldmark-mathjax"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting"
 	"github.com/yuin/goldmark/extension"
@@ -26,10 +29,12 @@ type (
 		ThemeFS *embed.FS         //主题所在文件夹
 		MDParse goldmark.Markdown //markdown->html解析器
 		//邮件提醒
+		//异地多活
+		//图片压缩webp
 	}
 
-	TEmplateRender struct {
-		TemplateRender *template.Template //渲染模板
+	TemplateRender struct {
+		Template *template.Template //渲染模板
 	}
 )
 
@@ -38,6 +43,14 @@ var (
 		goldmark.WithExtensions(
 			extension.GFM,
 			extension.Linkify,
+			//mathjax.MathJax,
+			&mermaid.Extender{},
+			//latex.NewLatex(
+			//	latex.WithSourceInlineDelim(`\(`, `\)`),
+			//	latex.WithSourceBlockDelim(`\[`, `\]`),
+			//	latex.WithOutputInlineDelim(`\(`, `\)`),
+			//	latex.WithOutputBlockDelim(`\[`, `\]`),
+			//),
 			highlighting.NewHighlighting(
 				highlighting.WithStyle("github")),
 		),
@@ -65,6 +78,9 @@ func New() (s *Smoe) {
 	s.MDParse = goldmark.New(
 		goldmark.WithExtensions(
 			extension.GFM,
+			mathjax.MathJax,
+			&mermaid.Extender{},
+			latex.NewLatex(),
 			highlighting.NewHighlighting(
 				highlighting.WithStyle("github")),
 		),
@@ -79,12 +95,19 @@ func New() (s *Smoe) {
 	return
 }
 
-func (t *TEmplateRender) Render(w io.Writer, name string, data interface{}, _ echo.Context) error {
-	return t.TemplateRender.ExecuteTemplate(w, name, data)
+func (t *TemplateRender) Render(w io.Writer, name string, data interface{}, _ echo.Context) error {
+	return t.Template.ExecuteTemplate(w, name, data)
 }
 
-// QueryPostWithCid 根据Cid查询单条文章
-func (s *Smoe) QueryPostWithCid(cid int) Contents {
+// QueryWithCid 根据Cid查询单条文章或独立页面
+func (s *Smoe) QueryWithCid(cid uint64) []Contents {
+	data := make([]Contents, 0, 1)
+	_ = s.Db.Select(&data, `SELECT * FROM typecho_contents WHERE cid=?`, cid)
+	return data
+}
+
+// TestQueryPostWithCid  测试是否是指针变量
+func (s *Smoe) TestQueryPostWithCid(cid uint64) Contents {
 	var data Contents
 	_ = s.Db.Get(&data, `SELECT * FROM typecho_contents WHERE cid=?`, cid)
 	return data
@@ -92,7 +115,7 @@ func (s *Smoe) QueryPostWithCid(cid int) Contents {
 
 // QueryPostArr 根据条件查询多条文章 状态 条数 页数
 func (s *Smoe) QueryPostArr(status string, limit, pagenum uint64) []Contents {
-	var data []Contents
+	data := make([]Contents, 0, limit)
 	_ = s.Db.Select(&data, `SELECT * FROM  typecho_contents 
 		WHERE type='post' AND status=? 
 		ORDER BY ROWID DESC 
@@ -124,18 +147,31 @@ func (s *Smoe) QueryPageArr() []Contents {
 }
 
 // QueryCommentsWithCid 根据文章cid查询该文章的评论
-func (s *Smoe) QueryCommentsWithCid(cid int) []Comments {
+func (s *Smoe) QueryCommentsWithCid(cid uint64) []Comments {
 	var data []Comments
 	_ = s.Db.Select(&data, `SELECT * FROM  typecho_comments 
 		WHERE cid=?`, cid)
 	return data
 }
 
-func (s *Smoe) QueryMedia(limit, pagenum int) []Contents {
-	var data []Contents
-	_ = s.Db.Select(&data, `SELECT * FROM  typecho_contents 
+// QueryCommentsArr 查询评论组，后台专用
+func (s *Smoe) QueryCommentsArr(status string, limit, pagenum uint64) []Comments {
+	data := make([]Comments, 0, limit)
+	_ = s.Db.Select(&data, `SELECT c.*,title
+    	FROM typecho_comments AS c 
+        INNER JOIN typecho_contents on typecho_contents.cid=c.cid
+		WHERE c.status=? 
+		ORDER BY c.created DESC 
+		LIMIT ? OFFSET ?`, status, limit, pagenum*limit-limit)
+	return data
+}
+
+// 查询文件组，后台专用
+func (s *Smoe) QueryMedia(limit, pagenum uint64) []Contents {
+	data := make([]Contents, 0, limit)
+	_ = s.Db.Select(&data, `SELECT * FROM  typecho_contents
 		WHERE type='attachment'
-		ORDER BY rowid DESC 
+		ORDER BY ROWID DESC
 		LIMIT ? OFFSET ?`, limit, pagenum*limit-limit)
 	return data
 }

@@ -9,40 +9,17 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"io"
-	"log"
 	"main/smoe"
 	_ "main/smoe"
 	_ "modernc.org/sqlite"
 	"net/http"
 	_ "net/http/pprof"
-	"os"
 	"text/template"
 )
 
 var db *sql.DB
 
 var s = Smoe.New()
-
-func init() {
-	checkDB()
-
-	//test()
-}
-
-func checkDB() {
-	//不存在就创建数据库
-	var err error
-	db, err = sql.Open("sqlite", "usr/smoe.db")
-	if err != nil {
-		log.Fatalf("创建数据库失败，请检查读写权限%v\n", err)
-	}
-	//读取sql文件创建表
-	sqlTable, err := os.ReadFile("usr/smoe.sql")
-	if err != nil {
-		log.Fatalf("读取sql文件失败，请检查读写权限%v\n", err)
-	}
-	db.Exec(string(sqlTable))
-}
 
 type TemplateRenderer struct {
 	templates *template.Template

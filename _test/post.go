@@ -1,4 +1,4 @@
-package main
+package _test
 
 import (
 	"database/sql"

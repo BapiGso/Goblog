@@ -1,6 +1,7 @@
 package Smoe
 
 import (
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
 	"text/template"
@@ -32,4 +33,6 @@ func (s *Smoe) Middleware() {
 	s.E.Use(middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
 		RedirectCode: http.StatusMovedPermanently,
 	}))
+	//自定义404
+	s.E.HTTPErrorHandler = func(err error, c echo.Context) { c.Render(http.StatusNotFound, "404.template", err) } //自定义404
 }

@@ -3,7 +3,6 @@ package Smoe
 import (
 	"database/sql"
 	"log"
-	"os"
 )
 
 func init() {
@@ -24,7 +23,7 @@ func (s *Smoe) InitializeDatabase() {
 		log.Fatalf("创建数据库失败，请检查读写权限%v\n", err)
 	}
 	//读取sql文件创建表
-	sqlTable, err := os.ReadFile("usr/smoe.sql")
+	sqlTable, err := s.ThemeFS.ReadFile("smoe.sql")
 	if err != nil {
 		log.Fatalf("读取sql文件失败，请检查读写权限%v\n", err)
 	}

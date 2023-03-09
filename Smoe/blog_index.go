@@ -6,7 +6,7 @@ import (
 )
 
 // FrontIndex TODO 加载更多、ajax
-func (s *Smoe) FrontIndex(c echo.Context) error {
+func (s *Smoe) BlogIndex(c echo.Context) error {
 	//判断页数查数据库
 	PageNum, _ := IsNum(c.Param("num"))
 	data := struct {
@@ -23,7 +23,7 @@ func (s *Smoe) FrontIndex(c echo.Context) error {
 	return c.Render(http.StatusOK, "index.template", data)
 }
 
-func IndexAjax(c echo.Context) error {
+func (s *Smoe) BlogIndexAjax(c echo.Context) error {
 	//pageNum, _ := Smoe.IsNum(c.Param("num"))
 	//indexData := new(IndexData)
 	////queryPost(&indexData.IndexPost, "publish", pageNum, 5)

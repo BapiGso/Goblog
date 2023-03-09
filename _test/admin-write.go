@@ -17,7 +17,7 @@ func WritePost(c echo.Context) error {
 	data := struct {
 		Post []Smoe.Contents
 	}{
-		s.QueryWithCid(req.Cid),
+		//s.QueryWithCid(req.Cid),
 	}
 	return c.Render(200, "write-post.template", data)
 
@@ -34,7 +34,7 @@ func WritePage(c echo.Context) error {
 	data := struct {
 		Page []Smoe.Contents
 	}{
-		s.QueryWithCid(req.Cid),
+		//s.QueryWithCid(req.Cid),
 	}
 	return c.Render(200, "write-page.template", data)
 }

@@ -12,8 +12,6 @@ import (
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/renderer/html"
-	"io"
-	"log"
 	"main/assets"
 	"text/template"
 )
@@ -62,16 +60,8 @@ var (
 )
 
 func New() (s *Smoe) {
-	var err error
 	s = &Smoe{}
-	s.Db, err = sqlx.Connect("sqlite", "smoe/smoe.db")
 	s.ThemeFS = &assets.Assets
-	if err != nil {
-		log.Fatalf("创建数据库失败，请检查读写权限%v\n", err)
-	}
-	sqltable, _ := s.ThemeFS.ReadFile("smoe.sql")
-	_, _ = s.Db.Exec(string(sqltable))
-
 	s.MDParse = goldmark.New(
 		goldmark.WithExtensions(
 			extension.GFM,
@@ -91,8 +81,4 @@ func New() (s *Smoe) {
 	)
 	s.E = echo.New()
 	return s
-}
-
-func (t *TemplateRender) Render(w io.Writer, name string, data interface{}, _ echo.Context) error {
-	return t.Template.ExecuteTemplate(w, name, data)
 }

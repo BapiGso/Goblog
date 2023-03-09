@@ -78,9 +78,9 @@ func curlBGM(url string) {
 
 func queryBGM() string {
 	var data []byte
-	_ = db.QueryRow(`SELECT value
-		FROM typecho_options
-		WHERE name='plugin:GoBangumiList' `).Scan(&data)
+	//_ = db.QueryRow(`SELECT value
+	//	FROM typecho_options
+	//	WHERE name='plugin:GoBangumiList' `).Scan(&data)
 	m := struct {
 		UserID string
 		AppID  string

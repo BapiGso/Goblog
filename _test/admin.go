@@ -3,7 +3,6 @@ package _test
 import (
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
-	Smoe "main/smoe"
 	"net/http"
 )
 
@@ -31,11 +30,11 @@ func LoginPost(c echo.Context) error {
 	}
 	sess, _ := session.Get("smoesession", c)
 	//TODO 发邮件提醒和防爆破
-	for _, v := range s.QueryUser() {
-		if v.Name == req.Name && v.Password == Smoe.Hash(req.Pwd+v.AuthCode) {
-			sess.Values["isLogin"] = true
-		}
-	}
+	//for _, v := range s.QueryUser() {
+	//	if v.Name == req.Name && v.Password == Smoe.Hash(req.Pwd+v.AuthCode) {
+	//		sess.Values["isLogin"] = true
+	//	}
+	//}
 	_ = sess.Save(c.Request(), c.Response())
 	return c.Redirect(302, "/admin")
 }

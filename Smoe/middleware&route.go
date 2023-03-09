@@ -3,9 +3,45 @@ package Smoe
 import (
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"io"
+	"net/http"
+	"text/template"
 )
 
-func (s *Smoe) LoadRoutes() {
+func (t *TemplateRender) Render(w io.Writer, name string, data interface{}, _ echo.Context) error {
+	return t.Template.ExecuteTemplate(w, name, data)
+}
+
+func (s *Smoe) LoadMiddlewareRoutes() {
+	s.E.Renderer = &TemplateRender{
+		Template: template.Must(template.ParseFS(s.ThemeFS, "*/*.template")),
+	}
+
+	//e.Logger.SetLevel(log.DEBUG)
+	//Secure防XSS，HSTS防中间人攻击
+	s.E.Use(middleware.SecureWithConfig(middleware.SecureConfig{
+		HSTSMaxAge:            31536000,
+		HSTSPreloadEnabled:    true,
+		HSTSExcludeSubdomains: true,
+	}))
+
+	//e.Use(middleware.Logger())
+	s.E.Use(middleware.Recover())
+
+	//echoV5更新时换成broitil编码
+	s.E.Use(middleware.GzipWithConfig(middleware.GzipConfig{
+		Level: 3,
+	}))
+	//http重定向https
+	//e.Pre(middleware.HTTPSRedirect())
+	//302跳转去除尾部斜杠
+	s.E.Use(middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
+		RedirectCode: http.StatusMovedPermanently,
+	}))
+	//自定义404
+	s.E.HTTPErrorHandler = func(err error, c echo.Context) { c.Render(http.StatusNotFound, "404.template", err) } //自定义404
 	// 前台页面路由
 	s.E.StaticFS("/", s.ThemeFS)            // 静态文件路由，指向主题的文件系统，例如CSS，图片等静态资源
 	s.E.GET("/", s.BlogIndex)               // 首页路由

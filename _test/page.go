@@ -11,9 +11,9 @@ type PageData struct {
 
 func queryPage(slug string) PageData {
 	data := PageData{}
-	_ = db.QueryRow(`SELECT cid,title,text
-		FROM typecho_contents
-		WHERE slug=?`, slug).Scan(&data.Cid, &data.Title, &data.Text)
+	//_ = db.QueryRow(`SELECT cid,title,text
+	//	FROM typecho_contents
+	//	WHERE slug=?`, slug).Scan(&data.Cid, &data.Title, &data.Text)
 	return data
 }
 

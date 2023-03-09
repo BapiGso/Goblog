@@ -10,17 +10,17 @@ import (
 // TODO 文章载入动画
 func Index(c echo.Context) error {
 	//判断页数查数据库
-	PageNum, _ := Smoe.IsNum(c.Param("num"))
+	//PageNum, _ := Smoe.IsNum(c.Param("num"))
 	data := struct {
 		PageArr    []Smoe.Contents
 		PostArr    []Smoe.Contents
 		PageNum    uint64
 		MaxPageNum uint64
 	}{
-		s.QueryPageArr(),
-		s.QueryPostArr("publish", 5, PageNum),
-		PageNum,
-		s.QueryCount("post", "publish"),
+		//s.QueryPageArr(),
+		//s.QueryPostArr("publish", 5, PageNum),
+		//PageNum,
+		//s.QueryCount("post", "publish"),
 	}
 	return c.Render(http.StatusOK, "index.template", data)
 }

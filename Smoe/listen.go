@@ -2,6 +2,7 @@ package Smoe
 
 import (
 	"crypto/tls"
+	"golang.org/x/crypto/acme"
 	"golang.org/x/crypto/acme/autocert"
 	"log"
 	"net/http"
@@ -9,20 +10,21 @@ import (
 
 func (s *Smoe) Listen() {
 	if s.CommandLineArgs.Domain != "" {
-		certManager := autocert.Manager{
+		autoTLSManager := autocert.Manager{
 			Prompt:     autocert.AcceptTOS,
 			Cache:      autocert.DirCache("user"),
 			HostPolicy: autocert.HostWhitelist("smoe.cc", s.CommandLineArgs.Domain),
 		}
-		server := &http.Server{
+		server := http.Server{
 			Addr:    ":443",
 			Handler: s.E,
 			TLSConfig: &tls.Config{
-				GetCertificate: certManager.GetCertificate,
+				GetCertificate: autoTLSManager.GetCertificate,
+				NextProtos:     []string{acme.ALPNProto},
 			},
 		}
 
-		go log.Fatal(http.ListenAndServe(":80", certManager.HTTPHandler(nil)))
+		go log.Fatal(http.ListenAndServe(":80", autoTLSManager.HTTPHandler(s.E)))
 		log.Fatal(server.ListenAndServeTLS("", ""))
 	}
 	if s.CommandLineArgs.SslPort != "" {

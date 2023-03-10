@@ -19,10 +19,7 @@ jobs:
 
       - name: Build
         run: |
-          rm go.mod
-          rm go.sum
-          go mod init SMOE
-          go mod tidy
+          export GOPATH=`pwd`
           go env -w GO111MODULE=off
           go build -o SMOE_linux_amd64
           CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o SMOE_windows_amd64.exe

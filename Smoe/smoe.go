@@ -1,10 +1,10 @@
 package smoe
 
 import (
+	"SMOE/assets"
+	"SMOE/smoe/mail"
+	"SMOE/smoe/mdparse"
 	"embed"
-	"github.com/BapiGso/SMOE/assets"
-	"github.com/BapiGso/SMOE/smoe/mail"
-	"github.com/BapiGso/SMOE/smoe/mdparse"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"github.com/yuin/goldmark"

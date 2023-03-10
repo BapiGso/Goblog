@@ -1,11 +1,11 @@
 package smoe
 
 import (
+	"SMOE/smoe/mdparse"
 	"bytes"
 	"crypto/md5"
 	"database/sql"
 	"fmt"
-	"github.com/BapiGso/SMOE/smoe/mdparse"
 	_ "modernc.org/sqlite"
 	"strings"
 	"time"

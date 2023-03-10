@@ -1,9 +1,8 @@
 package smoe
 
 import (
-	"github.com/BapiGso/SMOE/smoe/query"
+	"SMOE/smoe/query"
 	"github.com/labstack/echo/v4"
-	"github.com/mcuadros/go-defaults"
 	"net/http"
 )
 
@@ -17,7 +16,7 @@ type Param struct {
 
 func (s *Smoe) ManagePost(c echo.Context) error {
 	req := new(Param)
-	defaults.SetDefaults(req)
+
 	if err := c.Bind(req); err != nil {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
@@ -42,7 +41,7 @@ func (s *Smoe) ManagePage(c echo.Context) error {
 
 func (s *Smoe) ManageComment(c echo.Context) error {
 	req := new(Param)
-	defaults.SetDefaults(req)
+
 	if err := c.Bind(req); err != nil {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
@@ -56,7 +55,7 @@ func (s *Smoe) ManageComment(c echo.Context) error {
 
 func (s *Smoe) ManageMedia(c echo.Context) error {
 	req := new(Param)
-	defaults.SetDefaults(req)
+
 	if err := c.Bind(req); err != nil {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}

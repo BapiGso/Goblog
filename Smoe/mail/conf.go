@@ -8,19 +8,19 @@ import (
 	"net/smtp"
 )
 
-type email struct {
+type Email struct {
 	user   string
 	passwd string
 	Auth   smtp.Auth
 	Conn   *tls.Conn
 }
 
-func (e *email) Login(Db sqlx.DB) {
+func (e *Email) Login(Db sqlx.DB) {
 	var data []byte
 	_ = Db.QueryRow(`SELECT value
 		FROM typecho_options
 		WHERE name='plugin:GoMail' `).Scan(&data)
-	err := json.Unmarshal(data, &email{})
+	err := json.Unmarshal(data, &Email{})
 	if err != nil {
 		log.Println("获取邮箱用户名和密码失败")
 	}

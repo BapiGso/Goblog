@@ -11,7 +11,7 @@ type EmailMessage struct {
 	Body      string
 }
 
-func (e *email) Send(to string) {
+func (e *Email) Send(to string) {
 	message := &EmailMessage{
 		Recipient: []string{"to"},
 		Subject:   "来自SMOE的回复",

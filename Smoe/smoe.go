@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/yuin/goldmark"
 	"main/assets"
+	"main/smoe/mail"
 	"main/smoe/mdparse"
 	"text/template"
 )
@@ -17,7 +18,7 @@ type (
 		ThemeFS         *embed.FS         //主题所在文件夹
 		MDParse         goldmark.Markdown //markdown->html解析器
 		E               *echo.Echo        //后台框架
-		//邮件提醒
+		Main            *mail.Email       //邮件提醒
 		//异地多活
 		//图片压缩webp
 	}

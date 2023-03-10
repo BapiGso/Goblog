@@ -1,9 +1,9 @@
-package smoe
+package moe
 
 import (
 	"SMOE/assets"
-	"SMOE/smoe/mail"
-	"SMOE/smoe/mdparse"
+	"SMOE/moe/mail"
+	"SMOE/moe/mdparse"
 	"embed"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"

@@ -1,8 +1,8 @@
-package smoe
+package moe
 
 import (
-	"SMOE/smoe/archive"
-	"SMOE/smoe/bangumi"
+	"SMOE/moe/archive"
+	"SMOE/moe/bangumi"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"time"

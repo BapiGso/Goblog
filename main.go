@@ -1,9 +1,9 @@
 package main
 
-import "SMOE/smoe"
+import "SMOE/moe"
 
 func main() {
-	s := smoe.New()
+	s := moe.New()
 	s.BindFlag()
 	s.InitializeDatabase()
 	s.LoadMiddlewareRoutes()

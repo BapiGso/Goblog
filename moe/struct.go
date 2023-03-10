@@ -1,11 +1,12 @@
-package query
+package moe
 
 import (
-	"SMOE/smoe/mdparse"
+	"SMOE/moe/mdparse"
 	"bytes"
 	"crypto/md5"
 	"database/sql"
 	"fmt"
+	_ "modernc.org/sqlite"
 	"strings"
 	"time"
 	"unicode/utf8"

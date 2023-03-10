@@ -1,4 +1,4 @@
-package smoe
+package moe
 
 import (
 	"github.com/jmoiron/sqlx"

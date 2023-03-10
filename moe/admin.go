@@ -1,7 +1,7 @@
-package smoe
+package moe
 
 import (
-	"SMOE/smoe/query"
+	"SMOE/moe/query"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"net/http"

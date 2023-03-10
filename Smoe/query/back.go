@@ -10,16 +10,16 @@ func QueryWithCid(Db *sqlx.DB, cid uint64) []Contents {
 }
 
 // TestQueryPostWithCid  测试是否是指针变量
-func (s *Smoe) TestQueryPostWithCid(cid uint64) Contents {
+func TestQueryPostWithCid(Db *sqlx.DB, cid uint64) Contents {
 	var data Contents
-	_ = s.Db.Get(&data, `SELECT * FROM typecho_contents WHERE cid=?`, cid)
+	_ = Db.Get(&data, `SELECT * FROM typecho_contents WHERE cid=?`, cid)
 	return data
 }
 
 // QueryPostArr 根据条件查询多条文章 状态 条数 页数
-func (s *Smoe) QueryPostArr(status string, limit, pagenum uint64) []Contents {
+func QueryPostArr(Db *sqlx.DB, status string, limit, pagenum uint64) []Contents {
 	data := make([]Contents, 0, limit)
-	_ = s.Db.Select(&data, `SELECT * FROM  typecho_contents 
+	_ = Db.Select(&data, `SELECT * FROM  typecho_contents 
 		WHERE type='post' AND status=? 
 		ORDER BY ROWID DESC 
 		LIMIT ? OFFSET ?`, status, limit, pagenum*limit-limit)
@@ -27,9 +27,9 @@ func (s *Smoe) QueryPostArr(status string, limit, pagenum uint64) []Contents {
 }
 
 // TestAffairs  测试事务
-func (s *Smoe) TestAffairs(status string, limit, pagenum uint64) ([]Contents, []Contents) {
+func TestAffairs(Db *sqlx.DB, status string, limit, pagenum uint64) ([]Contents, []Contents) {
 	var data, data2 []Contents
-	tx, _ := s.Db.Beginx()
+	tx, _ := Db.Beginx()
 	go tx.Select(&data, `SELECT * FROM  typecho_contents 
 		WHERE type='page' AND status=? 
 		ORDER BY 'order' DESC 
@@ -41,26 +41,26 @@ func (s *Smoe) TestAffairs(status string, limit, pagenum uint64) ([]Contents, []
 }
 
 // QueryPageArr 根据条件查询多条页面
-func (s *Smoe) QueryPageArr() []Contents {
+func QueryPageArr(Db *sqlx.DB) []Contents {
 	var data []Contents
-	_ = s.Db.Select(&data, `SELECT * FROM  typecho_contents 
+	_ = Db.Select(&data, `SELECT * FROM  typecho_contents 
 		WHERE type='page'
 		ORDER BY 'order' `)
 	return data
 }
 
 // QueryCommentsWithCid 根据文章cid查询该文章的评论
-func (s *Smoe) QueryCommentsWithCid(cid uint64) []Comments {
+func QueryCommentsWithCid(Db *sqlx.DB, cid uint64) []Comments {
 	var data []Comments
-	_ = s.Db.Select(&data, `SELECT * FROM  typecho_comments 
+	_ = Db.Select(&data, `SELECT * FROM  typecho_comments 
 		WHERE cid=?`, cid)
 	return data
 }
 
 // QueryCommentsArr 查询评论组，后台专用
-func (s *Smoe) QueryCommentsArr(status string, limit, pagenum uint64) []Comments {
+func QueryCommentsArr(Db *sqlx.DB, status string, limit, pagenum uint64) []Comments {
 	data := make([]Comments, 0, limit)
-	_ = s.Db.Select(&data, `SELECT c.*,title
+	_ = Db.Select(&data, `SELECT c.*,title
     	FROM typecho_comments AS c 
         INNER JOIN typecho_contents on typecho_contents.cid=c.cid
 		WHERE c.status=? 
@@ -70,24 +70,24 @@ func (s *Smoe) QueryCommentsArr(status string, limit, pagenum uint64) []Comments
 }
 
 // 查询文件组，后台专用
-func (s *Smoe) QueryMedia(limit, pagenum uint64) []Contents {
+func QueryMedia(Db *sqlx.DB, limit, pagenum uint64) []Contents {
 	data := make([]Contents, 0, limit)
-	_ = s.Db.Select(&data, `SELECT * FROM  typecho_contents
+	_ = Db.Select(&data, `SELECT * FROM  typecho_contents
 		WHERE type='attachment'
 		ORDER BY ROWID DESC
 		LIMIT ? OFFSET ?`, limit, pagenum*limit-limit)
 	return data
 }
 
-func (s *Smoe) QueryCount(Type, status string) uint64 {
+func QueryCount(Db *sqlx.DB, Type, status string) uint64 {
 	var data uint64
-	_ = s.Db.Select(&data, `SELECT count(1) FROM  typecho_contents 
+	_ = Db.Select(&data, `SELECT count(1) FROM  typecho_contents 
 		WHERE type=? AND status=?`, Type, status)
 	return data
 }
 
-func (s *Smoe) QueryUser() []User {
+func QueryUser(Db *sqlx.DB) []User {
 	var data []User
-	_ = s.Db.Select(&data, `SELECT * FROM  typecho_users`)
+	_ = Db.Select(&data, `SELECT * FROM  typecho_users`)
 	return data
 }

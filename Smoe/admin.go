@@ -3,6 +3,7 @@ package Smoe
 import (
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
+	"main/smoe/query"
 	"net/http"
 )
 
@@ -30,7 +31,7 @@ func (s *Smoe) LoginPost(c echo.Context) error {
 	}
 	sess, _ := session.Get("smoesession", c)
 	//TODO 发邮件提醒和防爆破
-	for _, v := range s.QueryUser() {
+	for _, v := range query.QueryUser(s.Db) {
 		if v.Name == req.Name && v.Password == Hash(req.Pwd+v.AuthCode) {
 			sess.Values["isLogin"] = true
 		}

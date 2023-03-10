@@ -3,6 +3,7 @@ package Smoe
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/mcuadros/go-defaults"
+	"main/smoe/query"
 	"net/http"
 )
 
@@ -21,9 +22,9 @@ func (s *Smoe) ManagePost(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
 	data := struct {
-		PostArr []Contents
+		PostArr []query.Contents
 	}{
-		s.QueryPostArr(req.Status, 20, req.Page),
+		query.QueryPostArr(s.Db, req.Status, 20, req.Page),
 	}
 
 	return c.Render(200, "manage-posts.template", data)
@@ -31,9 +32,9 @@ func (s *Smoe) ManagePost(c echo.Context) error {
 
 func (s *Smoe) ManagePage(c echo.Context) error {
 	data := struct {
-		PageArr []Contents
+		PageArr []query.Contents
 	}{
-		s.QueryPageArr(),
+		query.QueryPageArr(s.Db),
 	}
 
 	return c.Render(200, "manage-pages.template", data)
@@ -46,9 +47,9 @@ func (s *Smoe) ManageComment(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
 	data := struct {
-		CommArr []Comments
+		CommArr []query.Comments
 	}{
-		s.QueryCommentsArr(req.CommStatus, 20, req.Page),
+		query.QueryCommentsArr(s.Db, req.CommStatus, 20, req.Page),
 	}
 	return c.Render(200, "manage-comments.template", data)
 }
@@ -60,9 +61,9 @@ func (s *Smoe) ManageMedia(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
 	data := struct {
-		MediaArr []Contents
+		MediaArr []query.Contents
 	}{
-		s.QueryMedia(20, req.Page),
+		query.QueryMedia(s.Db, 20, req.Page),
 	}
 	return c.Render(200, "manage-medias.template", data)
 }

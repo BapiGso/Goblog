@@ -2,17 +2,18 @@ package Smoe
 
 import (
 	"github.com/labstack/echo/v4"
+	"main/smoe/query"
 	"net/http"
 )
 
 func (s *Smoe) Post(c echo.Context) error {
 	cid, _ := IsNum(c.Param("cid"))
 	data := struct {
-		Post     []Contents
-		TestPost Contents
+		Post     []query.Contents
+		TestPost query.Contents
 	}{
-		s.QueryWithCid(cid),
-		s.TestQueryPostWithCid(cid),
+		query.QueryWithCid(s.Db, cid),
+		query.TestQueryPostWithCid(s.Db, cid),
 	}
 	return c.Render(http.StatusOK, "testpost.template", data)
 }

@@ -2,6 +2,7 @@ package Smoe
 
 import (
 	"github.com/labstack/echo/v4"
+	"main/smoe/query"
 	"net/http"
 )
 
@@ -10,15 +11,15 @@ func (s *Smoe) BlogIndex(c echo.Context) error {
 	//判断页数查数据库
 	PageNum, _ := IsNum(c.Param("num"))
 	data := struct {
-		PageArr    []Contents
-		PostArr    []Contents
+		PageArr    []query.Contents
+		PostArr    []query.Contents
 		PageNum    uint64
 		MaxPageNum uint64
 	}{
-		s.QueryPageArr(),
-		s.QueryPostArr("publish", 5, PageNum),
+		query.QueryPageArr(s.Db),
+		query.QueryPostArr(s.Db, "publish", 5, PageNum),
 		PageNum,
-		s.QueryCount("post", "publish"),
+		query.QueryCount(s.Db, "post", "publish"),
 	}
 	return c.Render(http.StatusOK, "index.template", data)
 }

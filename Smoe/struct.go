@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"database/sql"
 	"fmt"
+	"main/smoe/mdparse"
 	_ "modernc.org/sqlite"
 	"strings"
 	"time"
@@ -97,7 +98,7 @@ var (
 // MD2HTML markdown转换为html
 func (c *Contents) MD2HTML() string {
 	var buf bytes.Buffer
-	_ = MDParse.Convert(c.Text, &buf)
+	_ = mdparse.Goldmark.Convert(c.Text, &buf)
 	return buf.String()
 }
 

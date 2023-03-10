@@ -2,7 +2,7 @@ package Smoe
 
 import (
 	"github.com/labstack/echo/v4"
-	q "main/smoe/query"
+	"main/smoe/query"
 	"net/http"
 )
 
@@ -15,9 +15,9 @@ func (s *Smoe) WritePost(c echo.Context) error {
 	//	return c.Render(200, "write-post.template", nil)
 	//}
 	data := struct {
-		Post []Contents
+		Post []query.Contents
 	}{
-		s.QueryWithCid(req.Cid),
+		query.QueryWithCid(s.Db, req.Cid),
 	}
 	return c.Render(200, "write-post.template", data)
 
@@ -32,9 +32,9 @@ func (s *Smoe) WritePage(c echo.Context) error {
 	//	return c.Render(200, "write-page.template", nil)
 	//}
 	data := struct {
-		Page []Contents
+		Page []query.Contents
 	}{
-		q.QueryWithCid(s.Db, req.Cid),
+		query.QueryWithCid(s.Db, req.Cid),
 	}
 	return c.Render(200, "write-page.template", data)
 }

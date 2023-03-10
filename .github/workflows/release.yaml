@@ -19,6 +19,8 @@ jobs:
 
       - name: Build
         run: |
+          rm go.mod
+          rm go.sum
           go mod init
           go mod tidy
           go env -w GO111MODULE=off

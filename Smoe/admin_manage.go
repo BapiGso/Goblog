@@ -1,9 +1,9 @@
 package Smoe
 
 import (
+	"github.com/BapiGso/SMOE/smoe/query"
 	"github.com/labstack/echo/v4"
 	"github.com/mcuadros/go-defaults"
-	"main/smoe/query"
 	"net/http"
 )
 

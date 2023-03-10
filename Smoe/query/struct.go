@@ -5,7 +5,7 @@ import (
 	"crypto/md5"
 	"database/sql"
 	"fmt"
-	"main/smoe/mdparse"
+	"github.com/BapiGso/SMOE/smoe/mdparse"
 	"strings"
 	"time"
 	"unicode/utf8"

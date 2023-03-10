@@ -1,9 +1,9 @@
 package Smoe
 
 import (
+	"github.com/BapiGso/SMOE/smoe/archive"
+	"github.com/BapiGso/SMOE/smoe/bangumi"
 	"github.com/labstack/echo/v4"
-	"main/smoe/archive"
-	"main/smoe/bangumi"
 	"net/http"
 	"time"
 )

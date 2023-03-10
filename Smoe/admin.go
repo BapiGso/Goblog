@@ -1,9 +1,9 @@
 package Smoe
 
 import (
+	"github.com/BapiGso/SMOE/smoe/query"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
-	"main/smoe/query"
 	"net/http"
 )
 

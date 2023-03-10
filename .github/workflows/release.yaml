@@ -18,12 +18,12 @@ jobs:
       - name: Build
         run: |
           go env -w GO111MODULE=off
-          go build -o SMOE_linux_amd64
-          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o SMOE_windows_amd64.exe
-          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o SMOE_mac_amd64
-          CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o SMOE_linux_arm
-          CGO_ENABLED=0 GOOS=windows GOARCH=arm go build -o SMOE_windows_arm.exe
-          CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o SMOE_mac_arm
+          go build main.go -o SMOE_linux_amd64
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build main.go -o SMOE_windows_amd64.exe
+          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build main.go -o SMOE_mac_amd64
+          CGO_ENABLED=0 GOOS=linux GOARCH=arm go build main.go -o SMOE_linux_arm
+          CGO_ENABLED=0 GOOS=windows GOARCH=arm go build main.go -o SMOE_windows_arm.exe
+          CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build main.go -o SMOE_mac_arm
 
       - name: Release
         uses: softprops/action-gh-release@v1

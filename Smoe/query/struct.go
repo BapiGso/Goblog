@@ -1,6 +1,15 @@
 package query
 
-import "database/sql"
+import (
+	"bytes"
+	"crypto/md5"
+	"database/sql"
+	"fmt"
+	"main/smoe/mdparse"
+	"strings"
+	"time"
+	"unicode/utf8"
+)
 
 // 内存对齐 https://geektutu.com/post/hpg-struct-alignment.html
 type (
@@ -67,3 +76,61 @@ type (
 		AuthCode   string `db:"authCode"`
 	}
 )
+
+var (
+	mon = map[string]string{
+		"01": "一月",
+		"02": "二月",
+		"03": "三月",
+		"04": "四月",
+		"05": "五月",
+		"06": "六月",
+		"07": "七月",
+		"08": "八月",
+		"09": "九月",
+		"10": "十月",
+		"11": "十一月",
+		"12": "十二月",
+	}
+)
+
+// MD2HTML markdown转换为html
+func (c *Contents) MD2HTML() string {
+	var buf bytes.Buffer
+	_ = mdparse.Goldmark.Convert(c.Text, &buf)
+	return buf.String()
+}
+
+// MDSub 截取前95字符串作为摘要
+func (c *Contents) MDSub() string {
+	r := string([]rune(string(c.Text))[:70])
+	return r
+}
+
+// MDCount 计算文章字数
+func (c *Contents) MDCount() int {
+	r := utf8.RuneCount(c.Text)
+	return r
+}
+
+func (c *Contents) UnixToStr() string {
+	format := (time.Unix(c.Created, 0)).Format("01 02, 2006")
+	tmp := strings.Replace(format, format[:2], mon[format[:2]], 1)
+	return tmp
+}
+
+func (c *Contents) UnixFormat() string {
+	format := (time.Unix(c.Created, 0)).Format("2006年01月02日")
+	return format
+}
+
+func (c *Comments) UnixFormat() string {
+	format := (time.Unix(c.Created, 0)).Format("2006年01月02日")
+	return format
+}
+
+func (c *Comments) MD5Mail() string {
+	data := md5.Sum([]byte(c.Mail))
+	md5str := fmt.Sprintf("%x", data)
+	return md5str
+}

@@ -1,4 +1,4 @@
-module main
+module github.com/BapiGso/SMOE
 
 go 1.18
 

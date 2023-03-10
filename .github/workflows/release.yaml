@@ -23,8 +23,6 @@ jobs:
           CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o SMOE_linux_arm
           CGO_ENABLED=0 GOOS=windows GOARCH=arm go build -o SMOE_windows_arm.exe
           CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o SMOE_mac_arm
-        env:
-          GOPATH: /home/runner/work/woodpecker/go
 
       - name: Release
         uses: softprops/action-gh-release@v1

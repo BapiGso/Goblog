@@ -1,6 +1,8 @@
 package main
 
-import "main/smoe"
+import (
+	"github.com/BapiGso/SMOE/smoe"
+)
 
 func main() {
 	s := Smoe.New()

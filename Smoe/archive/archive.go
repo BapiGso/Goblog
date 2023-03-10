@@ -1,13 +1,12 @@
-package Smoe
+package archive
 
 import (
-	"github.com/labstack/echo/v4"
+	"github.com/jmoiron/sqlx"
 	"time"
 )
 
 type TimelineData struct {
-	Cid uint64
-
+	Cid         uint64
 	CreatedUnix int64
 	Day         int
 	Mon         int
@@ -21,26 +20,26 @@ type TimelineTmpdata struct {
 	Title string
 }
 
-type test1 struct {
+type h1 struct {
 	Mon   int
 	MData []TimelineTmpdata //Mdata里有这个月的文章
 }
 
-type test2 struct {
+type h2 struct {
 	Year  int
-	YData []test1 //Ydata里有12个月
+	YData []h1 //Ydata里有12个月
 }
 
-type test3 struct {
+type h3 struct {
 	Title string
-	Data  []test2
+	Data  []h2
 }
 
-func (s *Smoe) queryTime() test3 {
+func QueryTime(Db *sqlx.DB) h3 {
 	//data := make([]TimelineData, 95)
 	data := TimelineData{}
 	//var timeline = map[int]map[int][]TimelineTmpdata{}
-	rows, _ := s.Db.Query(`SELECT r.cid,c.title,c.created
+	rows, _ := Db.Query(`SELECT r.cid,c.title,c.created
 		FROM typecho_relationships AS r 
 		INNER JOIN typecho_contents AS c ON c.cid=r.cid 
 		WHERE c.status='publish'
@@ -59,7 +58,7 @@ func (s *Smoe) queryTime() test3 {
 	//}
 	//rows.Close()
 	var lasty, lastm int
-	aa1, aa2, aa3 := test1{}, test2{}, test3{} //一个月的数据,一年的数据，总数据
+	aa1, aa2, aa3 := h1{}, h2{}, h3{} //一个月的数据,一年的数据，总数据
 	for i := 0; rows.Next(); i++ {
 		_ = rows.Scan(&data.Cid, &data.Title, &data.CreatedUnix)
 		data.Year = (time.Unix(data.CreatedUnix, 0)).Year()
@@ -72,23 +71,23 @@ func (s *Smoe) queryTime() test3 {
 			aa1.MData = append(aa1.MData, TimelineTmpdata{data.Cid, data.Day, data.Title}) //添加文章到该月份
 		}
 		if data.Mon != lastm && data.Year == lasty { //如果月份和上次添加的不一样
-			aa2.YData = append(aa2.YData, test1{lastm, aa1.MData})                         //将该月份数据添加到该年
+			aa2.YData = append(aa2.YData, h1{lastm, aa1.MData})                            //将该月份数据添加到该年
 			aa1.MData = nil                                                                //该月份数据清空
 			aa1.MData = append(aa1.MData, TimelineTmpdata{data.Cid, data.Day, data.Title}) //添加文章到该月份
 		}
 		if data.Year != lasty {
-			aa2.YData = append(aa2.YData, test1{lastm, aa1.MData})
+			aa2.YData = append(aa2.YData, h1{lastm, aa1.MData})
 			aa1.MData = nil
 			aa1.MData = append(aa1.MData, TimelineTmpdata{data.Cid, data.Day, data.Title})
-			aa3.Data = append(aa3.Data, test2{lasty, aa2.YData}) //将该年数据添加到总数据
-			aa2.YData = nil                                      //该年数据清空
+			aa3.Data = append(aa3.Data, h2{lasty, aa2.YData}) //将该年数据添加到总数据
+			aa2.YData = nil                                   //该年数据清空
 		}
 		lastm, lasty = data.Mon, data.Year
 		//fmt.Println(i)
 	}
 	//退出循环后把最后一次数据加上
-	aa2.YData = append(aa2.YData, test1{lastm, aa1.MData})
-	aa3.Data = append(aa3.Data, test2{lasty, aa2.YData}) //将该年数据添加到总数据
+	aa2.YData = append(aa2.YData, h1{lastm, aa1.MData})
+	aa3.Data = append(aa3.Data, h2{lasty, aa2.YData}) //将该年数据添加到总数据
 	aa3.Title = "时间线"
 	rows.Close()
 	//fmt.Println(aa3.Data)
@@ -103,12 +102,6 @@ func (s *Smoe) queryTime() test3 {
 	//		timeline[v.Year][v.Mon] = append(timeline[v.Year][v.Mon], TimelineTmpdata{v.Cid, v.Title})
 	//	}
 	//}
-
 	//fmt.Println(timeline)
 	return aa3
-}
-
-func (s *Smoe) Archive(c echo.Context) error {
-	data := s.queryTime()
-	return c.Render(200, "page-timeline.template", data)
 }

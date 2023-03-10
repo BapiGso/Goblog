@@ -1,4 +1,4 @@
-package back_end
+package jwt
 
 import (
 	"github.com/alexsergivan/blog-examples/authentication/user"

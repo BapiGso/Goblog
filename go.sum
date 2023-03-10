@@ -1,3 +1,5 @@
+github.com/BapiGso/SMOE v0.0.0-20230310121959-e2125a033fb2 h1:b1DvgFhF3JSf8S/KOjlxz386Ee2jbcTW8sF8NmBqTEw=
+github.com/BapiGso/SMOE v0.0.0-20230310121959-e2125a033fb2/go.mod h1:FCcMB1Ag+9u9VME97U4a5I+RNIZ5HsLqqu+niWsIlvg=
 github.com/alecthomas/chroma v0.10.0 h1:7XDcGkCQopCNKjZHfYrNLraA+M7e0fMiJ/Mfikbfjek=
 github.com/alecthomas/chroma v0.10.0/go.mod h1:jtJATyUxlIORhUOFNA9NZDWGAQ8wpxQQqNSB4rjA/1s=
 github.com/alexsergivan/blog-examples/authentication v0.0.0-20221115100652-08b68b210058 h1:HxuXBDd8hhbt7bdvyhLC39SQ//5eF7z1PvJgV2rx9fM=

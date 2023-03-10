@@ -21,6 +21,7 @@ require (
 )
 
 require (
+	github.com/BapiGso/SMOE v0.0.0-20230310121959-e2125a033fb2 // indirect
 	github.com/alecthomas/chroma v0.10.0 // indirect
 	github.com/dlclark/regexp2 v1.4.0 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect

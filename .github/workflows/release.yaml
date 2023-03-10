@@ -17,7 +17,6 @@ jobs:
 
       - name: Build
         run: |
-          go get github.com/BapiGso/SMOE/smoe
           go build -o SMOE_linux_amd64 # 这 3 条是交叉编译 Go 的指令，酌情修改。
           CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o SMOE_windows_amd64.exe
           CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o SMOE_mac_amd64

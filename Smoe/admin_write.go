@@ -2,6 +2,7 @@ package Smoe
 
 import (
 	"github.com/labstack/echo/v4"
+	q "main/smoe/query"
 	"net/http"
 )
 
@@ -33,7 +34,7 @@ func (s *Smoe) WritePage(c echo.Context) error {
 	data := struct {
 		Page []Contents
 	}{
-		s.QueryWithCid(req.Cid),
+		q.QueryWithCid(s.Db, req.Cid),
 	}
 	return c.Render(200, "write-page.template", data)
 }

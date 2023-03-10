@@ -2,17 +2,11 @@ package Smoe
 
 import (
 	"embed"
-	mermaid "github.com/abhinav/goldmark-mermaid"
-	latex "github.com/aziis98/goldmark-latex"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
-	mathjax "github.com/litao91/goldmark-mathjax"
 	"github.com/yuin/goldmark"
-	highlighting "github.com/yuin/goldmark-highlighting"
-	"github.com/yuin/goldmark/extension"
-	"github.com/yuin/goldmark/parser"
-	"github.com/yuin/goldmark/renderer/html"
 	"main/assets"
+	"main/smoe/mdparse"
 	"text/template"
 )
 
@@ -33,52 +27,10 @@ type (
 	}
 )
 
-var (
-	MDParse = goldmark.New(
-		goldmark.WithExtensions(
-			extension.GFM,
-			extension.Linkify,
-			//mathjax.MathJax,
-			&mermaid.Extender{},
-			//latex.NewLatex(
-			//	latex.WithSourceInlineDelim(`\(`, `\)`),
-			//	latex.WithSourceBlockDelim(`\[`, `\]`),
-			//	latex.WithOutputInlineDelim(`\(`, `\)`),
-			//	latex.WithOutputBlockDelim(`\[`, `\]`),
-			//),
-			highlighting.NewHighlighting(
-				highlighting.WithStyle("github")),
-		),
-		goldmark.WithParserOptions(
-			parser.WithAutoHeadingID(),
-		),
-		goldmark.WithRendererOptions(
-			html.WithHardWraps(),
-			html.WithUnsafe(),
-		),
-	)
-)
-
 func New() (s *Smoe) {
 	s = &Smoe{}
 	s.ThemeFS = &assets.Assets
-	s.MDParse = goldmark.New(
-		goldmark.WithExtensions(
-			extension.GFM,
-			mathjax.MathJax,
-			&mermaid.Extender{},
-			latex.NewLatex(),
-			highlighting.NewHighlighting(
-				highlighting.WithStyle("github")),
-		),
-		goldmark.WithParserOptions(
-			parser.WithAutoHeadingID(),
-		),
-		goldmark.WithRendererOptions(
-			html.WithHardWraps(),
-			html.WithUnsafe(),
-		),
-	)
+	s.MDParse = mdparse.Goldmark
 	s.E = echo.New()
 	return s
 }

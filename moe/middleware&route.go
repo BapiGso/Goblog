@@ -57,20 +57,35 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 	// 后台管理路由
 	g := s.E.Group("/admin")                                             // 后台管理的路由组
 	g.Use(session.Middleware(sessions.NewCookieStore([]byte("secret")))) // 使用 session 中间件
-	g.Use(IsLogin)                                                       // 用户登录验证中间件
+	g.Use(isLogin)                                                       // 用户登录验证中间件
 
 	// 后台管理页面路由
-	g.GET("", s.LoginGet)                      // 后台管理登录页面路由
-	g.POST("", s.LoginPost)                    // 后台管理登录处理路由，接收登录表单的提交
-	g.GET("/manage-posts", s.ManagePost)       // 显示文章管理界面的路由
-	g.GET("/manage-pages", s.ManagePage)       // 显示页面管理界面的路由
-	g.GET("/manage-comments", s.ManageComment) // 显示评论管理界面的路由
-	g.GET("/manage-medias", s.ManageMedia)     // 显示媒体管理界面的路由
-	g.GET("/write-post", s.WritePost)          // 显示添加文章页面的路由
-	g.GET("/write-page", s.WritePage)          // 显示添加页面页面的路由
+	g.GET("", s.LoginGet)                                                                     // 后台管理登录页面路由
+	g.POST("", s.LoginPost, middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(10))) // 后台管理登录处理路由，接收登录表单的提交，每秒10次请求
+	g.GET("/manage-posts", s.ManagePost)                                                      // 显示文章管理界面的路由
+	g.GET("/manage-pages", s.ManagePage)                                                      // 显示页面管理界面的路由
+	g.GET("/manage-comments", s.ManageComment)                                                // 显示评论管理界面的路由
+	g.GET("/manage-medias", s.ManageMedia)                                                    // 显示媒体管理界面的路由
+	g.GET("/write-post", s.WritePost)                                                         // 显示添加文章页面的路由
+	g.GET("/write-page", s.WritePage)                                                         // 显示添加页面页面的路由
 
 	// 文件上传路由
 	g.POST("/upload", s.Upload)        // 处理文件上传请求的路由
 	g.GET("/uploadtest", s.UploadTest) // 文件上传测试路由，用于测试文件上传服务是否正常
 
+}
+
+func isLogin(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		//登录页面不用这个中间件
+		if c.Path() == "/admin" {
+			return next(c)
+		}
+		//后台页面没有cookie的全部跳去登录
+		sess, _ := session.Get("smoesession", c)
+		if sess.Values["isLogin"] != true {
+			return c.Redirect(http.StatusFound, "/admin")
+		}
+		return next(c)
+	}
 }

@@ -28,7 +28,9 @@ func (s *Smoe) Listen() {
 		log.Fatal(server.ListenAndServeTLS("", ""))
 	}
 	if s.CommandLineArgs.SslPort != "" {
+		log.Printf(banner, "=> https server started on :"+s.CommandLineArgs.SslPort)
 		log.Fatal(http.ListenAndServeTLS(":"+s.CommandLineArgs.SslPort, s.CommandLineArgs.SslCert, s.CommandLineArgs.SslKey, s.E))
 	}
+	log.Printf(banner, "=> http server started on :"+s.CommandLineArgs.Port)
 	log.Fatal(http.ListenAndServe(":"+s.CommandLineArgs.Port, s.E))
 }

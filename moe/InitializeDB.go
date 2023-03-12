@@ -10,10 +10,9 @@ func (s *Smoe) InitializeDatabase() {
 	if s.CommandLineArgs.DbConf != "" {
 		s.Db, err = sqlx.Connect("mysql", s.CommandLineArgs.DbConf)
 		if err != nil {
-			panic(err)
+			log.Fatalf("连接数据库失败，请检查读写权限%v\n", err)
 		}
 	}
-	//不存在就创建数据库
 
 	s.Db, err = sqlx.Connect("sqlite", "usr/smoe.db")
 	if err != nil {

@@ -1,2 +1,5 @@
 {{template "admin-header.template"}}
+
+<canvas id="canvas"></canvas>
+
 {{template "admin-footer.template"}}

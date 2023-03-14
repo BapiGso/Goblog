@@ -3,6 +3,7 @@ package moe
 import (
 	"github.com/jmoiron/sqlx"
 	"log"
+	_ "modernc.org/sqlite"
 )
 
 func (s *Smoe) InitializeDatabase() {

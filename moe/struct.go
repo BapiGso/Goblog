@@ -6,7 +6,7 @@ import (
 	"crypto/md5"
 	"database/sql"
 	"fmt"
-	_ "modernc.org/sqlite"
+
 	"strings"
 	"time"
 	"unicode/utf8"

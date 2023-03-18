@@ -1,41 +1,286 @@
-<!--
-WebGL Water
-http://madebyevan.com/webgl-water/
-
-Copyright 2011 Evan Wallace
-Released under the MIT license
--->
-
 <!DOCTYPE html>
-<html><head>
-  <title>WebGL Water</title>
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-  <script src="OES_texture_float_linear-polyfill.js"></script>
-  <script src="lightgl.js"></script>
-  <script src="cubemap.js"></script>
-  <script src="renderer.js"></script>
-  <script src="water.js"></script>
-  <script src="main.js"></script>
-  <style type="text/css">
-    body { font: 13px/140% Arial, sans-serif; background: black; color: white; overflow: hidden; }
-    a { color: inherit; cursor: pointer; }
-    img { display: none; }
-    ul { padding: 0 0 0 20px; }
-    h1 { font: bold italic 30px/30px Georgia; text-align: center; }
-    h2 { font: bold italic 17px/17px Georgia; padding-top: 10px; }
-    small { display: block; font-size: 11px; line-height: 15px; }
-    canvas { position: absolute; top: 0; left: 0; }
-    #loading { position: absolute; left: 0; top: 50%; right: 300px; text-align: center; margin-top: -8px; }
-    @media (max-width: 600px) {
-      small { font-size: 8px; line-height: 10px; }
-    }
-  </style>
-</head><body>
-  <div id="loading">Loading...</div>
-  <img id="tiles" src="tiles.png">
-  <img id="xneg" src="xneg.jpg">
-  <img id="xpos" src="xpos.jpg">
-  <img id="ypos" src="ypos.jpg">
-  <img id="zneg" src="zneg.jpg">
-  <img id="zpos" src="zpos.jpg">
-</body></html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="Water ripples simulation running on GPU" />
+    <title>Pool</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96">
+    <link rel="stylesheet" type="text/css" href="css/page.css?v=2023-02-19T20%3A28%3A54.467Z">
+  </head>
+
+  <body>
+    <main>
+      <div id="error-messages">
+        <noscript>
+          You need to enable Javascript to run this experiment.
+        </noscript>
+      </div>
+
+      <input type="checkbox" id="fullscreen-checkbox-id" class="hidden" checked ='checked'>
+      <div class="demo">
+        <input type="checkbox" id="side-pane-checkbox-id" class="hidden">
+        <div id="canvas-container">
+          <canvas id="canvas"></canvas>
+          <div class="loader">
+            <span></span>
+            <div class="loader-animation"></div>
+          </div>
+
+          <div id="canvas-buttons-column">
+            <label class="canvas-button" id="fullscreen-toggle-id" for="fullscreen-checkbox-id"></label>
+            <label class="canvas-button" id="side-pane-toggle-id" for="side-pane-checkbox-id"></label>
+          </div>
+        </div>
+        <div class="controls-block">
+          <section class="controls-section">
+            <h2>Simulation</h2>
+
+            <div class="controls-list">
+              <div class="control" id="control-quality">
+                <label>Quality:</label>
+                <div class="tabs compact" id="quality-id">
+                  <input type="radio" name="quality" value="128" id="quality-128-id" />
+                  <label for="quality-128-id">128</label>
+                  <input type="radio" name="quality" value="256" id="quality-256-id" />
+                  <label for="quality-256-id">256</label>
+                  <input type="radio" name="quality" value="512" id="quality-512-id" checked/>
+                  <label for="quality-512-id">512</label>
+                </div>
+              </div>
+              <div class="control" id="control-rain-checkbox-id">
+                <label>Rain:</label>
+                <div class="checkbox">
+                  <input type="checkbox" id="rain-checkbox-id" checked>
+                  <label for="rain-checkbox-id" class="checkmark"></label>
+                </div>
+              </div>
+              <div class="control" id="control-surface-tension-range-id">
+                <label>表面张力:</label>
+                <div class="range-container">
+                  <input type="range" min="0" max="30" value="20" step="0.1" class="slider" id="surface-tension-range-id">
+                  <div class="range-skin-container">
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-left range-stub-left"></span>
+                    </div>
+                    <div class="range-progress">
+                      <div class="range-progress-left">
+                        <span class="range-bar range-bar-left"></span>
+                        <span class="range-handle"></span>
+                        <output for="surface-tension-range-id" class="range-tooltip"></output>
+                      </div>
+                      <div class="range-progress-right">
+                        <span class="range-bar range-bar-right"></span>
+                      </div>
+                    </div>
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-right range-stub-right"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="control" id="control-stiffness-range-id">
+                <label>弹簧刚度:</label>
+                <div class="range-container">
+                  <input type="range" min="0" max="1" value="0.15" step="0.01" class="slider" id="stiffness-range-id">
+                  <div class="range-skin-container">
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-left range-stub-left"></span>
+                    </div>
+                    <div class="range-progress">
+                      <div class="range-progress-left">
+                        <span class="range-bar range-bar-left"></span>
+                        <span class="range-handle"></span>
+                        <output for="stiffness-range-id" class="range-tooltip"></output>
+                      </div>
+                      <div class="range-progress-right">
+                        <span class="range-bar range-bar-right"></span>
+                      </div>
+                    </div>
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-right range-stub-right"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="control" id="control-dispersion-range-id">
+                <label>分散:</label>
+                <div class="range-container">
+                  <input type="range" min="0.9" max="1" value="0.95" step="0.001" class="slider" id="dispersion-range-id">
+                  <div class="range-skin-container">
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-left range-stub-left"></span>
+                    </div>
+                    <div class="range-progress">
+                      <div class="range-progress-left">
+                        <span class="range-bar range-bar-left"></span>
+                        <span class="range-handle"></span>
+                        <output for="dispersion-range-id" class="range-tooltip"></output>
+                      </div>
+                      <div class="range-progress-right">
+                        <span class="range-bar range-bar-right"></span>
+                      </div>
+                    </div>
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-right range-stub-right"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <hr />
+          <section class="controls-section">
+            <h2>Rendering</h2>
+
+            <div class="controls-list">
+              <div class="control" id="control-viewer">
+                <label>Viewer:</label>
+                <div class="tabs compact" id="viewer-id">
+                  <input type="radio" name="viewer" value="2D" id="viewer-2D-id" />
+                  <label for="viewer-2D-id">2D</label>
+                  <input type="radio" name="viewer" value="3D" id="viewer-3D-id" checked />
+                  <label for="viewer-3D-id">3D</label>
+                </div>
+              </div>
+              <div class="control" id="control-specular-checkbox-id">
+                <label>高光:</label>
+                <div class="checkbox">
+                  <input type="checkbox" id="specular-checkbox-id" checked>
+                  <label for="specular-checkbox-id" class="checkmark"></label>
+                </div>
+              </div>
+              <div class="control" id="control-caustics-checkbox-id">
+                <label>焦散:</label>
+                <div class="checkbox">
+                  <input type="checkbox" id="caustics-checkbox-id" checked>
+                  <label for="caustics-checkbox-id" class="checkmark"></label>
+                </div>
+              </div>
+              <div class="control" id="control-fresnel-checkbox-id">
+                <label>菲涅尔:</label>
+                <div class="checkbox">
+                  <input type="checkbox" id="fresnel-checkbox-id">
+                  <label for="fresnel-checkbox-id" class="checkmark"></label>
+                </div>
+              </div>
+              <div class="control" id="control-amplitude-range-id">
+                <label>振幅:</label>
+                <div class="range-container">
+                  <input type="range" min="0" max="0.06" value="0.03" step="0.001" class="slider" id="amplitude-range-id">
+                  <div class="range-skin-container">
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-left range-stub-left"></span>
+                    </div>
+                    <div class="range-progress">
+                      <div class="range-progress-left">
+                        <span class="range-bar range-bar-left"></span>
+                        <span class="range-handle"></span>
+                        <output for="amplitude-range-id" class="range-tooltip"></output>
+                      </div>
+                      <div class="range-progress-right">
+                        <span class="range-bar range-bar-right"></span>
+                      </div>
+                    </div>
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-right range-stub-right"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="control" id="control-level-range-id">
+                <label>水深:</label>
+                <div class="range-container">
+                  <input type="range" min="0.03" max="1" value="0.1" step="0.01" class="slider" id="level-range-id">
+                  <div class="range-skin-container">
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-left range-stub-left"></span>
+                    </div>
+                    <div class="range-progress">
+                      <div class="range-progress-left">
+                        <span class="range-bar range-bar-left"></span>
+                        <span class="range-handle"></span>
+                        <output for="level-range-id" class="range-tooltip"></output>
+                      </div>
+                      <div class="range-progress-right">
+                        <span class="range-bar range-bar-right"></span>
+                      </div>
+                    </div>
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-right range-stub-right"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="control" id="control-opacity-range-id">
+                <label>透射:</label>
+                <div class="range-container">
+                  <input type="range" min="0" max="1.5" value="0.5" step="0.01" class="slider" id="opacity-range-id">
+                  <div class="range-skin-container">
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-left range-stub-left"></span>
+                    </div>
+                    <div class="range-progress">
+                      <div class="range-progress-left">
+                        <span class="range-bar range-bar-left"></span>
+                        <span class="range-handle"></span>
+                        <output for="opacity-range-id" class="range-tooltip"></output>
+                      </div>
+                      <div class="range-progress-right">
+                        <span class="range-bar range-bar-right"></span>
+                      </div>
+                    </div>
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-right range-stub-right"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="control" id="control-refraction-range-id">
+                <label>折射:</label>
+                <div class="range-container">
+                  <input type="range" min="0.5" max="1" value="0.75" step="0.01" class="slider" id="refraction-range-id">
+                  <div class="range-skin-container">
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-left range-stub-left"></span>
+                    </div>
+                    <div class="range-progress">
+                      <div class="range-progress-left">
+                        <span class="range-bar range-bar-left"></span>
+                        <span class="range-handle"></span>
+                        <output for="refraction-range-id" class="range-tooltip"></output>
+                      </div>
+                      <div class="range-progress-right">
+                        <span class="range-bar range-bar-right"></span>
+                      </div>
+                    </div>
+                    <div class="range-stub">
+                      <span class="range-bar range-bar-right range-stub-right"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <script type="text/javascript">
+      var Page = Page || {};
+      Object.defineProperty(Page, "version", {
+        value: "",
+        writable: false,
+      });
+    </script>
+    <script src="script/page.js"></script>
+    <script src="script/gl-matrix-2.5.1-min.js"></script>
+    <script src="script/main.min.js"></script>
+  </body>
+
+</html>

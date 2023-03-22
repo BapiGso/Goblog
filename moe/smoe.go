@@ -1,10 +1,10 @@
 package moe
 
 import (
-	"SMOE/assets"
-	"SMOE/moe/mail"
-	"SMOE/moe/mdparse"
 	"embed"
+	"github.com/BapiGso/SMOE/assets"
+	"github.com/BapiGso/SMOE/moe/mail"
+	"github.com/BapiGso/SMOE/moe/mdparse"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"github.com/yuin/goldmark"

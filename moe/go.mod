@@ -1,12 +1,11 @@
-module github.com/BapiGso/SMOE
+module github.com/BapiGso/SMOE/moe
 
 go 1.19
 
-replace (
-	github.com/BapiGso/SMOE/moe => ./moe
-)
+replace github.com/BapiGso/SMOE/assets => ../assets
 
 require (
+	github.com/BapiGso/SMOE/assets v0.0.0-00010101000000-000000000000
 	github.com/alexsergivan/blog-examples/authentication v0.0.0-20221115100652-08b68b210058
 	github.com/aziis98/goldmark-latex v0.0.0-20220412232851-e4525c017227
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible

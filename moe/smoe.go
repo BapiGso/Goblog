@@ -17,7 +17,7 @@ type (
 		Db              *sqlx.DB          //数据库
 		ThemeFS         *embed.FS         //主题所在文件夹
 		MDParse         goldmark.Markdown //markdown->html解析器
-		E               *echo.Echo        //后台框架
+		e               *echo.Echo        //后台框架
 		Main            *mail.Email       //邮件提醒
 		//异地多活
 		//图片压缩webp
@@ -46,6 +46,6 @@ func New() (s *Smoe) {
 	s = &Smoe{}
 	s.ThemeFS = &assets.Assets
 	s.MDParse = mdparse.Goldmark
-	s.E = echo.New()
+	s.e = echo.New()
 	return s
 }

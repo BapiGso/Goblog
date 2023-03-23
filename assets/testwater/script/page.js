@@ -1,53 +1,5 @@
 var Page;
 (function (Page) {
-    var Demopage;
-    (function (Demopage) {
-        var errorsBlockId = "error-messages";
-        var errorsBlock = document.getElementById(errorsBlockId);
-        if (!errorsBlock) {
-            throw new Error("Cannot find element '" + errorsBlockId + "'.");
-        }
-        function getErrorById(id) {
-            if (errorsBlock) {
-                return errorsBlock.querySelector("span[id=error-message-" + id + "]");
-            }
-            return null;
-        }
-        function setErrorMessage(id, message) {
-            if (errorsBlock) {
-                var existingSpan = getErrorById(id);
-                if (existingSpan) {
-                    existingSpan.innerHTML = message;
-                    return;
-                }
-                else {
-                    var newSpan = document.createElement("span");
-                    newSpan.id = "error-message-" + id;
-                    newSpan.innerText = message;
-                    errorsBlock.appendChild(newSpan);
-                    errorsBlock.appendChild(document.createElement("br"));
-                }
-            }
-        }
-        Demopage.setErrorMessage = setErrorMessage;
-        function removeErrorMessage(id) {
-            if (errorsBlock) {
-                var span = getErrorById(id);
-                if (span) {
-                    var br = span.nextElementSibling;
-                    if (br) {
-                        errorsBlock.removeChild(br);
-                    }
-                    errorsBlock.removeChild(span);
-                }
-            }
-        }
-        Demopage.removeErrorMessage = removeErrorMessage;
-    })(Demopage = Page.Demopage || (Page.Demopage = {}));
-})(Page || (Page = {}));
-
-var Page;
-(function (Page) {
     var Helpers;
     (function (Helpers) {
         var Utils;
@@ -773,27 +725,6 @@ var Page;
         var loader = Page.Helpers.Utils.selector(canvasContainer, ".loader");
         var maxWidth = 1024;
         var maxHeight = 1024;
-        function bindCanvasButtons() {
-            function hideOverflow(value) {
-                document.body.style.overflow = value ? "hidden" : "auto";
-            }
-            if (fullscreenCheckbox) {
-                Page.Helpers.Events.callAfterDOMLoaded(function () {
-                    hideOverflow(fullscreenCheckbox.checked);
-                    fullscreenCheckbox.addEventListener("change", function () {
-                        hideOverflow(fullscreenCheckbox.checked);
-                    });
-                });
-                if (sidePaneCheckbox) {
-                    fullscreenCheckbox.addEventListener("change", function () {
-                        if (fullscreenCheckbox.checked) {
-                            sidePaneCheckbox.checked = false;
-                        }
-                    }, false);
-                }
-            }
-        }
-        bindCanvasButtons();
         function getCanvasSize() {
             var rect = canvas.getBoundingClientRect();
             return [Math.floor(rect.width), Math.floor(rect.height)];
@@ -808,25 +739,26 @@ var Page;
          */
         function updateCanvasSize() {
             canvasContainer.style.width = "100vw";
-            var size = getCanvasSize();
-            if (fullscreenCheckbox.checked) {
-                canvasContainer.style.height = "100%";
-                canvasContainer.style.maxWidth = "";
-                canvasContainer.style.maxHeight = "";
-            }
-            else {
-                size[1] = size[0] * maxHeight / maxWidth;
-                canvasContainer.style.height = inPx(size[1]);
-                canvasContainer.style.maxWidth = inPx(maxWidth);
-                canvasContainer.style.maxHeight = inPx(maxHeight);
-            }
-            if (size[0] !== lastCanvasSize[0] || size[1] !== lastCanvasSize[1]) {
-                lastCanvasSize = getCanvasSize();
-                for (var _i = 0, canvasResizeObservers_1 = canvasResizeObservers; _i < canvasResizeObservers_1.length; _i++) {
-                    var observer = canvasResizeObservers_1[_i];
-                    observer(lastCanvasSize[0], lastCanvasSize[1]);
-                }
-            }
+            canvasContainer.style.height = "100vh";
+            // var size = getCanvasSize();
+            // if (fullscreenCheckbox.checked) {
+            //     canvasContainer.style.height = "100%";
+            //     canvasContainer.style.maxWidth = "";
+            //     canvasContainer.style.maxHeight = "";
+            // }
+            // else {
+            //     size[1] = size[0] * maxHeight / maxWidth;
+            //     canvasContainer.style.height = inPx(size[1]);
+            //     canvasContainer.style.maxWidth = inPx(maxWidth);
+            //     canvasContainer.style.maxHeight = inPx(maxHeight);
+            // }
+            // if (size[0] !== lastCanvasSize[0] || size[1] !== lastCanvasSize[1]) {
+            //     lastCanvasSize = getCanvasSize();
+            //     for (var _i = 0, canvasResizeObservers_1 = canvasResizeObservers; _i < canvasResizeObservers_1.length; _i++) {
+            //         var observer = canvasResizeObservers_1[_i];
+            //         observer(lastCanvasSize[0], lastCanvasSize[1]);
+            //     }
+            // }
         }
         Page.Helpers.Events.callAfterDOMLoaded(updateCanvasSize);
         fullscreenCheckbox.addEventListener("change", updateCanvasSize, false);
@@ -840,15 +772,15 @@ var Page;
         var mouseLeaveObservers = [];
         var mouseWheelObservers = [];
         /* Bind fullscreen events */
-        if (fullscreenCheckbox) {
-            fullscreenCheckbox.addEventListener("change", function () {
-                var isFullscreen = fullscreenCheckbox.checked;
-                for (var _i = 0, fullscreenToggleObservers_1 = fullscreenToggleObservers; _i < fullscreenToggleObservers_1.length; _i++) {
-                    var observer = fullscreenToggleObservers_1[_i];
-                    observer(isFullscreen);
-                }
-            }, false);
-        }
+        // if (fullscreenCheckbox) {
+        //     fullscreenCheckbox.addEventListener("change", function () {
+        //         var isFullscreen = fullscreenCheckbox.checked;
+        //         for (var _i = 0, fullscreenToggleObservers_1 = fullscreenToggleObservers; _i < fullscreenToggleObservers_1.length; _i++) {
+        //             var observer = fullscreenToggleObservers_1[_i];
+        //             observer(isFullscreen);
+        //         }
+        //     }, false);
+        // }
         document.addEventListener("keydown", function (event) {
             if (event.keyCode === 27) {
                 Canvas.toggleFullscreen(true);

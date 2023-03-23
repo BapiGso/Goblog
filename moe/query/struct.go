@@ -1,11 +1,11 @@
 package query
 
 import (
-	"SMOE/moe/mdparse"
 	"bytes"
 	"crypto/md5"
 	"database/sql"
 	"fmt"
+	"github.com/BapiGso/SMOE/moe/mdparse"
 	"strings"
 	"time"
 	"unicode/utf8"

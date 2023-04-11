@@ -17,9 +17,9 @@ func WritePost(c echo.Context) error {
 	//	return c.Render(200, "write-post.template", nil)
 	//}
 	data := struct {
-		Post []query.Contents
+		Post query.Contents
 	}{
-		query.QueryWithCid(db, req.Cid),
+		query.PostWithCid(db, req.Cid),
 	}
 	return c.Render(200, "write-post.template", data)
 
@@ -35,9 +35,9 @@ func WritePage(c echo.Context) error {
 	//	return c.Render(200, "write-page.template", nil)
 	//}
 	data := struct {
-		Page []query.Contents
+		Page query.Contents
 	}{
-		query.QueryWithCid(db, req.Cid),
+		query.PostWithCid(db, req.Cid),
 	}
 	return c.Render(200, "write-page.template", data)
 }

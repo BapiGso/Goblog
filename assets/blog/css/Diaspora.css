@@ -6,6 +6,7 @@ h3,
 h4,
 h5,
 p,
+ol,
 ul,
 li {
     margin     : 0;
@@ -1061,24 +1062,25 @@ h1.title {
     display: none;
 }
 
+#commentform{
+    display: flex;
+    flex-direction: column;
+}
+
+#commentform>*{
+    margin-top: 10px;
+}
+
 #commentform input,
 #commentform textarea {
-    display           : block;
     border            : 1px solid #e2e2e2;
     padding           : 10px;
-    width             : 100%;
     -webkit-box-sizing: border-box;
     box-sizing        : border-box;
     outline           : none;
     font-size         : 14px;
 }
 
-#commentform label {
-    display  : block;
-    font-size: 14px;
-    color    : #444;
-    margin   : 10px 0 5px;
-}
 
 #commentform input[type=submit] {
     cursor        : pointer;
@@ -1089,92 +1091,65 @@ h1.title {
     color         : #666;
     font-size     : 14px;
     padding       : 10px 0;
-    background    : #fff;
     margin        : 30px auto 0;
+    background-color: rgba(0,0,0,0);
 }
 
-#comments {
+#comments{
     margin-top: 70px;
 }
 
-#comments>h2 {
-    color    : #333;
-    font-size: 18px;
+#comments ol,
+#comments li{
+    margin-top: 30px;
 }
 
-#comments ol {
-    padding-left: 0;
+
+.comment-body{
+    height: 40px;
+    display: flex;
 }
 
-#comments li {
-    position      : relative;
-    margin-top    : 30px;
-    padding-bottom: 20px;
-    border-bottom : 1px solid #eee;
+.comment-body>img{
+    border-radius: 50%;
 }
 
-.says {
-    display: none;
-}
-
-.comment-author {
-    display: inline-block;
-}
-
-.comment-author img {
-    display              : inline-block;
-    -webkit-border-radius: 50%;
-    border-radius        : 50%;
-    vertical-align       : top;
-    margin-right         : 10px;
-}
-
-.comment-author a {
-    color: inherit;
-}
-
-.comment-author cite {
-    color     : #EF6D57;
-    font-style: normal;
-    font-size : 14px;
-}
-
-.comment-meta {
-    margin   : -14px 0 0 54px;
+.comment-meta{
+    height: 100%;
+    margin-left: 14px;
+    flex: 5;
     font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.comment-meta+p {
-    margin-top: 14px;
-    font-size : 14px;
-    color     : #333;
-    word-break: break-all;
-}
-
-.comment-meta+div {
-    margin-top: 14px;
-    font-size : 14px;
-    color     : #333;
-    word-break: break-all;
-}
-
-.comment-meta a {
+.comment-meta span{
     color: #666;
 }
 
-.reply {
-    position : absolute;
-    right    : 0;
-    top      : 0;
+.comment-meta a {
+    color: #EF6D57;
+    font-style: normal;
     font-size: 14px;
 }
 
-.reply a {
+.comment-body>.reply {
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+.comment-body>.reply a {
     color          : #EF6D57;
     text-decoration: underline;
 }
 
-ol.children {
+.comment-content{
+    margin-top: 14px;
+}
+
+
+.comment-child {
     margin-left: 30px;
 }
 

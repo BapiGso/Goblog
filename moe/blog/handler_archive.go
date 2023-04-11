@@ -1,4 +1,4 @@
-package page
+package blog
 
 import (
 	"github.com/jmoiron/sqlx"

@@ -1,0 +1,48 @@
+<div class="comment-wrap">
+    <div class="comment-respond" id="respond-post-150">
+        <form action="https://smoe.cc/archives/150/comment" class="comment-form" id="commentform" method="post">
+            <h2 class="comment-reply-title" id="reply-title">
+                发表评论
+                <small><a href="https://smoe.cc/archives/150/#respond-post-150" id="cancel-comment-reply-link"
+                          onclick="return TypechoComment.cancelReply();" rel="nofollow"
+                          style="display:none">取消回复</a></small>
+            </h2>
+            <label for="textarea">评论</label>
+            <textarea cols="45" id="textarea" maxlength="65525" name="text" required="required" rows="8"></textarea>
+            <label for="author">姓名<span class="required">*</span></label>
+            <input id="author" maxlength="245" name="author" required="required" size="30" type="text" value="">
+            <label for="mail">电子邮件<span class="required">*</span></label>
+            <input aria-describedby="email-notes" id="mail" maxlength="100" name="mail" required="required" size="30" type="text"
+                   value="">
+            <label for="url">站点</label>
+            <input id="url" maxlength="200" name="url" size="30" type="text" value="">
+            <input class="submit" data-empty-comment="必须填写评论内容" data-init="提交评论" data-now="刚刚" data-posted="评论提交成功"
+                   data-posting="提交评论中..." id="submit" type="submit" value="发表评论">
+        </form>
+    </div>
+
+    {{with .}}
+    <div class="comments-area" id="comments">
+        <h2>评论列表</h2>
+        {{range .}}
+        <ol class="comment-list">
+            {{range .}}
+            <li class="comment {{if eq .Parent 0}}comment-parent{{else}}comment-child{{end}} comment-odd" id="comment-68">
+                <div class="comment-body" id="div-comment-68">
+                    <img alt="{{.Author}}" class="avatar" src="https://gravatar.loli.net/avatar/{{.MD5Mail}}?s=40&amp;r=G&amp;d=identicon" width="40">
+                    <div class="comment-meta">
+                        <cite class="fn"><a href="{{.Url}}" rel="external nofollow">{{.Author}}</a></cite>
+                        <span>{{.UnixFormat}}</span>
+                    </div>
+                    <div class="reply">
+                        <a href="https://smoe.cc/archives/150/comment-page-1?replyTo=68#respond-post-150" onclick="return TypechoComment.reply('comment-68', 68);" rel="nofollow">回复</a>
+                    </div>
+                </div>
+                <div class="comment-content"><p>{{.Text}}</p></div>
+            </li>
+            {{end}}
+        </ol>
+        {{end}}
+    </div>
+    {{end}}
+</div>

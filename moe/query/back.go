@@ -1,33 +1,36 @@
 package query
 
-import "github.com/jmoiron/sqlx"
+import (
+	"fmt"
+	"github.com/jmoiron/sqlx"
+)
 
-// QueryWithCid 根据Cid查询单条文章或独立页面
-func QueryWithCid(Db *sqlx.DB, cid uint64) []Contents {
+// PostWithCid 根据Cid查询单条文章或独立页面
+func PostWithCid(Db *sqlx.DB, cid int) Contents {
 	data := make([]Contents, 0, 1)
 	_ = Db.Select(&data, `SELECT * FROM typecho_contents WHERE cid=?`, cid)
-	return data
+	return data[0]
 }
 
 // TestQueryPostWithCid  测试是否是指针变量
-func TestQueryPostWithCid(Db *sqlx.DB, cid uint64) Contents {
+func TestQueryPostWithCid(Db *sqlx.DB, cid int) Contents {
 	var data Contents
 	_ = Db.Get(&data, `SELECT * FROM typecho_contents WHERE cid=?`, cid)
 	return data
 }
 
-// QueryPostArr 根据条件查询多条文章 状态 条数 页数
-func QueryPostArr(Db *sqlx.DB, status string, limit, pagenum uint64) []Contents {
+// PostArr 根据条件查询多条文章 状态 条数 页数
+func PostArr(Db *sqlx.DB, status string, limit, pagenum int) []Contents {
 	data := make([]Contents, 0, limit)
-	_ = Db.Select(&data, `SELECT * FROM  typecho_contents 
-		WHERE type='post' AND status=? 
-		ORDER BY ROWID DESC 
+	_ = Db.Select(&data, `SELECT * FROM  typecho_contents
+		WHERE type='post' AND status=?
+		ORDER BY ROWID DESC
 		LIMIT ? OFFSET ?`, status, limit, pagenum*limit-limit)
 	return data
 }
 
 // TestAffairs  测试事务
-func TestAffairs(Db *sqlx.DB, status string, limit, pagenum uint64) ([]Contents, []Contents) {
+func TestAffairs(Db *sqlx.DB, status string, limit, pagenum int) ([]Contents, []Contents) {
 	var data, data2 []Contents
 	tx, _ := Db.Beginx()
 	go tx.Select(&data, `SELECT * FROM  typecho_contents 
@@ -40,8 +43,8 @@ func TestAffairs(Db *sqlx.DB, status string, limit, pagenum uint64) ([]Contents,
 	return data, data2
 }
 
-// QueryPageArr 根据条件查询多条页面
-func QueryPageArr(Db *sqlx.DB) []Contents {
+// PageArr 根据条件查询多条页面
+func PageArr(Db *sqlx.DB) []Contents {
 	var data []Contents
 	_ = Db.Select(&data, `SELECT * FROM  typecho_contents 
 		WHERE type='page'
@@ -49,16 +52,17 @@ func QueryPageArr(Db *sqlx.DB) []Contents {
 	return data
 }
 
-// QueryCommentsWithCid 根据文章cid查询该文章的评论
-func QueryCommentsWithCid(Db *sqlx.DB, cid uint64) []Comments {
+// CommentsWithCid 根据文章cid查询该文章的评论
+func CommentsWithCid(Db *sqlx.DB, cid int) []Comments {
 	var data []Comments
 	_ = Db.Select(&data, `SELECT * FROM  typecho_comments 
-		WHERE cid=?`, cid)
+		WHERE cid=?
+		ORDER BY created`, cid)
 	return data
 }
 
-// QueryCommentsArr 查询评论组，后台专用
-func QueryCommentsArr(Db *sqlx.DB, status string, limit, pagenum uint64) []Comments {
+// CommentsArr 查询评论组，后台专用
+func CommentsArr(Db *sqlx.DB, status string, limit, pagenum int) []Comments {
 	data := make([]Comments, 0, limit)
 	_ = Db.Select(&data, `SELECT c.*,title
     	FROM typecho_comments AS c 
@@ -70,7 +74,7 @@ func QueryCommentsArr(Db *sqlx.DB, status string, limit, pagenum uint64) []Comme
 }
 
 // 查询文件组，后台专用
-func QueryMedia(Db *sqlx.DB, limit, pagenum uint64) []Contents {
+func Media(Db *sqlx.DB, limit, pagenum int) []Contents {
 	data := make([]Contents, 0, limit)
 	_ = Db.Select(&data, `SELECT * FROM  typecho_contents
 		WHERE type='attachment'
@@ -79,15 +83,33 @@ func QueryMedia(Db *sqlx.DB, limit, pagenum uint64) []Contents {
 	return data
 }
 
-func QueryCount(Db *sqlx.DB, Type, status string) uint64 {
-	var data uint64
+func Count(Db *sqlx.DB, Type, status string) int {
+	var data int
 	_ = Db.Select(&data, `SELECT count(1) FROM  typecho_contents 
 		WHERE type=? AND status=?`, Type, status)
 	return data
 }
 
-func QueryUser(Db *sqlx.DB) []User {
+func UserWithName(Db *sqlx.DB, name string) (User, error) {
 	var data []User
-	_ = Db.Select(&data, `SELECT * FROM  typecho_users`)
-	return data
+	err := Db.Select(&data, `SELECT * FROM  typecho_users WHERE name = ?`, name)
+	return data[0], err
+}
+
+func InsertComment(Db *sqlx.DB, data Comments) {
+
+}
+
+func HaveCid(Db *sqlx.DB, cid int) bool {
+	var data int
+	err := Db.Get(&data, `SELECT 'allowComment' FROM typecho_contents WHERE cid = ?`, cid)
+	if err != nil {
+		// 如果查询过程中发生错误，可以打印错误信息并返回 false
+		fmt.Printf("Error checking for CID: %v\n", err)
+		return false
+	}
+	if data == 0 {
+		return false
+	}
+	return true
 }

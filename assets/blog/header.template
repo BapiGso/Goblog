@@ -17,9 +17,9 @@
           name="keywords"/>
     <meta content="Smoe" name="generator"/>
     <meta content="Smoe-master" name="template"/>
-    <link rel="alternate" type="application/rss+xml" title="晓梦 &raquo; RSS 2.0" href="https://smoe.cc/feed/" />
-    <link rel="alternate" type="application/rdf+xml" title="晓梦 &raquo; RSS 1.0" href="https://smoe.cc/feed/rss/" />
-    <link rel="alternate" type="application/atom+xml" title="晓梦 &raquo; ATOM 1.0" href="https://smoe.cc/feed/atom/" />
+    <link rel="alternate" type="application/rss+xml" title="晓梦 &raquo; RSS 2.0" href="/feed/" />
+    <link rel="alternate" type="application/rdf+xml" title="晓梦 &raquo; RSS 1.0" href="/feed/rss/" />
+    <link rel="alternate" type="application/atom+xml" title="晓梦 &raquo; ATOM 1.0" href="/feed/atom/" />
 </head>
 <script>
     window['LocalConst'] = {

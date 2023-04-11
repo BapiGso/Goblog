@@ -1,4 +1,4 @@
-package page
+package blog
 
 import (
 	"encoding/json"
@@ -77,6 +77,7 @@ type bgmCache struct {
 
 var Bgmcache = bgmCache{}
 
+// QueryBGM TODO 把这个移到query中
 func QueryBGM(Db *sqlx.DB) string {
 	var data []byte
 	_ = Db.QueryRow(`SELECT value

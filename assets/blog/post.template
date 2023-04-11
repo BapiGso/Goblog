@@ -8,7 +8,7 @@
     <p>
 </div>
 
-{{range .Post}}
+{{with .Post}}
 <div data-id="{{.Cid}}" id="single">
     <div id="top">
         <div class="bar"></div>
@@ -38,23 +38,20 @@
             <div>
                 <h1 class="title">{{.Title}}</h1>
                 <div class="stuff">
-                    <span></span>
+                    <span>{{.UnixToStr}}</span>
                     <span>阅读 <span id="readNum">{{.Views}}</span></span>
-                    <span>字数 <span id="wordNum"></span></span>
+                    <span>字数 <span id="wordNum">{{.MDCount}}</span></span>
                     <span>喜欢 <span class="count likeNum">{{.Likes}}</span></span>
                 </div>
 
                 <div class="content">
-                    <p>
-                        {{.MD2HTML}}
-                    </p>
+                    {{.MD2HTML}}
                 </div>
-{{end}}
-
+                {{end}}
+                {{template "comment.template" .Comms }}
             </div>
         </div>
     </div>
-
 </div>
 {{template "footer.template"}}
 <script type="text/javascript">

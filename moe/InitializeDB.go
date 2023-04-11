@@ -8,8 +8,8 @@ import (
 
 func (s *Smoe) InitializeDatabase() {
 	var err error
-	if s.CommandLineArgs.DbConf != "" {
-		s.Db, err = sqlx.Connect("mysql", s.CommandLineArgs.DbConf)
+	if *s.CommandLineArgs.DbConf != "" {
+		s.Db, err = sqlx.Connect("mysql", *s.CommandLineArgs.DbConf)
 		if err != nil {
 			log.Fatalf("连接数据库失败，请检查读写权限%v\n", err)
 		}

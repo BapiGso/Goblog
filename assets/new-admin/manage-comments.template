@@ -1,48 +1,86 @@
 {{template "admin-header.template"}}
-<table class="table is-hoverable is-striped">
-    <thead>
-    <tr>
-        <th class="is-narrow">
-            <input type="checkbox">
-        </th>
-        <th>作者</th>
-        <th>内容</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{range .CommArr}}
-    <tr>
-        <td>
-            <input type="checkbox">
-        </td>
-        <td>
-            <div class="comment-author" style="display: flex">
-                <img src="" width="40" height="40" alt="">
-                <div class="comment-head" style="display: flex;flex-direction: column">
-                    <strong><a href="http://smoe.cc" rel="noopener noreferrer" target="_blank">{{.Author}}</a></strong>
-                    <span><a href="mailto:{{.Mail}}" target="_blank" rel="noopener noreferrer">{{.Mail}}</a></span>
-                    <span>{{.Ip}}</span>
-                </div>
+<div id="smoe-root">
+    <div id="main">
+        <div class="tab-bar">
+            <div class="btn-group btn-group-block">
+                <button class="btn btn-primary">文章</button>
+                <button class="btn btn-primary">页面</button>
+                <button class="btn btn-primary">评论</button>
+                <button class="btn btn-primary">文件</button>
             </div>
-        </td>
-        <td>
-            <div class="comment-body">
-                <div class="comment-date">{{.UnixFormat}} 于 <a href="https://smoe.cc/archives/145/comment-page-1#comment-94" target="_blank" rel="noopener noreferrer">QUEST2串流的又一选择——NVIDIA CloudXR</a></div>
-                <div class="comment-content">
-                    <p>你好 能否将CloudXR-Setup.exe和 quest2的安装包发我一份 ,谢谢！<br>
-                        邮箱：*@gmail.com</p>                                </div>
-                <div class="buttons">
-                    <a class="button is-small">通过</a>
-                    <a class="button is-small">待审核</a>
-                    <a class="button is-small">垃圾</a>
-                    <a class="button is-small">编辑</a>
-                    <a class="button is-small">回复</a>
-                    <a class="button is-small">删除</a>
-                </div>
+            <div class="btn-group btn-group-block">
+                <button class="btn">已通过</button>
+                <button class="btn">待审核</button>
+                <button class="btn">垃圾</button>
             </div>
-        </td>
-    </tr>
-    {{end}}
-    </tbody>
-</table>
+        </div>
+
+        <div class="list-operate">
+            <label class="checkbox">
+                <div class="dropdown">
+                    <div class="btn-group">选中项<i class="icon icon-caret"></i></a>
+                        <ul class="menu">
+                            <li class="menu-item">通过</li>
+                            <li class="menu-item">待审核</b></li>
+                            <li class="menu-item">标记垃圾/b></li>
+                            <li class="menu-item">删除</b></li>
+                        </ul>
+                    </div>
+                </div>
+            </label>
+            <div class="input-group input-inline">
+                <input class="form-input" type="text" placeholder="请输入关键字">
+                <button class="btn btn-primary input-group-btn">筛选</button>
+            </div>
+        </div>
+
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th><input type="checkbox"></th>
+                <th>作者</th>
+                <th></th>
+                <th>内容</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range .CommArr}}
+            <tr>
+                <td>
+                    <input type="checkbox">
+                </td>
+                <td>
+                    <div class="comment-author" style="display: flex">
+                        <img src="https://secure.gravatar.com/avatar/{{.MD5Mail}}?s=40&r=G" width="40" height="40" alt="">
+                    </div>
+                </td>
+                <td>
+                    <div class="comment-head" style="display: flex;flex-direction: column">
+                        <strong><a href="http://smoe.cc" rel="noopener noreferrer" target="_blank">{{.Author}}</a></strong>
+                        <span><a href="mailto:{{.Mail}}" target="_blank" rel="noopener noreferrer">{{.Mail}}</a></span>
+                        <span>{{.Ip}}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="comment-body">
+                        <div class="comment-date">{{.UnixFormat}} 于 <a href="/archives/145/comment-page-1#comment-94" target="_blank" rel="noopener noreferrer">{{.Title}}</a></div>
+                        <div class="comment-content">
+                            {{.Text}}
+                        </div>
+                        <div class="buttons">
+                            <a class="button is-small">通过</a>
+                            <a class="button is-small">待审核</a>
+                            <a class="button is-small">垃圾</a>
+                            <a class="button is-small">编辑</a>
+                            <a class="button is-small">回复</a>
+                            <a class="button is-small">删除</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+</div>
 {{template "admin-footer.template"}}

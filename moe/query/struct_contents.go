@@ -57,7 +57,14 @@ func (c Contents) MD2HTML() string {
 
 // MDSub 截取前95字符串作为摘要
 func (c Contents) MDSub() string {
-	r := string([]rune(string(c.Text))[:70])
+	text := string(c.Text)
+	length := len([]rune(text))
+
+	if length <= 70 {
+		return text
+	}
+
+	r := string([]rune(text)[:70])
 	return r
 }
 

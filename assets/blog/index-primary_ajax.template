@@ -1,31 +1,40 @@
 <!DOCTYPE html>
-<head>
-    <meta name="ROBOTS" content="NOINDEX,FOLLOW" >
-</head>
-<div id="container">
-<div id="primary">
-{{range .IndexPost}}
-{{if .Cid }}
-<div class="post">
-    <a data-id="{{ .Cid }}" href="./archives/{{ .Cid }}" title="{{ .Title}}">
-        <img width="680" height="440" src="{{.Cover}}" class="cover" alt="illustration">
-    </a>
-    <div class="else">
-        <p>{{ .CreatedStr }}</p>
-        <h3><a data-id="{{ .Cid }}" class="posttitle" href="./archives/{{ .Cid }}">{{ .Title }}</a></h3>
-        <div><p>{{ .TextSub }}...</p></div>
-        <p class="here">
-            <span class="icon-letter">{{ .TextLen }}</span>
-            <span class="icon-view">{{ .Views }}</span>
-            <span class="icon-like">{{ .Likes }}</span>
-        </p>
+<html>
+    <head>
+        <meta name="ROBOTS" content="NOINDEX,FOLLOW" >
+    </head>
+    <body>
+    <div id="container">
+        <div id="primary">
+            {{range .PostArr }}
+            <div class="post">
+                <a data-id="{{ .Cid }}" href="/archives/{{.Cid}}" title="{{.Title}}">
+                    <img width="680" height="440" src="wait" class="cover" alt="illustration">
+                </a>
+                <div class="else">
+                    <p>{{ .UnixToStr }}</p>
+                    <h3><a data-id="{{ .Cid }}" class="posttitle" href="/archives/{{ .Cid }}">{{ .Title }}</a></h3>
+                    <div class="abstract">
+                        <p>{{- .MDSub -}}...</p>
+                    </div>
+                    <div class="here">
+                        <span class="icon-letter"></span>
+                        <p>{{ .MDCount }}</p>
+                        <span class="icon-view"></span>
+                        <p>{{ .Views }}</p>
+                        <span class="icon-like"></span>
+                        <p>{{ .Likes }}</p>
+                    </div>
+                </div>
+            </div>
+            {{- end }}
+        </div>>
+        {{if (ne .NextPageNum 0)}}
+        <div id="pager">
+            <a href="/page/{{.NextPageNum}}" data-url="/page/{{.NextPageNum}}" class="more">加载更多</a>
+        </div>
+        {{end}}
     </div>
-</div>
-{{- end }}
-{{- end }}
-</div>>
-    <div id="pager">
-        <a href="/page/{{.PageNext}}" data-url="/page/{{.PageNext}}" class="more">加载更多</a>
-    </div>
-</div>
-<div id="preview" class="trans"></div>
+    <div id="preview" class="trans"></div>
+    </body>
+</html>

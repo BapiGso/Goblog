@@ -48,9 +48,9 @@ func ManageComment(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
 	data := struct {
-		CommArr []query.Comments
+		CommArr []query.CommsWithTitleMix
 	}{
-		query.CommentsArr(db, req.CommStatus, 5, req.Page),
+		query.CommsWithTitle(db, req.CommStatus, 5, req.Page),
 	}
 	return c.Render(200, "manage-comments.template", data)
 }
@@ -62,9 +62,9 @@ func ManageMedia(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
 	data := struct {
-		MediaArr []query.Contents
+		MediaArr []query.MediasWithTitleMix
 	}{
-		query.Media(db, 10, req.Page),
+		query.MediasWithTitle(db, 10, req.Page),
 	}
 	return c.Render(200, "manage-medias.template", data)
 }

@@ -1,20 +1,22 @@
-
-        {{range slice . 1}}
-        {{if .Cid }}
-            <div class="post">
-                <a data-id="{{ .Cid }}" href="./archives/{{.Cid}}" title="{{.Title}}">
-                    <img width="680" height="440" src="wait" class="cover" alt="illustration">
-                </a>
-                <div class="else">
-                    <p>{{ .UnixToStr }}</p>
-                    <h3><a data-id="{{ .Cid }}" class="posttitle" href="./archives/{{ .Cid }}">{{ .Title }}</a></h3>
-                    <div><p>{{- .MDSub -}}...</p></div>
-                    <p class="here">
-                        <span class="icon-letter">{{ .MDCount }}</span>
-                        <span class="icon-view">{{ .Views }}</span>
-                        <span class="icon-like">{{ .Likes }}</span>
-                    </p>
-                </div>
+{{range slice . 1}}
+    <div class="post">
+        <a data-id="{{ .Cid }}" href="/archives/{{.Cid}}" title="{{.Title}}">
+            <img src="/usr/uploads/推门2.png" alt="illustration">
+        </a>
+        <div class="else">
+            <p>{{ .UnixToStr }}</p>
+            <h3><a data-id="{{ .Cid }}" class="posttitle" href="/archives/{{ .Cid }}">{{ .Title }}</a></h3>
+            <div class="abstract">
+                <p>{{- .MDSub -}}...</p>
             </div>
-        {{- end }}
-        {{- end }}
+            <div class="here">
+                <span class="icon-letter"></span>
+                <p>{{ .MDCount }}</p>
+                <span class="icon-view"></span>
+                <p>{{ .Views }}</p>
+                <span class="icon-like"></span>
+                <p>{{ .Likes }}</p>
+            </div>
+        </div>
+    </div>
+{{- end }}

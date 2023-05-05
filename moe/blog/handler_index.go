@@ -11,25 +11,34 @@ import (
 func BlogIndex(c echo.Context) error {
 	//判断页数查数据库
 	db := c.Get("db").(*sqlx.DB)
-	PageNum, _ := isNum(c.Param("num"))
+	PageNum, err := isNum(c.Param("num"))
+	if err != nil {
+		return c.JSON(http.StatusForbidden, err)
+	}
 	data := struct {
-		PageArr    []query.Contents
-		PostArr    []query.Contents
-		PageNum    int
-		MaxPageNum int
+		PageArr     []query.Contents
+		PostArr     []query.Contents
+		NextPageNum int
 	}{
 		query.PageArr(db),
 		query.PostArr(db, "publish", 5, PageNum),
-		PageNum,
-		query.Count(db, "post", "publish"),
+		query.NextPageNum(db, "publish", 5, PageNum),
 	}
 	return c.Render(http.StatusOK, "index.template", data)
 }
 
 func BlogIndexAjax(c echo.Context) error {
-	//pageNum, _ := Smoe.IsNum(c.Param("num"))
-	//indexData := new(IndexData)
-	////queryPost(&indexData.IndexPost, "publish", pageNum, 5)
-	//indexData.PageNext = pageNum + 1
-	return c.Render(http.StatusOK, "index-primary_ajax.template", nil)
+	db := c.Get("db").(*sqlx.DB)
+	PageNum, err := isNum(c.Param("num"))
+	if err != nil {
+		return c.JSON(http.StatusForbidden, err)
+	}
+	data := struct {
+		PostArr     []query.Contents
+		NextPageNum int
+	}{
+		query.PostArr(db, "publish", 5, PageNum),
+		query.NextPageNum(db, "publish", 5, PageNum),
+	}
+	return c.Render(http.StatusOK, "index-primary_ajax.template", data)
 }

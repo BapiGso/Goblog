@@ -33,9 +33,13 @@
             width: 50%;
         }
 
+        .tree-reflect{
+            opacity: .3;
+        }
+
         #sky{
             position: absolute;
-            width: 100%;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -43,7 +47,7 @@
         }
 
         .reflect{
-            width: 102%;
+            width: 102vw;
             height: 100%;
             z-index: -1;
             transform: translateY(-2px) scaleY(-1);
@@ -75,21 +79,6 @@
             flex-direction: column;
         }
 
-
-        #main>div{
-            margin-top: 1.5%;
-        }
-
-        #main .tab-bar{
-            display: flex;
-            justify-content: space-between;
-        }
-
-        #main .list-operate{
-            display: flex;
-            justify-content: space-between;
-        }
-
         #main .list-operate label{
             display: flex;
             justify-content: center;
@@ -99,6 +88,14 @@
             height: 500px;
         }
 
+        #树干分支>*{
+            opacity: .9;
+            filter: drop-shadow(0 0 10px black);
+        }
+
+        #logo字母>*:hover{
+            filter: drop-shadow(0 0 20px black);
+        }
     </style>
     <script type="module" crossorigin src="/new-admin/js/sky.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">

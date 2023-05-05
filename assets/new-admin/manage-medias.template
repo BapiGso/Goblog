@@ -1,18 +1,16 @@
 {{template "admin-header.template" }}
 <div id="smoe-root">
     <div id="main">
-        <div class="tab-bar">
-            <div class="btn-group btn-group-block">
-                <button class="btn btn-primary">文章</button>
-                <button class="btn btn-primary">页面</button>
-                <button class="btn btn-primary">评论</button>
-                <button class="btn btn-primary">文件</button>
-            </div>
+        <div class="navbar">
+            <section class="navbar-section">
+                <a href="/admin/manage-posts" class="btn btn-link">文章</a>
+                <a href="/admin/manage-pages" class="btn btn-link">页面</a>
+                <a href="/admin/manage-comments" class="btn btn-link">评论</a>
+                <a href="/admin/manage-medias" class="btn btn-link">文件</a>
+            </section>
             <div class="btn-group btn-group-block">
             </div>
         </div>
-
-
         <div class="list-operate">
             <label class="checkbox">
                 <div class="dropdown">
@@ -51,7 +49,7 @@
                     </a>
                 </td>
                 <td>
-                    暂无
+                    {{.PostTitle}}
                 </td>
                 <td>
                     {{.UnixFormat}}

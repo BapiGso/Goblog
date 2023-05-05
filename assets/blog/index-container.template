@@ -14,10 +14,14 @@
         </div>
 
         <div id="header">
-            <div>
-                <a class="image-logo" href="/"></a>
-                <div class="icon-menu switchmenu"></div>
-            </div>
+            <a class="logo" href="/"></a>
+            <button class="icon-menu switchmenu">
+                <svg  width="32" height="32" viewBox="0 0 100 100">
+                    <path class="line line1"/>
+                    <path class="line line2"/>
+                    <path class="line line3"/>
+                </svg>
+            </button>
         </div>
 
         <div id="post0">

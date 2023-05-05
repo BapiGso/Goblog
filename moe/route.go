@@ -4,7 +4,6 @@ import (
 	"github.com/BapiGso/SMOE/moe/admin"
 	"github.com/BapiGso/SMOE/moe/blog"
 	"github.com/gorilla/sessions"
-	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -48,9 +47,10 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 
 	s.e.Use(attachDB(s.Db))
 	// 前台页面路由
-	s.e.StaticFS("/", s.ThemeFS)                         // 静态文件路由，指向主题的文件系统，例如CSS，图片等静态资源
+	s.e.StaticFS("/", s.ThemeFS) // 静态文件路由，指向主题的文件系统，例如CSS，图片等静态资源
+	s.e.Static("/usr/uploads", "/usr/uploads")
 	s.e.GET("/", blog.BlogIndex)                         // 首页路由
-	s.e.GET("/page/:num", blog.BlogIndexAjax)            // 分页路由，显示指定页数的文章列表
+	s.e.GET("/page/:num", blog.BlogIndex)                // 分页路由，显示指定页数的文章列表
 	s.e.POST("/page/:num", blog.BlogIndexAjax)           // 分页路由，通过异步请求更新指定页数的文章列表
 	s.e.GET("/archives", blog.Archive)                   // 归档页面路由，显示所有文章的归档分类
 	s.e.GET("/archives/:cid", blog.Post)                 // 根据分类ID显示该分类下的文章列表
@@ -65,41 +65,19 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 	g.Use(isLogin)                                                          // 用户登录验证中间件
 	g.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(10))) //每秒10次请求
 	// 后台管理页面路由
-	g.GET("", admin.LoginGet)                                                   // 后台管理登录页面路由
-	g.POST("", admin.LoginPost)                                                 // 后台管理登录处理路由
-	g.GET("/manage-posts", admin.ManagePost, admin.SetDefaultQueryParams)       // 显示文章管理界面的路由
-	g.GET("/manage-pages", admin.ManagePage)                                    // 显示页面管理界面的路由
-	g.GET("/manage-comments", admin.ManageComment, admin.SetDefaultQueryParams) // 显示评论管理界面的路由
-	g.GET("/manage-medias", admin.ManageMedia)                                  // 显示媒体管理界面的路由
-	g.GET("/write-post", admin.WritePost)                                       // 显示添加文章页面的路由
-	g.GET("/write-page", admin.WritePage)                                       // 显示添加页面页面的路由
-	g.GET("/test", admin.Test)                                                  // 显示文章管理界面的路由
+	g.GET("", admin.LoginGet)                                             // 后台管理登录页面路由
+	g.POST("", admin.LoginPost)                                           // 后台管理登录处理路由
+	g.GET("/manage-posts", admin.ManagePost, SetDefaultQueryParams)       // 显示文章管理界面的路由
+	g.GET("/manage-pages", admin.ManagePage)                              // 显示页面管理界面的路由
+	g.GET("/manage-comments", admin.ManageComment, SetDefaultQueryParams) // 显示评论管理界面的路由
+	g.GET("/manage-medias", admin.ManageMedia)                            // 显示媒体管理界面的路由
+	g.GET("/write-post", admin.WritePost)                                 // 显示添加文章页面的路由
+	g.GET("/write-page", admin.WritePage)                                 // 显示添加页面页面的路由
+	g.GET("/test", admin.Test)                                            // 显示文章管理界面的路由
+	g.GET("/log-access", admin.LogAccess, SetDefaultQueryParams)
+	g.GET("/setting", admin.Setting)
 
 	// 文件上传路由
-	g.POST("/upload", admin.Upload)        // 处理文件上传请求的路由
-	g.GET("/uploadtest", admin.UploadTest) // 文件上传测试路由，用于测试文件上传服务是否正常
-}
-
-func isLogin(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		//登录页面不用这个中间件
-		if c.Path() == "/admin" {
-			return next(c)
-		}
-		//后台页面没有cookie的全部跳去登录
-		sess, _ := session.Get("smoeSession", c)
-		if sess.Values["isLogin"] != true {
-			return c.Redirect(http.StatusFound, "/admin")
-		}
-		return next(c)
-	}
-}
-
-func attachDB(db *sqlx.DB) echo.MiddlewareFunc {
-	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			c.Set("db", db)
-			return next(c)
-		}
-	}
+	g.POST("/uploadImage", admin.UploadImage) // 处理图片上传请求的路由
+	g.GET("/uploadtest", admin.UploadTest)    // 文件上传测试路由，用于测试文件上传服务是否正常
 }

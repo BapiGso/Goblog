@@ -1,0 +1,84 @@
+{{template "admin-header.template" }}
+<div id="smoe-root">
+    <div id="main">
+        <ul class="tab">
+            <li class="tab-item active">
+                <a href="/admin/log-access" class="btn btn-link">访问日志</a>
+            </li>
+            <li class="tab-item">
+                <a href="/admin/log-system" class="btn btn-link">系统日志</a>
+            </li>
+        </ul>
+
+        <div class="input-group input-inline">
+            <input class="form-input" type="text" placeholder="请输入关键字">
+            <button class="btn btn-primary input-group-btn">筛选</button>
+        </div>
+
+
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th><input type="checkbox"></th>
+                <th>受访地址</th>
+                <th>UA</th>
+                <th>IP地址</th>
+                <th>Referer</th>
+                <th>日期</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range .AccessArr}}
+            <tr>
+                <td>
+                    <input type="checkbox">
+                </td>
+                <td>
+                    {{.Path}}
+                </td>
+                <td>
+                    {{.SimplifyUserAgent}}
+                </td>
+                <td>
+                    {{.IPString}}
+                </td>
+                <td>
+                    {{.SubReferer}}
+                </td>
+                <td>
+                    {{.UnixFormat}}
+                </td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+
+        <div class="navbar">
+            <div></div>
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <a href="#" tabindex="-1">Prev</a>
+                </li>
+                <li class="page-item active">
+                    <a href="#">1</a>
+                </li>
+                <li class="page-item">
+                    <a href="#">2</a>
+                </li>
+                <li class="page-item">
+                    <a href="#">3</a>
+                </li>
+                <li class="page-item">
+                    <span>...</span>
+                </li>
+                <li class="page-item">
+                    <a href="#">12</a>
+                </li>
+                <li class="page-item">
+                    <a href="#">Next</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{{template "admin-footer.template"}}

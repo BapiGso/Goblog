@@ -7,8 +7,10 @@ replace github.com/BapiGso/SMOE/assets => ../assets
 require (
 	github.com/BapiGso/SMOE/assets v0.0.0-00010101000000-000000000000
 	github.com/alexsergivan/blog-examples/authentication v0.0.0-20221115100652-08b68b210058
+	github.com/andybalholm/brotli v1.0.5
 	github.com/aziis98/goldmark-latex v0.0.0-20220412232851-e4525c017227
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/google/uuid v1.3.0
 	github.com/gorilla/sessions v1.2.1
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/labstack/echo-contrib v0.14.1
@@ -27,7 +29,6 @@ require (
 	github.com/dlclark/regexp2 v1.4.0 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect

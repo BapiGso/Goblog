@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"fmt"
 	"github.com/BapiGso/SMOE/moe/query"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
@@ -21,6 +22,7 @@ func WritePost(c echo.Context) error {
 	}{
 		query.PostWithCid(db, req.Cid),
 	}
+	fmt.Println(req, data)
 	return c.Render(200, "write-post.template", data)
 
 }
@@ -31,13 +33,10 @@ func WritePage(c echo.Context) error {
 	if err := c.Bind(req); err != nil {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
-	//if req.Cid == 0 {
-	//	return c.Render(200, "write-page.template", nil)
-	//}
 	data := struct {
 		Page query.Contents
 	}{
-		query.PostWithCid(db, req.Cid),
+		query.PageWithCid(db, req.Cid),
 	}
 	return c.Render(200, "write-page.template", data)
 }

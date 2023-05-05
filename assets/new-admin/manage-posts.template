@@ -1,35 +1,46 @@
 {{template "admin-header.template" }}
 <div id="smoe-root">
     <div id="main">
-        <div class="tab-bar">
-            <div class="btn-group btn-group-block">
-                <button class="btn btn-primary">文章</button>
-                <button class="btn btn-primary">页面</button>
-                <button class="btn btn-primary">评论</button>
-                <button class="btn btn-primary">文件</button>
-            </div>
-            <div class="btn-group btn-group-block">
-                <button class="btn">可用</button>
-                <button class="btn">待审核</button>
-                <button class="btn">草稿</button>
-            </div>
-        </div>
 
 
-        <div class="list-operate">
-            <label class="checkbox">
-                <div class="dropdown">
-                    <div class="btn-group">选中项<i class="icon icon-caret"></i></a>
-                        <ul class="menu">
-                            <li class="menu-item">删除</li>
-                            <li class="menu-item">标记为<b>公开</b></li>
-                            <li class="menu-item">标记为<b>待审核</b></li>
-                            <li class="menu-item">标记为<b>隐藏</b></li>
-                            <li class="menu-item">标记为<b>私密</b></li>
-                        </ul>
-                    </div>
+        <ul class="tab">
+            <li class="tab-item active">
+                <a href="/admin/manage-posts" class="btn btn-link">文章</a>
+            </li>
+            <li class="tab-item">
+                <a href="/admin/manage-pages" class="btn btn-link">页面</a>
+            </li>
+            <li class="tab-item">
+                <a href="/admin/manage-comments" class="btn btn-link">评论</a>
+            </li>
+            <li class="tab-item">
+                <a href="/admin/manage-medias" class="btn btn-link">文件</a>
+            </li>
+            <li class="tab-item tab-action">
+                <li class="tab-item active">
+                    <a href="?status=publish" class="btn btn-link">可用</a>
+                </li>
+                <li class="tab-item">
+                    <a href="?status=waiting" class="btn btn-link">待审核</a>
+                </li>
+                <li class="tab-item">
+                    <a href="?status=draft" class="btn btn-link">草稿</a>
+                </li>
+            </li>
+        </ul>
+
+        <div class="navbar">
+            <div class="navbar">
+                <input type="checkbox">
+                <div class="dropdown dropdown-left"><a class="btn btn-link dropdown-toggle" tabindex="0">选中项<i class="icon icon-caret"></i></a>
+                    <ul class="menu text-left">
+                        <li class="menu-item"><a href="#dropdowns">标记为<b>公开</b></a></li>
+                        <li class="menu-item"><a href="#dropdowns">标记为<b>待审核</b></a></li>
+                        <li class="menu-item"><a href="#dropdowns">标记为<b>隐藏</b></a></li>
+                        <li class="menu-item"><a href="#dropdowns">标记为<b>私密</b></a></li>
+                    </ul>
                 </div>
-            </label>
+            </div>
 
             <div class="input-group input-inline">
                 <input class="form-input" type="text" placeholder="请输入关键字">
@@ -63,6 +74,33 @@
             {{end}}
             </tbody>
         </table>
+
+        <div class="navbar">
+            <div></div>
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <a href="#" tabindex="-1">Prev</a>
+                </li>
+                <li class="page-item active">
+                    <a href="#">1</a>
+                </li>
+                <li class="page-item">
+                    <a href="#">2</a>
+                </li>
+                <li class="page-item">
+                    <a href="#">3</a>
+                </li>
+                <li class="page-item">
+                    <span>...</span>
+                </li>
+                <li class="page-item">
+                    <a href="#">12</a>
+                </li>
+                <li class="page-item">
+                    <a href="#">Next</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 {{template "admin-footer.template"}}

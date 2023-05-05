@@ -3,6 +3,9 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/moe/mail/conf.go" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/moe/query/back.go" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/moe/query/smoe_comments.go" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/moe/query/smoe_contents.go" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/moe/smoe.go" dialect="SQLite" />
+    <file url="PROJECT" dialect="SQLite" />
   </component>
 </project>

@@ -19,19 +19,18 @@ func isNum(numstr string) (int, error) {
 
 func sortComms(data []query.Comments) [][]query.Comments {
 	final := [][]query.Comments{}
-	parentIndexMap := make(map[uint32]int)
+	parentMap := make(map[uint32]int)
 	for _, v := range data {
 		//父评论新建一个组，因为按时间排序肯定比子评论先
 		if v.Parent == 0 {
 			//初始化tmp的同时就把v加入切片
 			tmp := []query.Comments{v}
 			final = append(final, tmp)
-			parentIndexMap[v.Coid] = len(final) - 1
+			parentMap[v.Coid] = len(final) - 1
 		} else { //如果是子评论，找自己属于哪个父评论组
-			if parentIndex, ok := parentIndexMap[v.Parent]; ok {
-				final[parentIndex] = append(final[parentIndex], v)
-				parentIndexMap[v.Coid] = parentIndex
-			}
+			index := parentMap[v.Parent]
+			final[index] = append(final[index], v)
+			parentMap[v.Coid] = index
 		}
 	}
 	//fmt.Println(parentIndexMap)

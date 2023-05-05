@@ -8,7 +8,7 @@ replace (
 )
 
 require (
-	github.com/BapiGso/SMOE/moe v0.0.0-20230323071601-fb6116f08e4d
+	github.com/BapiGso/SMOE/moe v0.0.0-20230411032452-35afabf0ccb2
 	github.com/jmoiron/sqlx v1.3.5
 	modernc.org/sqlite v1.21.0
 )
@@ -25,6 +25,7 @@ require (
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
+	github.com/kolesa-team/go-webp v1.0.4 // indirect
 	github.com/labstack/echo-contrib v0.14.1 // indirect
 	github.com/labstack/echo/v4 v4.10.2 // indirect
 	github.com/labstack/gommon v0.4.0 // indirect

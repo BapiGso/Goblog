@@ -3,8 +3,8 @@
  * @author LoeiFy
  * @url http://lorem.in
  */
-var Home = location.href,
-    Pages = LocalConst.MAX_PAGES,
+let Home = location.href,
+    Pages = 5,
     xhr,
     xhrUrl = '',
     scrollFunction,
@@ -195,7 +195,7 @@ let Diaspora = {
 
         p.on({
             'timeupdate': function () {
-                $('.bar').css('width', p[0].currentTime / p[0].duration * 100 + '%')
+                $('.playbackbar').css('width', p[0].currentTime / p[0].duration * 100 + '%')
             },
             'ended': function () {
                 $('.icon-pause').removeClass('icon-pause').addClass('icon-play')
@@ -317,6 +317,7 @@ $(function () {
             }
             if (swatches['Vibrant']) {
                 $('.icon-menu').css('color', swatches['Vibrant'].getHex())
+                console.log(123)
             }
 
         })
@@ -570,8 +571,5 @@ $(function () {
         }
 
     });
-    // console.log("%c Github %c","background:#24272A; color:#ffffff","","https://github.com/LoeiFy/Diaspora")
-    console.log("\n %c Diaspora For Typecho %c Jin < https://jcl.moe/ > \n", "color:rgb(255, 242, 242);background:rgb(244, 164, 164);padding:5px 0;border-radius:3px 0 0 3px;", "color:rgb(244, 164, 164);background:rgb(255, 242, 242);padding:5px 0;border-radius:0 3px 3px 0;")
-
 });
 console.timeEnd("2");

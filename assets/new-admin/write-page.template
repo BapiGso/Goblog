@@ -10,7 +10,6 @@
     }
 
 
-
     #mdedit{
         flex: 500px;
     }
@@ -54,38 +53,31 @@
         <div id="mdedit"></div>
         <div id="release">
             <div>
-                <div id="sidebar">
-                    <div class="card">
-                        <!--                <div class="card-image">-->
-                        <!--                    <img src="/blog/1.webp" class="img-responsive">-->
-                        <!--                </div>-->
-                        <div class="card-header">
-                            <div class="card-title h5">背景图片</div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary">选择</button>
-                        </div>
+                <div class="popover popover-bottom">
+                    <button class="btn btn-primary">背景图片</button>
+                    <div class="popover-container">
+                        <input class="form-input" id="input-example-16" type="file">
                     </div>
-                    <div class="card">
-                        <!--                <div class="card-image">-->
-                        <!--                    <img src="/blog/1.webp" class="img-responsive">-->
-                        <!--                </div>-->
-                        <div class="card-header">
-                            <div class="card-title h5">背景音乐</div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary">选择</button>
-                        </div>
+                </div>
+                <div class="popover popover-bottom">
+                    <button class="btn btn-primary">背景音乐</button>
+                    <div class="popover-container">
+                        <input class="form-input" type="text" id="input-example-1" placeholder="粘贴音乐链接到这">
                     </div>
-                    <div class="card">
-                        <!--                <div class="card-image">-->
-                        <!--                    <img src="/blog/1.webp" class="img-responsive">-->
-                        <!--                </div>-->
-                        <div class="card-header">
-                            <div class="card-title h5">附件</div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary">上传</button>
+                </div>
+                <div class="popover popover-bottom">
+                    <button class="btn btn-primary">附件</button>
+                    <div class="popover-container">
+                        <div class="card">
+                            <div class="card-header">
+                                ...
+                            </div>
+                            <div class="card-body">
+                                ...
+                            </div>
+                            <div class="card-footer">
+                                ...
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -119,6 +111,33 @@
         target: document.getElementById('mdedit'),
         props: {
             value: content[0]||"",
+            uploadImages: async (files) => {
+                const formData = new FormData();
+                formData.append("image", files[0]);
+                // console.log(files)
+                try {
+                    const response = await fetch("/admin/uploadImage", {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Failed to upload image");
+                    }
+
+                    const data = await response.json();
+                    return [
+                        {
+                            url: data.url,
+                            alt: data.alt,
+                            title: data.title,
+                        },
+                    ];
+                } catch (error) {
+                    console.error("Error uploading image:", error);
+                    return [];
+                }
+            },
             plugins:[
                 bytemdPluginMermaid(),
                 bytemdPluginMediumZoom(),
@@ -126,8 +145,10 @@
                 bytemdPluginHighlight(),
                 bytemdPluginHighlightSsr(),
                 bytemdPluginMath(),
-            ]
+            ],
+
         },
+
     })
     editor.$on('change', (e) => {
         editor.$set({value: e.detail.value})

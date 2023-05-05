@@ -1,22 +1,22 @@
 {{template "admin-header.template" }}
 <div id="smoe-root">
     <div id="main">
-        <div class="tab-bar">
-            <div class="btn-group btn-group-block">
-                <button class="btn btn-primary">文章</button>
-                <button class="btn btn-primary">页面</button>
-                <button class="btn btn-primary">评论</button>
-                <button class="btn btn-primary">文件</button>
-            </div>
-            <div class="btn-group btn-group-block">
-                <button class="btn">可用</button>
-                <button class="btn">待审核</button>
-                <button class="btn">草稿</button>
-            </div>
+        <div class="navbar">
+            <section class="navbar-section">
+                <a href="/admin/manage-posts" class="btn btn-link">文章</a>
+                <a href="/admin/manage-pages" class="btn btn-link">页面</a>
+                <a href="/admin/manage-comments" class="btn btn-link">评论</a>
+                <a href="/admin/manage-medias" class="btn btn-link">文件</a>
+            </section>
+            <section class="navbar-section">
+                <a href="?status=publish" class="btn btn-link">可用</a>
+                <a href="?status=waiting" class="btn btn-link">待审核</a>
+                <a href="?status=draft" class="btn btn-link">草稿</a>
+            </section>
         </div>
 
 
-        <div class="list-operate">
+        <div class="navbar">
             <label class="checkbox">
                 <div class="dropdown">
                     <div class="btn-group">选中项<i class="icon icon-caret"></i></a>

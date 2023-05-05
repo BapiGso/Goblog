@@ -1,15 +1,10 @@
 <div class="comment-wrap">
     <div class="comment-respond" id="respond-post-150">
-        <form action="https://smoe.cc/archives/150/comment" class="comment-form" id="commentform" method="post">
-            <h2 class="comment-reply-title" id="reply-title">
-                发表评论
-                <small><a href="https://smoe.cc/archives/150/#respond-post-150" id="cancel-comment-reply-link"
-                          onclick="return TypechoComment.cancelReply();" rel="nofollow"
-                          style="display:none">取消回复</a></small>
-            </h2>
+        <form action="" class="comment-form" id="commentform" method="post" name="commentform">
+            <h2 class="comment-reply-title" id="reply-title">发表评论</h2>
             <label for="textarea">评论</label>
             <textarea cols="45" id="textarea" maxlength="65525" name="text" required="required" rows="8"></textarea>
-            <label for="author">姓名<span class="required">*</span></label>
+            <label for="author">昵称<span class="required">*</span></label>
             <input id="author" maxlength="245" name="author" required="required" size="30" type="text" value="">
             <label for="mail">电子邮件<span class="required">*</span></label>
             <input aria-describedby="email-notes" id="mail" maxlength="100" name="mail" required="required" size="30" type="text"
@@ -17,7 +12,7 @@
             <label for="url">站点</label>
             <input id="url" maxlength="200" name="url" size="30" type="text" value="">
             <input class="submit" data-empty-comment="必须填写评论内容" data-init="提交评论" data-now="刚刚" data-posted="评论提交成功"
-                   data-posting="提交评论中..." id="submit" type="submit" value="发表评论">
+                   data-posting="提交评论中..." id="submit" type="submit" value="发表评论" onsubmit="return save();">
         </form>
     </div>
 
@@ -31,12 +26,12 @@
                 <div class="comment-body" id="div-comment-68">
                     <img alt="{{.Author}}" class="avatar" src="https://gravatar.loli.net/avatar/{{.MD5Mail}}?s=40&amp;r=G&amp;d=identicon" width="40">
                     <div class="comment-meta">
-                        <cite class="fn"><a href="{{.Url}}" rel="external nofollow">{{.Author}}</a></cite>
+                        <cite class="fn {{if (eq .AuthorId 1)}}master{{end}}">
+                            <a href="{{.Url.String}}" rel="external nofollow">{{.Author}}</a>
+                        </cite>
                         <span>{{.UnixFormat}}</span>
                     </div>
-                    <div class="reply">
-                        <a href="https://smoe.cc/archives/150/comment-page-1?replyTo=68#respond-post-150" onclick="return TypechoComment.reply('comment-68', 68);" rel="nofollow">回复</a>
-                    </div>
+                    <span onclick="CommentReply()" rel="nofollow">回复</span>
                 </div>
                 <div class="comment-content"><p>{{.Text}}</p></div>
             </li>
@@ -46,3 +41,16 @@
     </div>
     {{end}}
 </div>
+<script>
+    const commentForm = document.forms.commentform
+    commentForm.action=new URL(window.location.href).pathname + "/comment"
+
+    function CommentReply(){
+        // 获取当前点击的按钮
+        const replyButton = event.target;
+        // 获取按钮的父节点的父节点
+        const grandParentNode = replyButton.parentNode.parentNode;
+        // 将表单插入到按钮的父节点的父节点后面
+        grandParentNode.insertAdjacentElement("afterend", commentForm);
+    }
+</script>

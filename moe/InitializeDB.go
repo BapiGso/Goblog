@@ -14,12 +14,12 @@ func (s *Smoe) InitializeDatabase() {
 			log.Fatalf("连接数据库失败，请检查读写权限%v\n", err)
 		}
 	}
-
+	log.Println("You are not using mysql parameter,using sqlite mode")
 	s.Db, err = sqlx.Connect("sqlite", "usr/smoe.db")
 	if err != nil {
 		log.Fatalf("创建数据库失败，请检查读写权限%v\n", err)
 	}
-
+	log.Println("Successfully connected to the database")
 	//读取sql文件创建表
 	sqlTable, err := s.ThemeFS.ReadFile("smoe.sql")
 	if err != nil {

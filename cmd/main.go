@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/BapiGso/SMOE/moe"
+	"smoe/moe"
 )
 
 func main() {

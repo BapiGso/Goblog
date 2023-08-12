@@ -1,14 +1,14 @@
 package moe
 
 import (
-	"github.com/BapiGso/SMOE/moe/admin"
-	"github.com/BapiGso/SMOE/moe/blog"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"io"
 	"net/http"
+	"smoe/moe/admin"
+	"smoe/moe/blog"
 	"text/template"
 )
 

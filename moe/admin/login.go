@@ -3,11 +3,11 @@ package admin
 import (
 	"crypto/sha1"
 	"encoding/hex"
-	"github.com/BapiGso/SMOE/moe/query"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"smoe/moe/query"
 )
 
 type loginReq struct {

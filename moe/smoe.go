@@ -13,12 +13,12 @@ import (
 
 type (
 	Smoe struct {
-		CommandLineArgs *BindFlag          //命令行参数
-		Db              *sqlx.DB           //数据库
-		ThemeFS         *embed.FS          //主题所在文件夹
-		MDParse         *goldmark.Markdown //markdown->html解析器
-		e               *echo.Echo         //后台框架
-		Main            *mail.Email        //邮件提醒
+		Param   *BindFlag          //命令行参数
+		Db      *sqlx.DB           //数据库
+		ThemeFS *embed.FS          //主题所在文件夹
+		MDParse *goldmark.Markdown //markdown->html解析器
+		e       *echo.Echo         //后台框架
+		Mail    *mail.Email        //邮件提醒
 		//异地多活
 		//图片压缩webp
 	}

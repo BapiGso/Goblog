@@ -1,2 +1,5 @@
-/usr/smoe.db
-./.idea
+# 排除用户数据
+usr
+
+#
+.idea

@@ -12,7 +12,7 @@ type BindFlag struct {
 }
 
 func (s *Smoe) BindFlag() {
-	s.CommandLineArgs = &BindFlag{
+	s.Param = &BindFlag{
 		Domain:  flag.String("d", "", "绑定域名，用于申请ssl证书"),
 		Port:    flag.String("p", "80", "运行端口，默认80"),
 		SslPort: flag.String("tlsp", "", "tls运行端口，默认不开启"),

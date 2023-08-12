@@ -28,9 +28,16 @@ func (s *Smoe) Listen() {
 		log.Fatal(server.ListenAndServeTLS("", ""))
 	}
 	if *s.CommandLineArgs.SslPort != "" {
+		if err := http.ListenAndServeTLS(":"+*s.CommandLineArgs.SslPort, *s.CommandLineArgs.SslCert, *s.CommandLineArgs.SslKey, s.e); err != nil {
+			log.Fatal(err)
+		} else {
+			log.Printf(banner, "=> https server started on :"+*s.CommandLineArgs.SslPort)
+		}
 		log.Printf(banner, "=> https server started on :"+*s.CommandLineArgs.SslPort)
-		log.Fatal(http.ListenAndServeTLS(":"+*s.CommandLineArgs.SslPort, *s.CommandLineArgs.SslCert, *s.CommandLineArgs.SslKey, s.e))
 	}
-	log.Printf(banner, "=> http server started on :"+*s.CommandLineArgs.Port)
-	log.Fatal(http.ListenAndServe(":"+*s.CommandLineArgs.Port, s.e))
+	if err := http.ListenAndServe(":"+*s.CommandLineArgs.Port, s.e); err != nil {
+		log.Fatal(err)
+	} else {
+		log.Printf(banner, "=> http server started on :"+*s.CommandLineArgs.Port)
+	}
 }

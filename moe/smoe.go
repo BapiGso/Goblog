@@ -1,10 +1,9 @@
 package moe
 
 import (
-	"embed"
 	"SMOE/moe/mail"
+	"embed"
 	"github.com/jmoiron/sqlx"
-	"github.com/labstack/echo/v4"
 	"smoe/assets"
 	_ "smoe/moe/database"
 	"text/template"
@@ -20,6 +19,7 @@ type (
 		Mail *mail.Email //邮件提醒
 		//异地多活
 		//图片压缩webp
+
 	}
 
 	TemplateRender struct {

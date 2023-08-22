@@ -3,7 +3,6 @@ module smoe
 go 1.20
 
 require (
-	github.com/BapiGso/SMOE/assets v0.0.0-20230505133740-43d30ecaada5
 	github.com/BapiGso/SMOE/moe v0.0.0-20230505133740-43d30ecaada5
 	github.com/alexsergivan/blog-examples/authentication v0.0.0-20221115100652-08b68b210058
 	github.com/aziis98/goldmark-latex v0.0.0-20220412232851-e4525c017227

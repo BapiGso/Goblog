@@ -1,7 +1,7 @@
 ﻿SMOE
 ===
 
-![Smoe](assets/screenshot.png)
+![smoe](assets/screenshot.png)
 
 ![Go version](https://img.shields.io/github/go-mod/go-version/bapigso/smoe)
 ![WP version](https://img.shields.io/badge/license-GPL-blue)

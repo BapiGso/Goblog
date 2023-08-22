@@ -1,24 +1,33 @@
 package blog
 
 import (
-	"github.com/BapiGso/SMOE/moe/query"
-	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"smoe/moe/database"
 )
 
 func Post(c echo.Context) error {
-	db := c.Get("db").(*sqlx.DB)
+	qpu := database.NewQPU()
+	defer qpu.Free()
 	cid, _ := isNum(c.Param("cid"))
-	data := struct {
-		Post     query.Contents
-		TestPost query.Contents
-		Comms    [][]query.Comments
-	}{
-		query.PostWithCid(db, cid),
-		query.TestQueryPostWithCid(db, cid),
-		sortComms(query.CommentsWithCid(db, cid)),
+	//data := struct {
+	//	Post     query.Contents
+	//	TestPost query.Contents
+	//	Comms    [][]query.Comments
+	//}{
+	//	query.GetPostWithCid(db, cid),
+	//	query.TestQueryPostWithCid(db, cid),
+	//	sortComms(query.CommentsWithCid(db, cid)),
+	//}
+	err := qpu.GetPostWithCid(cid)
+	if err != nil {
+		return err
 	}
+	err = qpu.CommentsWithCid(cid)
+	if err != nil {
+		return err
+	}
+
 	//fmt.Println(data.Post)
-	return c.Render(http.StatusOK, "post.template", data)
+	return c.Render(http.StatusOK, "post.template", nil)
 }

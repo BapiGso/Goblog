@@ -1,4 +1,4 @@
-package query
+package database
 
 import "github.com/jmoiron/sqlx"
 

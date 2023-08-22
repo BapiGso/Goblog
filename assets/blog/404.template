@@ -2,7 +2,7 @@
 <html lang="zh-CN" class="">
 <head>
     <title>晓梦 | 页面未找到</title>
-    <link rel="stylesheet" href="/blog/css/Diaspora.css">
+    <link rel="stylesheet" href="/assets/blog/css/Diaspora.css">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="<?php $this->options->charset(); ?>">
     <meta name="apple-mobile-web-app-capable" content="yes" />

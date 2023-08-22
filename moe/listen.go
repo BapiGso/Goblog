@@ -9,11 +9,11 @@ import (
 )
 
 func (s *Smoe) Listen() {
-	if *s.CommandLineArgs.Domain != "" {
+	if *s.Param.Domain != "" {
 		autoTLSManager := autocert.Manager{
 			Prompt:     autocert.AcceptTOS,
 			Cache:      autocert.DirCache("user"),
-			HostPolicy: autocert.HostWhitelist("smoe.cc", *s.CommandLineArgs.Domain),
+			HostPolicy: autocert.HostWhitelist("smoe.cc", *s.Param.Domain),
 		}
 		server := http.Server{
 			Addr:    ":443",
@@ -27,17 +27,17 @@ func (s *Smoe) Listen() {
 		go log.Fatal(http.ListenAndServe(":80", autoTLSManager.HTTPHandler(s.e)))
 		log.Fatal(server.ListenAndServeTLS("", ""))
 	}
-	if *s.CommandLineArgs.SslPort != "" {
-		if err := http.ListenAndServeTLS(":"+*s.CommandLineArgs.SslPort, *s.CommandLineArgs.SslCert, *s.CommandLineArgs.SslKey, s.e); err != nil {
+	if *s.Param.SslPort != "" {
+		if err := http.ListenAndServeTLS(":"+*s.Param.SslPort, *s.Param.SslCert, *s.Param.SslKey, s.e); err != nil {
 			log.Fatal(err)
 		} else {
-			log.Printf(banner, "=> https server started on :"+*s.CommandLineArgs.SslPort)
+			log.Printf(banner, "=> https server started on :"+*s.Param.SslPort)
 		}
-		log.Printf(banner, "=> https server started on :"+*s.CommandLineArgs.SslPort)
+		log.Printf(banner, "=> https server started on :"+*s.Param.SslPort)
 	}
-	if err := http.ListenAndServe(":"+*s.CommandLineArgs.Port, s.e); err != nil {
+	if err := http.ListenAndServe(":"+*s.Param.Port, s.e); err != nil {
 		log.Fatal(err)
 	} else {
-		log.Printf(banner, "=> http server started on :"+*s.CommandLineArgs.Port)
+		log.Printf(banner, "=> http server started on :"+*s.Param.Port)
 	}
 }

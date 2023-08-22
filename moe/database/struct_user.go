@@ -1,4 +1,4 @@
-package query
+package database
 
 // 内存对齐 https://geektutu.com/post/hpg-struct-alignment.html
 type User struct {

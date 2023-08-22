@@ -43,15 +43,16 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 		RedirectCode: http.StatusMovedPermanently,
 	}))
 	//自定义404
+
 	s.e.HTTPErrorHandler = blog.FrontErr //自定义404
 
 	s.e.Use(attachDB(s.Db))
 	// 前台页面路由
-	s.e.StaticFS("/", s.ThemeFS) // 静态文件路由，指向主题的文件系统，例如CSS，图片等静态资源
-	s.e.Static("/usr/uploads", "/usr/uploads")
-	s.e.GET("/", blog.BlogIndex)                         // 首页路由
-	s.e.GET("/page/:num", blog.BlogIndex)                // 分页路由，显示指定页数的文章列表
-	s.e.POST("/page/:num", blog.BlogIndexAjax)           // 分页路由，通过异步请求更新指定页数的文章列表
+	s.e.StaticFS("/assets", s.ThemeFS)                   // 静态文件路由，指向主题的文件系统，例如CSS，图片等静态资源
+	s.e.Static("/usr/uploads", "/usr/uploads")           //用户上传的文件
+	s.e.GET("/", blog.Index)                             // 首页路由
+	s.e.GET("/page/:num", blog.Index)                    // 分页路由，显示指定页数的文章列表
+	s.e.POST("/page/:num", blog.IndexAjax)               // 分页路由，通过异步请求更新指定页数的文章列表
 	s.e.GET("/archives", blog.Archive)                   // 归档页面路由，显示所有文章的归档分类
 	s.e.GET("/archives/:cid", blog.Post)                 // 根据分类ID显示该分类下的文章列表
 	s.e.POST("/archives/:cid/comment", blog.CommentPost) // 管理评论提交

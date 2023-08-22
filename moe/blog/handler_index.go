@@ -1,44 +1,37 @@
 package blog
 
 import (
-	"github.com/BapiGso/SMOE/moe/query"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"smoe/moe/database"
 )
 
-// FrontIndex TODO 加载更多、ajax
-func BlogIndex(c echo.Context) error {
+// Index TODO 加载更多、ajax
+func Index(c echo.Context) error {
 	//判断页数查数据库
-	db := c.Get("db").(*sqlx.DB)
+	qpu := database.NewQPU()
 	PageNum, err := isNum(c.Param("num"))
 	if err != nil {
-		return c.JSON(http.StatusForbidden, err)
+		return err
 	}
-	data := struct {
-		PageArr     []query.Contents
-		PostArr     []query.Contents
-		NextPageNum int
-	}{
-		query.PageArr(db),
-		query.PostArr(db, "publish", 5, PageNum),
-		query.NextPageNum(db, "publish", 5, PageNum),
+	err = qpu.GetPages()
+	if err != nil {
+		return err
 	}
-	return c.Render(http.StatusOK, "index.template", data)
+	err = qpu.GetPosts("publish", 5, PageNum)
+	if err != nil {
+		return err
+	}
+	return c.Render(http.StatusOK, "index.template", qpu)
 }
 
-func BlogIndexAjax(c echo.Context) error {
-	db := c.Get("db").(*sqlx.DB)
-	PageNum, err := isNum(c.Param("num"))
+func IndexAjax(c echo.Context) error {
+	_ = c.Get("db").(*sqlx.DB)
+	_, err := isNum(c.Param("num"))
 	if err != nil {
 		return c.JSON(http.StatusForbidden, err)
 	}
-	data := struct {
-		PostArr     []query.Contents
-		NextPageNum int
-	}{
-		query.PostArr(db, "publish", 5, PageNum),
-		query.NextPageNum(db, "publish", 5, PageNum),
-	}
-	return c.Render(http.StatusOK, "index-primary_ajax.template", data)
+
+	return c.Render(http.StatusOK, "index-primary_ajax.template", nil)
 }

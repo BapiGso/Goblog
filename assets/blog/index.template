@@ -9,7 +9,7 @@
             </li>
             {{ end }}
         </ul>
-        <p>&copy; 2020 <a href="/">晓梦</a>. Power By <a rel="external nofollow" href="https://github.com/BapiGso/smoe">Smoe</a>.
+        <p>&copy; 2020 <a href="/">晓梦</a>. Power By <a rel="external nofollow" href="https://github.com/BapiGso/smoe">smoe</a>.
             Theme <a href="https://github.com/LoeiFy/Diaspora">Diaspora</a>.
         </p>
     </div>
@@ -19,11 +19,11 @@
         <div id="primary">
             {{- template "index-primary.template" .PostArr -}}
         </div>
-        {{if (ne .NextPageNum 0)}}
+
         <div id="pager">
-            <a href="/page/{{.NextPageNum}}" data-url="/page/{{.NextPageNum}}" class="more">加载更多</a>
+            <a href="/page/" data-url="/page/" class="more">加载更多</a>
         </div>
-        {{end}}
+
     </div>
 
     <div id="preview" class="trans"></div>

@@ -1,4 +1,4 @@
-package query
+package database
 
 import (
 	"bytes"
@@ -56,9 +56,9 @@ func (c Contents) MD2HTML() string {
 	return buf.String()
 }
 
-// MDSub 截取前95字符串作为摘要
+// MDSub 截取前95个字符串作为摘要
 func (c Contents) MDSub() string {
-	text := string(c.Text)
+	text := *(*string)(unsafe.Pointer(&c.Text))
 	length := len([]rune(text))
 
 	if length <= 70 {
@@ -87,17 +87,12 @@ func (c Contents) UnixFormat() string {
 }
 
 // Bytes2String 两者指向的相同的内存，改一个另外一个也会变。
-// 效率是string([]byte{})的百倍以上，且转换量越大效率优势越明显。
-func (c Contents) Bytes2String(b []byte) string {
+func (c Contents) Bytes2String() string {
 	return *(*string)(unsafe.Pointer(&c.Text))
 }
 
-// String2Bytes 直接转换底层指针，两者指向的相同的内存，改一个另外一个也会变。
-// 效率是string([]byte{})的百倍以上，且转换量越大效率优势越明显。
-// 转换之后若没做其他操作直接改变里面的字符，则程序会崩溃。
-// 如 b:=String2bytes("xxx"); b[1]='d'; 程序将panic。
+// String2Bytes https://github.com/kubernetes/apiserver/blob/706a6d89cf35950281e095bb1eeed5e3211d6272/pkg/authentication/token/cache/cached_token_authenticator.go#L263-L271
 func String2Bytes(s string) []byte {
-	x := (*[2]uintptr)(unsafe.Pointer(&s))
-	h := [3]uintptr{x[0], x[1], x[1]}
-	return *(*[]byte)(unsafe.Pointer(&h))
+
+	return *(*[]byte)(unsafe.Pointer(&s))
 }

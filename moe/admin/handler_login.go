@@ -1,13 +1,11 @@
 package admin
 
 import (
-	"crypto/sha1"
-	"encoding/hex"
-	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
-	"smoe/moe/query"
+	"smoe/moe/database"
 )
 
 type loginReq struct {
@@ -25,34 +23,31 @@ func LoginGet(c echo.Context) error {
 }
 
 func LoginPost(c echo.Context) error {
-	db := c.Get("db").(*sqlx.DB)
+	qpu := database.NewQPU()
+	defer qpu.Free()
 	req := new(loginReq)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(400, err)
+		return err
 	}
 	sess, err := session.Get("smoeSession", c)
 	if err != nil {
-		return c.JSON(400, err)
+		return err
 	}
-	user, err := query.UserWithName(db, req.Name)
+	err = qpu.UserWithName(req.Name)
 	if err != nil {
-		return c.JSON(400, err)
+		return err
 	}
-	if user.Password == hash(req.Pwd+user.AuthCode) {
+	//计算提交表单的密码与盐 scrypt和数据库中密码是否一致
+	if err != nil {
+		return err
+	}
+	if err := bcrypt.CompareHashAndPassword([]byte(qpu.UserInfo.Password), []byte(req.Pwd)); err == nil {
 		sess.Values["isLogin"] = true
+	} else {
+		return err
 	}
+
 	//TODO 发邮件提醒和防爆破
 	_ = sess.Save(c.Request(), c.Response())
 	return c.Redirect(302, "/admin")
-}
-
-// hash 计算字符串sha1
-func hash(input string) string {
-	h := sha1.New() // md5加密类似md5.New()
-	//写入要处理的字节。如果是一个字符串，需要使用[]byte(s) 来强制转换成字节数组。
-	h.Write([]byte(input))
-	bs := h.Sum(nil)
-	h.Reset()
-	passwdhash := hex.EncodeToString(bs)
-	return passwdhash
 }

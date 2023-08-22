@@ -2,23 +2,22 @@ package moe
 
 import (
 	"embed"
-	"github.com/BapiGso/SMOE/assets"
-	"github.com/BapiGso/SMOE/moe/mail"
-	"github.com/BapiGso/SMOE/moe/mdparse"
+	"SMOE/moe/mail"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
-	"github.com/yuin/goldmark"
+	"smoe/assets"
+	_ "smoe/moe/database"
 	"text/template"
 )
 
 type (
 	Smoe struct {
-		Param   *BindFlag          //命令行参数
-		Db      *sqlx.DB           //数据库
-		ThemeFS *embed.FS          //主题所在文件夹
-		MDParse *goldmark.Markdown //markdown->html解析器
-		e       *echo.Echo         //后台框架
-		Mail    *mail.Email        //邮件提醒
+		Param   *BindFlag //命令行参数
+		Db      *sqlx.DB  //数据库
+		ThemeFS *embed.FS //主题所在文件夹
+		//mdParse *goldmark.Markdown //markdown->html解析器
+		e    *echo.Echo  //后台框架
+		Mail *mail.Email //邮件提醒
 		//异地多活
 		//图片压缩webp
 	}
@@ -45,7 +44,6 @@ ____________________________________O/_______
 func New() (s *Smoe) {
 	s = &Smoe{}
 	s.ThemeFS = &assets.Assets
-	s.MDParse = &mdparse.Goldmark
 	s.e = echo.New()
 	return s
 }

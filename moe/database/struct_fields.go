@@ -1,4 +1,4 @@
-package query
+package database
 
 type Fields struct {
 	Cid        int     `db:"cid"`

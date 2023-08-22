@@ -18,7 +18,7 @@ func isNum(numstr string) (int, error) {
 }
 
 func sortComms(data []query.Comments) [][]query.Comments {
-	final := [][]query.Comments{}
+	var final [][]query.Comments
 	parentMap := make(map[uint32]int)
 	for _, v := range data {
 		//父评论新建一个组，因为按时间排序肯定比子评论先

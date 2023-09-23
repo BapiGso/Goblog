@@ -1,4 +1,4 @@
-package jwt
+package customw
 
 import (
 	"github.com/alexsergivan/blog-examples/authentication/user"

@@ -9,9 +9,10 @@ type BindFlag struct {
 	SslCert *string
 	SslKey  *string
 	DbConf  *string
+	logLvl  *string
 }
 
-func (s *Smoe) BindFlag() {
+func (s *Smoe) Bind() {
 	s.Param = &BindFlag{
 		Domain:  flag.String("d", "", "绑定域名，用于申请ssl证书"),
 		Port:    flag.String("p", "80", "运行端口，默认80"),

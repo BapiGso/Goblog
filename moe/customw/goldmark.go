@@ -1,4 +1,4 @@
-package mdparse
+package customw
 
 import (
 	latex "github.com/aziis98/goldmark-latex"
@@ -11,7 +11,7 @@ import (
 	"go.abhg.dev/goldmark/mermaid"
 )
 
-var Goldmark = goldmark.New(
+var GoldMark = goldmark.New(
 	goldmark.WithExtensions(
 		extension.GFM,
 		mathjax.MathJax,

@@ -265,7 +265,7 @@
             <h1>WELCOME</h1>
             <p>SMOE!</p>
             <div class="img-box">
-                <img src="/new-admin/img/waoku.webp" alt="">
+                <img src="/assets/new-admin/img/waoku.webp" alt="">
             </div>
         </div>
         <!-- 注册盒子 -->
@@ -315,12 +315,12 @@
                     // 获取到滑动盒子的dom元素并修改它的背景颜色
                     prebox.style.backgroundColor ='#c9e0ed'
                     //修改图片的路径
-                    img.setAttribute("src","/new-admin/img/wuwu.webp")
+                    img.setAttribute("src","/assets/new-admin/img/wuwu.webp")
                 }
                 else {
                     prebox.style.transform='translateX(0%)'
                     prebox.style.backgroundColor ='#ded4ed'
-                    img.setAttribute("src","/new-admin/img/waoku.webp")
+                    img.setAttribute("src","/assets/new-admin/img/waoku.webp")
                 }
                 flag=!flag
              }

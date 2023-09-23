@@ -1,15 +1,16 @@
 package admin
 
 import (
+	"SMOE/moe/database"
 	"fmt"
-	"github.com/BapiGso/SMOE/moe/query"
-	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
+
+	"github.com/jmoiron/sqlx"
 	"net/http"
 )
 
 func WritePost(c echo.Context) error {
-	db := c.Get("db").(*sqlx.DB)
+	//db := c.Get("db").(*sqlx.DB)
 	req := new(Param)
 	if err := c.Bind(req); err != nil {
 		return c.String(http.StatusBadRequest, "参数Param错误")
@@ -18,9 +19,9 @@ func WritePost(c echo.Context) error {
 	//	return c.Render(200, "write-post.template", nil)
 	//}
 	data := struct {
-		Post query.Contents
+		Post database.Contents
 	}{
-		query.PostWithCid(db, req.Cid),
+		//database.PostWithCid(db, req.Cid),
 	}
 	fmt.Println(req, data)
 	return c.Render(200, "write-post.template", data)
@@ -28,15 +29,15 @@ func WritePost(c echo.Context) error {
 }
 
 func WritePage(c echo.Context) error {
-	db := c.Get("db").(*sqlx.DB)
+	_ = c.Get("db").(*sqlx.DB)
 	req := new(Param)
 	if err := c.Bind(req); err != nil {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
 	data := struct {
-		Page query.Contents
+		Page database.Contents
 	}{
-		query.PageWithCid(db, req.Cid),
+		//database.PageWithCid(db, req.Cid),
 	}
 	return c.Render(200, "write-page.template", data)
 }

@@ -186,6 +186,8 @@ audio {
     flex-direction: column;
 }
 
+
+
 #mark {
     position: absolute;
     width   : 100vw;
@@ -478,6 +480,7 @@ body.touch #top {
 
 .components{
     width: 100%;
+    height: 100%;
     position: absolute;
     display      : flex;
     align-items  : center;

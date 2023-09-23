@@ -1,11 +1,11 @@
 package admin
 
 import (
+	"SMOE/moe/database"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
-	"smoe/moe/database"
 )
 
 type loginReq struct {

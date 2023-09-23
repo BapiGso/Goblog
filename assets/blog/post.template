@@ -1,47 +1,42 @@
 {{template "header.template"  }}
 <body class="loading">
 <div id="loader"></div>
-<div class="nav">
-    <p>&copy; 2020 <a href="/">晓梦</a>. Power By <a href="https://github.com/BapiGso/smoe"
-                                                   rel="external nofollow">smoe</a>.
-        Theme <a href="https://github.com/LoeiFy/Diaspora">Diaspora</a>.
-    <p>
-</div>
 
-{{with .Post}}
-<div data-id="{{.Cid}}" id="single">
-    <div id="top">
-        <div class="components">
-            <a class="logo-min" href="javascript:history.back()"></a>
-            <button class="icon-play" data-id="{{.Cid}}" title="播放/暂停">
-                <svg viewBox="0 0 50 50">
-                    <path class="left"/>
-                    <path class="right"/>
+<header id="top">
+    <nav class="components">
+        <a class="logo-min" href="javascript:history.back()"></a>
+        <button class="icon-play" data-id="" title="播放/暂停">
+            <svg viewBox="0 0 50 50">
+                <path class="left"/>
+                <path class="right"/>
+            </svg>
+        </button>
+        <h3 class="subtitle"></h3>
+        <div class="like-icon">
+            <a class="likeThis" href="javascript:" id="like-">
+                <span class="icon-like"></span>
+            </a>
+        </div>
+        <div>
+            <button class="icon-night">
+                <svg  width="32" height="32" viewBox="0 0 120 120">
+                    <path class="line line4"/>
                 </svg>
             </button>
-            <h3 class="subtitle">{{.Title}}</h3>
-            <div class="like-icon">
-                <a class="likeThis" href="javascript:" id="like-{{.Cid}}">
-                    <span class="icon-like"></span>
-                </a>
-            </div>
-            <div>
-                <button class="icon-night">
-                    <svg  width="32" height="32" viewBox="0 0 120 120">
-                        <path class="line line4"/>
-                    </svg>
-                </button>
-                <div id="qr">
-                </div>
+            <div id="qr">
             </div>
         </div>
-        <div class="bar">
-            <div class="scrollbar"></div>
-            <div class="playbackbar"></div>
-        </div>
+    </nav>
+    <div class="bar">
+        <div class="scrollbar"></div>
+        <div class="playbackbar"></div>
     </div>
+</header>
 
-    <div class="section" style="left: 0;">
+{{range .PostArr}}
+<div data-id="{{.Cid}}" id="single">
+
+    <div class="section">
         <!--<div class="images"></div>-->
         <div class="article">
             <h1 class="title">{{.Title}}</h1>
@@ -54,14 +49,15 @@
             <div class="content">
                 {{.MD2HTML}}
             </div>
-            {{end}}
-            {{template "comment.template" .Comms }}
+            {{template "comment.template" $.SortComments}}
         </div>
     </div>
     <audio id="audio-166-1" preload="auto" controls="controls">
-        <source type="audio/mpeg" src="https://music.163.com/song/media/outer/url?id=26085473.mp3">
+        <source type="audio/mpeg" src="{{.GetMusicList}}">
     </audio>
 </div>
+{{end}}
+
 {{template "footer.template"}}
 <script type="text/javascript">
     (function () {

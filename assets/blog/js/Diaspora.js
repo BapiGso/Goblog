@@ -378,9 +378,9 @@ $(function () {
             $('.scrollbar').width((50 + st) / ct * 100 + '%')
 
             if (st > 80 && window.innerWidth > 800) {
-                $('.subtitle').fadeIn()
+                //$('.subtitle').fadeIn()
             } else {
-                $('.subtitle').fadeOut()
+                //$('.subtitle').fadeOut()
             }
         }
     })
@@ -471,13 +471,13 @@ $(function () {
 
             // audio play
             case (tag.indexOf('icon-play') != -1):
-                $('#audio-' + $('.icon-play').data('id') + '-1')[0].play()
+                document.getElementsByTagName("audio")[0].play()
                 $('.icon-play').removeClass('icon-play').addClass('icon-pause')
                 break;
 
             // audio pause
             case (tag.indexOf('icon-pause') != -1):
-                $('#audio-' + $('.icon-pause').data('id') + '-1')[0].pause()
+                document.getElementsByTagName("audio")[0].pause()
                 $('.icon-pause').removeClass('icon-pause').addClass('icon-play')
                 break;
 

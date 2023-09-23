@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"github.com/BapiGso/SMOE/moe/query"
+	"SMOE/moe/database"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -14,9 +14,9 @@ func LogAccess(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
 	data := struct {
-		AccessArr []query.Access
+		AccessArr []database.Access
 	}{
-		query.AccessArr(db, 10, req.Page),
+		database.AccessArr(db, 10, req.Page),
 	}
 	return c.Render(200, "log-access.template", data)
 }

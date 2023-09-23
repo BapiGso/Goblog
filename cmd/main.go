@@ -1,13 +1,13 @@
 package main
 
 import (
-	"smoe/moe"
+	"SMOE/moe"
 )
 
 func main() {
 	s := moe.New()
-	s.BindFlag()
-	s.InitializeDatabase()
+	s.Bind()
+	s.Init()
 	s.LoadMiddlewareRoutes()
 	s.Listen()
 }

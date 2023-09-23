@@ -16,7 +16,6 @@
         </form>
     </div>
 
-    {{with .}}
     <div class="comments-area" id="comments">
         <h2>评论列表</h2>
         {{range .}}
@@ -39,7 +38,6 @@
         </ol>
         {{end}}
     </div>
-    {{end}}
 </div>
 <script>
     const commentForm = document.forms.commentform

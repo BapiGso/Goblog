@@ -1,7 +1,7 @@
 {{range slice . 1}}
     <div class="post">
         <a data-id="{{ .Cid }}" href="/archives/{{.Cid}}" title="{{.Title}}">
-            <img src="/usr/uploads/推门2.png" alt="illustration">
+            <img src="{{.GetCoverList}}" alt="illustration">
         </a>
         <div class="else">
             <p>{{ .UnixToStr }}</p>

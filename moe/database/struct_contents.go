@@ -1,9 +1,10 @@
 package database
 
 import (
+	"SMOE/moe/customw"
 	"bytes"
 	"database/sql"
-	"github.com/BapiGso/SMOE/moe/mdparse"
+	"log/slog"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -32,27 +33,10 @@ type Contents struct {
 	Likes        uint32         `db:"likes"`
 }
 
-var (
-	mon = map[string]string{
-		"01": "一月",
-		"02": "二月",
-		"03": "三月",
-		"04": "四月",
-		"05": "五月",
-		"06": "六月",
-		"07": "七月",
-		"08": "八月",
-		"09": "九月",
-		"10": "十月",
-		"11": "十一月",
-		"12": "十二月",
-	}
-)
-
 // MD2HTML markdown转换为html
 func (c Contents) MD2HTML() string {
 	var buf bytes.Buffer
-	_ = mdparse.Goldmark.Convert(c.Text, &buf)
+	_ = customw.GoldMark.Convert(c.Text, &buf)
 	return buf.String()
 }
 
@@ -60,11 +44,9 @@ func (c Contents) MD2HTML() string {
 func (c Contents) MDSub() string {
 	text := *(*string)(unsafe.Pointer(&c.Text))
 	length := len([]rune(text))
-
 	if length <= 70 {
 		return text
 	}
-
 	r := string([]rune(text)[:70])
 	return r
 }
@@ -76,8 +58,10 @@ func (c Contents) MDCount() int {
 }
 
 func (c Contents) UnixToStr() string {
+	monStr := [...]string{"", "一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"}
+	mon := int((time.Unix(c.Created, 0)).Month())
 	format := (time.Unix(c.Created, 0)).Format("01 02, 2006")
-	tmp := strings.Replace(format, format[:2], mon[format[:2]], 1)
+	tmp := strings.Replace(format, format[:2], monStr[mon], 1)
 	return tmp
 }
 
@@ -93,6 +77,28 @@ func (c Contents) Bytes2String() string {
 
 // String2Bytes https://github.com/kubernetes/apiserver/blob/706a6d89cf35950281e095bb1eeed5e3211d6272/pkg/authentication/token/cache/cached_token_authenticator.go#L263-L271
 func String2Bytes(s string) []byte {
-
 	return *(*[]byte)(unsafe.Pointer(&s))
+}
+
+func (c Contents) GetMusicList() string {
+	var data string
+	err := db.Get(&data, `
+		SELECT str_value FROM  typecho_fields 
+		WHERE cid=? and name='bgMusicList'`, c.Cid)
+	if err != nil {
+		slog.Error(err.Error())
+	}
+	return data
+}
+
+// GetCoverList TODO 数据库无数据时随机添加一个封面
+func (c Contents) GetCoverList() string {
+	var data string
+	err := db.Get(&data, `
+		SELECT str_value FROM  typecho_fields 
+		WHERE cid=? and name='coverList'`, c.Cid)
+	if err != nil {
+		slog.Error(err.Error())
+	}
+	return data
 }

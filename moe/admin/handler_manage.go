@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"github.com/BapiGso/SMOE/moe/query"
+	"SMOE/moe/database"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -16,25 +16,25 @@ type Param struct {
 }
 
 func ManagePost(c echo.Context) error {
-	db := c.Get("db").(*sqlx.DB)
+	_ = c.Get("db").(*sqlx.DB)
 	req := new(Param)
 	if err := c.Bind(req); err != nil {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
 	data := struct {
-		PostArr []query.Contents
+		PostArr []database.Contents
 	}{
-		query.PostArr(db, req.Status, 10, req.Page),
+		//database.PostArr(db, req.Status, 10, req.Page),
 	}
 	return c.Render(200, "manage-posts.template", data)
 }
 
 func ManagePage(c echo.Context) error {
-	db := c.Get("db").(*sqlx.DB)
+	_ = c.Get("db").(*sqlx.DB)
 	data := struct {
-		PageArr []query.Contents
+		PageArr []database.Contents
 	}{
-		query.PageArr(db),
+		//database.PageArr(db),
 	}
 
 	return c.Render(200, "manage-pages.template", data)
@@ -48,9 +48,9 @@ func ManageComment(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
 	data := struct {
-		CommArr []query.CommsWithTitleMix
+		CommArr []database.CommsWithTitleMix
 	}{
-		query.CommsWithTitle(db, req.CommStatus, 5, req.Page),
+		database.CommsWithTitle(db, req.CommStatus, 5, req.Page),
 	}
 	return c.Render(200, "manage-comments.template", data)
 }
@@ -62,9 +62,9 @@ func ManageMedia(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
 	data := struct {
-		MediaArr []query.MediasWithTitleMix
+		MediaArr []database.MediasWithTitleMix
 	}{
-		query.MediasWithTitle(db, 10, req.Page),
+		database.MediasWithTitle(db, 10, req.Page),
 	}
 	return c.Render(200, "manage-medias.template", data)
 }

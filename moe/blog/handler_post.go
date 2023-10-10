@@ -9,8 +9,11 @@ import (
 func Post(c echo.Context) error {
 	qpu := database.NewQPU()
 	defer qpu.Free()
-	cid, _ := isNum(c.Param("cid"))
-	err := qpu.GetPostWithCid(cid)
+	cid, err := validateNum(c.Param("cid"))
+	if err != nil {
+		return err
+	}
+	err = qpu.GetPostWithCid(cid)
 	if err != nil {
 		return err
 	}

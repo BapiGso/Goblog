@@ -15,7 +15,9 @@ var GoldMark = goldmark.New(
 	goldmark.WithExtensions(
 		extension.GFM,
 		mathjax.MathJax,
-		&mermaid.Extender{},
+		&mermaid.Extender{
+			MermaidJS: "/assets/blog/js/mermaid.js", //自定义js静态资源路径
+		},
 		latex.NewLatex(),
 		highlighting.NewHighlighting(
 			highlighting.WithStyle("github")),

@@ -4,8 +4,6 @@ import (
 	"SMOE/moe/database"
 	"fmt"
 	"github.com/labstack/echo/v4"
-
-	"github.com/jmoiron/sqlx"
 	"net/http"
 )
 
@@ -29,15 +27,15 @@ func WritePost(c echo.Context) error {
 }
 
 func WritePage(c echo.Context) error {
-	_ = c.Get("db").(*sqlx.DB)
 	req := new(Param)
 	if err := c.Bind(req); err != nil {
 		return c.String(http.StatusBadRequest, "参数Param错误")
 	}
-	data := struct {
-		Page database.Contents
-	}{
-		//database.PageWithCid(db, req.Cid),
+	qpu := database.NewQPU()
+	err := qpu.GetPageWithCid(req.Cid)
+	if err != nil {
+		return err
 	}
-	return c.Render(200, "write-page.template", data)
+
+	return c.Render(200, "write-page.template", qpu)
 }

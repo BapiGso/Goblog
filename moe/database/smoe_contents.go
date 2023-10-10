@@ -39,12 +39,23 @@ func (s *QPU) GetPosts(status string, limit, pageNum int) error {
 	return err
 }
 
+// GetPage  根据条件查询单独页面
+func (s *QPU) GetPage(p string) error {
+	err := db.Select(&s.PageArr, `
+		SELECT * FROM  typecho_contents 
+		WHERE type='page' AND slug = ?`, p)
+	if len(s.PageArr) == 0 {
+		return errors.New("not found")
+	}
+	return err
+}
+
 // GetPages  根据条件查询多条页面
 func (s *QPU) GetPages() error {
 	err := db.Select(&s.PageArr, `
 		SELECT * FROM  typecho_contents 
 		WHERE type='page'
-		ORDER BY 'order' `)
+		ORDER BY "order" `)
 	return err
 }
 

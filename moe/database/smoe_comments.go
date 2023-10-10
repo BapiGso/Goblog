@@ -1,5 +1,7 @@
 package database
 
+import "database/sql"
+
 // CommentsWithCid 根据文章cid查询该文章的评论
 func (s *QPU) CommentsWithCid(cid int) error {
 	err := db.Select(&s.CommArr, `SELECT * FROM  typecho_comments 
@@ -25,16 +27,34 @@ func (s *QPU) SortComments() [][]Comments {
 			parentMap[v.Coid] = index
 		}
 	}
-
 	return final
-
 }
 
-func InsertComment() error {
+// InsertComment todo
+func InsertComment(data map[string]any) error {
+	arg := Comments{
+		Coid:     0,
+		Cid:      0,
+		OwnerId:  0,
+		Parent:   0,
+		Created:  0,
+		Author:   "",
+		Mail:     "",
+		Ip:       "",
+		Agent:    "",
+		Text:     "",
+		Type:     "",
+		Status:   "",
+		AuthorId: 0,
+		Url:      sql.NullString{},
+	}
 	tx, err := db.Beginx()
 	if err != nil {
 		return err
 	}
-	tx.Exec(``)
+	_, err = tx.NamedExec(`INSERT `, arg)
+	if err != nil {
+		return err
+	}
 	return nil
 }

@@ -1,4 +1,4 @@
-{{template "header.template" .Title}}
+{{template "header.template" }}
     <body>
     <div id="loader"></div>
     <div class="nav">
@@ -12,16 +12,17 @@
         <div id="top">
             <a class="image-icon" href="javascript:history.back()"></a>
         </div>
-
+        {{range .PageArr}}
         <div class="section" style="left: 0;">
             <div class="article">
                 <div>
                     <div class="content">
-                        {{.Text2HTML}}
+                        {{.MD2HTML}}
                     </div>
                 </div>
             </div>
         </div>
+        {{end}}
     </div>
     {{template "footer.template"}}
     </body>

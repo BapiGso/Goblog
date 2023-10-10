@@ -19,13 +19,13 @@ type QPU struct {
 
 // Free 清空s结构体存储的data，然后返还到池中
 // todo 记得清空数据，因为sqlx的select方法是append，而不是clear后scan
-func (s *QPU) Free() {
+func (q *QPU) Free() {
 	//clear(s.PostArr)
-	ss.Put(s)
+	qpuPool.Put(q)
 }
 
 // qpu对象池
-var ss = sync.Pool{
+var qpuPool = sync.Pool{
 	New: func() any {
 		return new(QPU)
 	},
@@ -33,6 +33,7 @@ var ss = sync.Pool{
 
 // NewQPU 创建新的query progress unit
 func NewQPU() *QPU {
-	p := ss.Get().(*QPU)
-	return p
+	q := qpuPool.Get().(*QPU)
+	qpuPool.Put(q)
+	return q
 }

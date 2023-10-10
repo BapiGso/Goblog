@@ -2,38 +2,42 @@
 <html lang="zh-CN" class="">
 <head>
     <title>晓梦 | 页面未找到</title>
-    <link rel="stylesheet" href="/assets/blog/css/Diaspora.css">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="<?php $this->options->charset(); ?>">
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="google" content="notranslate" />
-    <meta name="theme-color" content="#9370DB"/>
-    <head>
+    <meta charset="UTF-8">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="notranslate" name="google"/>
+    <meta content="遁隐缥缈霞云, 就此声销迹灭" name="description"/>
+    <meta content="smoe.cc,晓梦,曉夢" name="keywords"/>
+    <meta name="theme-color" content="#9370DB">
+    <link href="/assets/blog/css/Diaspora.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/assets/favicon.ico">
+    <link rel="alternate" type="application/rss+xml" title="晓梦 &raquo; RSS 2.0" href="/feed/" />
+    <link rel="alternate" type="application/rdf+xml" title="晓梦 &raquo; RSS 1.0" href="/feed/rss/" />
+    <link rel="alternate" type="application/atom+xml" title="晓梦 &raquo; ATOM 1.0" href="/feed/atom/" />
+</head>
 <body class="">
-<div id="single" class="page">
+    <header id="top">
+        <nav class="components">
+            <a class="logo-min" href="javascript:history.back()"></a>
 
-    <div id="top">
-        <a class="image-icon" href="javascript:history.back()"></a>
-    </div>
 
-    <div class="section">
-        <div class="images">
-        </div><div class="article">
-        <div>
-            <div class="content">
-                <h1>404 Not Found</h1>
-                <p>The page you were looking for is no longer available.</p>
-                <p>{{ with .}}{{.}}{{ end }}</p>
+        </nav>
+        <div class="bar">
+        </div>
+    </header>
+    <div id="single" class="page">
+        <div class="section">
+            <div class="article">
+            <div>
+                <div class="content">
+                    <h1>404 Not Found</h1>
+                    <p>The page you were looking for is no longer available.</p>
+                    <p>{{ with .}}{{.}}{{ end }}</p>
+                </div>
+            </div>
             </div>
         </div>
     </div>
-    </div>
-
-</div>
 </body>
 </html>

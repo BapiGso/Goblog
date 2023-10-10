@@ -3,9 +3,8 @@ module SMOE
 go 1.21.0
 
 require (
-	github.com/alexsergivan/blog-examples/authentication v0.0.0-20221115100652-08b68b210058
+	github.com/andybalholm/brotli v1.0.5
 	github.com/aziis98/goldmark-latex v0.0.0-20220412232851-e4525c017227
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-playground/validator/v10 v10.15.4
 	github.com/google/uuid v1.3.1
 	github.com/gorilla/sessions v1.2.1

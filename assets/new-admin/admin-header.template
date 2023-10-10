@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>白玉楼外</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.ico">
+    <title>はくぎょくろう</title>
     <style>
         body{
             margin: 0;

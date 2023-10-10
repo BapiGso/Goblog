@@ -5,8 +5,8 @@ import (
 	"strconv"
 )
 
-// isNum 首页返回1，不是数字返回err调用404，其他为对应页数
-func isNum(numStr string) (int, error) {
+// validateNum 首页返回1，不是数字返回err调用404，其他为对应页数
+func validateNum(numStr string) (int, error) {
 	if numStr == "" {
 		return 1, nil
 	}

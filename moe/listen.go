@@ -2,18 +2,19 @@ package moe
 
 import (
 	"crypto/tls"
+	"fmt"
 	"golang.org/x/crypto/acme"
 	"golang.org/x/crypto/acme/autocert"
-	"log"
 	"net/http"
 )
 
 func (s *Smoe) Listen() {
-	if *s.Param.Domain != "" {
+
+	if *s.param.Domain != "" {
 		autoTLSManager := autocert.Manager{
 			Prompt:     autocert.AcceptTOS,
 			Cache:      autocert.DirCache("user"),
-			HostPolicy: autocert.HostWhitelist("smoe.cc", *s.Param.Domain),
+			HostPolicy: autocert.HostWhitelist("smoe.cc", *s.param.Domain),
 		}
 		server := http.Server{
 			Addr:    ":443",
@@ -23,21 +24,15 @@ func (s *Smoe) Listen() {
 				NextProtos:     []string{acme.ALPNProto},
 			},
 		}
-
-		go log.Fatal(http.ListenAndServe(":80", autoTLSManager.HTTPHandler(s.e)))
-		log.Fatal(server.ListenAndServeTLS("", ""))
+		go http.ListenAndServe(":80", autoTLSManager.HTTPHandler(s.e))
+		go server.ListenAndServeTLS("", "")
+		fmt.Printf(banner, "=> http server started on : 80\n")
+		fmt.Printf(banner, "=> https server started on : 443\n")
 	}
-	if *s.Param.SslPort != "" {
-		if err := http.ListenAndServeTLS(":"+*s.Param.SslPort, *s.Param.SslCert, *s.Param.SslKey, s.e); err != nil {
-			log.Fatal(err)
-		} else {
-			log.Printf(banner, "=> https server started on :"+*s.Param.SslPort)
-		}
-		log.Printf(banner, "=> https server started on :"+*s.Param.SslPort)
+	if *s.param.SslPort != "" {
+		go http.ListenAndServeTLS(":"+*s.param.SslPort, *s.param.SslCert, *s.param.SslKey, s.e)
+		fmt.Printf(banner, "=> https server started on :"+*s.param.SslPort)
 	}
-	if err := http.ListenAndServe(":"+*s.Param.Port, s.e); err != nil {
-		log.Fatal(err)
-	} else {
-		log.Printf(banner, "=> http server started on :"+*s.Param.Port)
-	}
+	http.ListenAndServe(":"+*s.param.Port, s.e)
+	fmt.Printf(banner, "=> http server started on :"+*s.param.Port)
 }

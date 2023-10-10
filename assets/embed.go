@@ -4,5 +4,7 @@ import (
 	"embed"
 )
 
-//go:embed *
-var Assets embed.FS
+var (
+	//go:embed *
+	Assets embed.FS
+)

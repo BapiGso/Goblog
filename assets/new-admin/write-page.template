@@ -104,7 +104,7 @@
 <script>
 
     let content=[]
-    {{with .Page}}
+    {{with .PageArr}}
     content=[{{- printf "%q," .Text -}}]
     {{end}}
     const editor = new bytemd.Editor({

@@ -8,12 +8,6 @@ import (
 	"net/http"
 )
 
-type loginReq struct {
-	Name     string `xml:"user"  form:"user" `
-	Pwd      string `xml:"pwd" form:"pwd" `
-	Illsions string `xml:"illsions"  form:"illsions" `
-}
-
 func LoginGet(c echo.Context) error {
 	sess, _ := session.Get("smoeSession", c)
 	if sess.Values["isLogin"] == true {
@@ -25,7 +19,11 @@ func LoginGet(c echo.Context) error {
 func LoginPost(c echo.Context) error {
 	qpu := database.NewQPU()
 	defer qpu.Free()
-	req := new(loginReq)
+	req := struct {
+		Name     string `xml:"user"  form:"user" `
+		Pwd      string `xml:"pwd" form:"pwd" `
+		Illsions string `xml:"illsions"  form:"illsions" `
+	}{}
 	if err := c.Bind(req); err != nil {
 		return err
 	}

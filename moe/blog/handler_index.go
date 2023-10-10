@@ -12,7 +12,11 @@ func Index(c echo.Context) error {
 	//判断页数查数据库
 	qpu := database.NewQPU()
 	defer qpu.Free()
-	PageNum, err := isNum(c.Param("num"))
+	//_, err := session.Get("smoeSession", c)
+	//if err != nil {
+	//	return err
+	//}
+	PageNum, err := validateNum(c.Param("num"))
 	if err != nil {
 		return err
 	}
@@ -29,7 +33,7 @@ func Index(c echo.Context) error {
 
 func IndexAjax(c echo.Context) error {
 	_ = c.Get("db").(*sqlx.DB)
-	_, err := isNum(c.Param("num"))
+	_, err := validateNum(c.Param("num"))
 	if err != nil {
 		return c.JSON(http.StatusForbidden, err)
 	}

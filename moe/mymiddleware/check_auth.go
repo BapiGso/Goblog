@@ -1,4 +1,4 @@
-package customw
+package mymiddleware
 
 import (
 	"github.com/labstack/echo-contrib/session"
@@ -20,13 +20,6 @@ func CheckAuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		if sess.Values["isLogin"] != true {
 			return c.Redirect(http.StatusFound, "/admin")
 		}
-		return next(c)
-	}
-}
-
-func test(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-
 		return next(c)
 	}
 }

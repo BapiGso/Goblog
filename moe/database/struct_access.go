@@ -26,7 +26,7 @@ type Access struct {
 	Time             int64   `db:"time"`
 	ContentID        *int64  `db:"content_id"`
 	MetaID           *int64  `db:"meta_id"`
-	Robot            int8    `db:"robot"`
+	Robot            int     `db:"robot"`
 	RobotID          string  `db:"robot_id"`
 	RobotVersion     string  `db:"robot_version"`
 }

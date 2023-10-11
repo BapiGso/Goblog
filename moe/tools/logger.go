@@ -1,4 +1,4 @@
-package customw
+package tools
 
 import (
 	"log/slog"

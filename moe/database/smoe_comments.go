@@ -1,18 +1,18 @@
 package database
 
 // CommentsWithCid 根据文章cid查询该文章的评论
-func (s *QPU) CommentsWithCid(cid int) error {
-	err := db.Select(&s.CommArr, `SELECT * FROM  typecho_comments 
+func (q *QPU) CommentsWithCid(cid int) error {
+	err := db.Select(&q.CommArr, `SELECT * FROM  typecho_comments 
 		WHERE cid=?
 		ORDER BY created`, cid)
 	return err
 }
 
 // SortComments 排序评论
-func (s *QPU) SortComments() [][]Comments {
+func (q *QPU) SortComments() [][]Comments {
 	var final [][]Comments
-	parentMap := make(map[uint32]int)
-	for _, v := range s.CommArr {
+	parentMap := make(map[uint]int)
+	for _, v := range q.CommArr {
 		//父评论新建一个组，因为按时间排序肯定比子评论先
 		if v.Parent == 0 {
 			//初始化tmp的同时就把v加入切片

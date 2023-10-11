@@ -1,8 +1,8 @@
 package moe
 
 import (
-	"SMOE/moe/customw"
 	"SMOE/moe/handler"
+	"SMOE/moe/mymiddleware"
 	"fmt"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
@@ -15,8 +15,8 @@ import (
 )
 
 func (s *Smoe) LoadMiddlewareRoutes() {
-	s.e.Validator = &customw.Validator{}
-	s.e.Renderer = &customw.TemplateRender{
+	s.e.Validator = &mymiddleware.Validator{}
+	s.e.Renderer = &mymiddleware.TemplateRender{
 		Template: template.Must(template.ParseFS(s.themeFS, "*/*.template")),
 	}
 
@@ -53,7 +53,7 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 		},
 		Level: 3,
 	}))
-	s.e.Use(customw.BrotliWithConfig(customw.BrotliConfig{
+	s.e.Use(mymiddleware.BrotliWithConfig(mymiddleware.BrotliConfig{
 		Level: 0,
 	}))
 
@@ -86,7 +86,7 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 	// 后台管理
 	// 后台管理的路由组
 	back.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))    // 使用 session 中间件
-	back.Use(customw.CheckAuthMiddleware)                                      // 用户登录验证中间件
+	back.Use(mymiddleware.CheckAuthMiddleware)                                 // 用户登录验证中间件
 	back.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(10))) //每秒10次请求
 	// 后台管理页面路由
 	back.GET("", handler.LoginGet)                      // 后台管理登录页面路由

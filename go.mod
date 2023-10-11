@@ -13,6 +13,7 @@ require (
 	github.com/labstack/echo/v4 v4.11.1
 	github.com/labstack/gommon v0.4.0
 	github.com/litao91/goldmark-mathjax v0.0.0-20210217064022-a43cf739a50f
+	github.com/mdigger/goldmark-toc v0.0.0-20191225162753-7bc0e0d778c3
 	github.com/yuin/goldmark v1.5.6
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	go.abhg.dev/goldmark/mermaid v0.4.0
@@ -30,10 +31,12 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
+	github.com/gosimple/slug v1.9.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
+	github.com/rainycape/unidecode v0.0.0-20150907023854-cb7f23ec59be // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect

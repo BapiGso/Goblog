@@ -9,6 +9,8 @@ import (
 // SubmitArticleComment todo 工作量证明
 func SubmitArticleComment(c echo.Context) error {
 	req := struct {
+		Coid   string `xml:"coid"     form:"coid" validate:"required"`
+		Cid    string `xml:"cid"      form:"cid" validate:"required"`
 		Author string `xml:"author"   form:"author" validate:"required,min=1,max=200"`
 		Mail   string `xml:"mail"     form:"mail" validate:"email,required,min=1,max=200"`
 		Text   string `xml:"text"     form:"text" validate:"required,min=1,max=1000"`

@@ -1,4 +1,4 @@
-package customw
+package mymiddleware
 
 import (
 	"github.com/labstack/echo/v4"

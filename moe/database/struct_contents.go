@@ -1,7 +1,7 @@
 package database
 
 import (
-	"SMOE/moe/customw"
+	"SMOE/moe/tools"
 	"bytes"
 	"log/slog"
 	"strings"
@@ -17,25 +17,25 @@ type Contents struct {
 	Created      int64   `db:"created"`
 	Modified     int64   `db:"modified"`
 	Text         []byte  `db:"text"`
-	Order        uint8   `db:"order"`
-	AuthorId     uint8   `db:"authorId"`
+	Order        uint    `db:"order"`
+	AuthorId     uint    `db:"authorId"`
 	Template     *string `db:"template"`
 	Type         string  `db:"type"`
 	Status       string  `db:"status"`
 	Password     *string `db:"password"`
-	AllowComment uint8   `db:"allowComment"`
-	AllowPing    uint8   `db:"allowPing"`
-	AllowFeed    uint8   `db:"allowFeed"`
-	CommentsNum  uint16  `db:"commentsNum"`
-	Parent       uint16  `db:"parent"`
-	Views        uint16  `db:"views"`
-	Likes        uint32  `db:"likes"`
+	AllowComment uint    `db:"allowComment"`
+	AllowPing    uint    `db:"allowPing"`
+	AllowFeed    uint    `db:"allowFeed"`
+	CommentsNum  uint    `db:"commentsNum"`
+	Parent       uint    `db:"parent"`
+	Views        uint    `db:"views"`
+	Likes        uint    `db:"likes"`
 }
 
 // MD2HTML markdown转换为html
 func (c Contents) MD2HTML() string {
 	var buf bytes.Buffer
-	_ = customw.GoldMark.Convert(c.Text, &buf)
+	_ = tools.GoldMark.Convert(c.Text, &buf)
 	return buf.String()
 }
 

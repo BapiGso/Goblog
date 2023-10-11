@@ -8,9 +8,9 @@ type User struct {
 	Mail       string  `db:"mail"`
 	Url        *string `db:"url"`
 	ScreenName string  `db:"screenName"`
-	Created    int64   `db:"created"`
-	Activated  int64   `db:"activated"`
-	Logged     int64   `db:"logged"`
+	Created    int     `db:"created"`
+	Activated  int     `db:"activated"`
+	Logged     int     `db:"logged"`
 	Group      string  `db:"group"`
 	AuthCode   string  `db:"authCode"`
 }

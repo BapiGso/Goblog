@@ -1,4 +1,4 @@
-package customw
+package mymiddleware
 
 import (
 	"github.com/go-playground/validator/v10"

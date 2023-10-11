@@ -7,10 +7,10 @@ import (
 )
 
 type Comments struct {
-	Coid     uint32  `db:"coid"     form:"coid"`
-	Cid      uint32  `db:"cid"      form:"cid"`
-	OwnerId  uint32  `db:"ownerId"  form:"ownerId"`
-	Parent   uint32  `db:"parent"   form:"parent"`
+	Coid     uint    `db:"coid"     form:"coid"`
+	Cid      uint    `db:"cid"      form:"cid"`
+	OwnerId  uint    `db:"ownerId"  form:"ownerId"`
+	Parent   uint    `db:"parent"   form:"parent"`
 	Created  int64   `db:"created"  form:"created"`
 	Author   string  `db:"author"   form:"author"`
 	Mail     string  `db:"mail"     form:"mail"`
@@ -19,7 +19,7 @@ type Comments struct {
 	Text     string  `db:"text"     form:"text"`
 	Type     string  `db:"type"     form:"type"`
 	Status   string  `db:"status"   form:"status"`
-	AuthorId uint8   `db:"authorId" form:"authorId"`
+	AuthorId uint    `db:"authorId" form:"authorId"`
 	Url      *string `db:"url"      form:"url"` //用*string代替可能为null的值
 }
 

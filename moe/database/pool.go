@@ -17,7 +17,7 @@ type QPU struct {
 
 // Free 清空s结构体存储的data，然后返还到池中
 // todo 记得清空数据，因为sqlx的select方法是append，而不是clear后scan
-func (q *QPU) Free() func() {
+func (q *QPU) Free() {
 	//clear(s.PostArr)
 
 	qpuPool.Put(q)

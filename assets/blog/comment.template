@@ -26,7 +26,7 @@
                     <img alt="{{.Author}}" class="avatar" src="https://gravatar.loli.net/avatar/{{.MD5Mail}}?s=40&amp;r=G&amp;d=identicon" width="40">
                     <div class="comment-meta">
                         <cite class="fn {{if (eq .AuthorId 1)}}master{{end}}">
-                            <a href="{{.Url.String}}" rel="external nofollow">{{.Author}}</a>
+                            <a href="{{.Url}}" rel="external nofollow">{{.Author}}</a>
                         </cite>
                         <span>{{.UnixFormat}}</span>
                     </div>

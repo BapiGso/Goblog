@@ -1,4 +1,4 @@
-package admin
+package handler
 
 import (
 	"fmt"

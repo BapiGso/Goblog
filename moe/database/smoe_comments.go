@@ -1,7 +1,5 @@
 package database
 
-import "database/sql"
-
 // CommentsWithCid 根据文章cid查询该文章的评论
 func (s *QPU) CommentsWithCid(cid int) error {
 	err := db.Select(&s.CommArr, `SELECT * FROM  typecho_comments 
@@ -32,22 +30,7 @@ func (s *QPU) SortComments() [][]Comments {
 
 // InsertComment todo
 func InsertComment(data map[string]any) error {
-	arg := Comments{
-		Coid:     0,
-		Cid:      0,
-		OwnerId:  0,
-		Parent:   0,
-		Created:  0,
-		Author:   "",
-		Mail:     "",
-		Ip:       "",
-		Agent:    "",
-		Text:     "",
-		Type:     "",
-		Status:   "",
-		AuthorId: 0,
-		Url:      sql.NullString{},
-	}
+	arg := Comments{}
 	tx, err := db.Beginx()
 	if err != nil {
 		return err

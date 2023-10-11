@@ -3,13 +3,12 @@ package customw
 import (
 	"bufio"
 	"github.com/andybalholm/brotli"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"io"
 	"net"
 	"net/http"
 	"strings"
-
-	"github.com/labstack/echo/v4"
 )
 
 type (

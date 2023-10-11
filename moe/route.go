@@ -1,9 +1,8 @@
 package moe
 
 import (
-	"SMOE/moe/admin"
-	"SMOE/moe/blog"
 	"SMOE/moe/customw"
+	"SMOE/moe/handler"
 	"fmt"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
@@ -66,23 +65,23 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 	}))
 
 	//自定义404
-	s.e.HTTPErrorHandler = blog.FrontErr //自定义404
+	s.e.HTTPErrorHandler = handler.FrontErr //自定义404
 
 	front := s.e.Group("")
 	back := s.e.Group("/admin")
 	// 前台页面路由
 
-	front.GET("/", blog.Index)          // 首页路由
-	front.GET("/page/:num", blog.Index) // 分页路由，显示指定页数的文章列表
+	front.GET("/", handler.Index)          // 首页路由
+	front.GET("/page/:num", handler.Index) // 分页路由，显示指定页数的文章列表
 	//todo 不跟据请求方法，根据req header是否有x request
-	front.POST("/page/:num", blog.IndexAjax)                        // 分页路由，通过异步请求更新指定页数的文章列表
-	front.GET("/archives/:cid", blog.Post)                          // 根据分类ID显示该分类下的文章列表
-	front.POST("/archives/:cid/comment", blog.SubmitArticleComment) // 管理评论提交
-	front.GET("/:page", blog.Page)                                  //独立页面，注册在特殊独立页面前
-	front.GET("/archives", blog.Archive)                            // 归档页面路由，显示所有文章的归档分类
-	front.GET("/bangumi", blog.Bangumi)                             // 显示番剧相关信息的页面路由
-	front.Static("/usr/uploads", "/usr/uploads")                    //用户上传的文件，最后注册
-	front.StaticFS("/assets", s.themeFS)                            // 静态文件路由,最后注册
+	front.POST("/page/:num", handler.IndexAjax)                        // 分页路由，通过异步请求更新指定页数的文章列表
+	front.GET("/archives/:cid", handler.Post)                          // 根据分类ID显示该分类下的文章列表
+	front.POST("/archives/:cid/comment", handler.SubmitArticleComment) // 管理评论提交
+	front.GET("/:page", handler.Page)                                  //独立页面，注册在特殊独立页面前
+	front.GET("/archives", handler.Archive)                            // 归档页面路由，显示所有文章的归档分类
+	front.GET("/bangumi", handler.Bangumi)                             // 显示番剧相关信息的页面路由
+	front.Static("/usr/uploads", "/usr/uploads")                       //用户上传的文件，最后注册
+	front.StaticFS("/assets", s.themeFS)                               // 静态文件路由,最后注册
 
 	// 后台管理
 	// 后台管理的路由组
@@ -90,19 +89,19 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 	back.Use(customw.CheckAuthMiddleware)                                      // 用户登录验证中间件
 	back.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(10))) //每秒10次请求
 	// 后台管理页面路由
-	back.GET("", admin.LoginGet)                      // 后台管理登录页面路由
-	back.POST("", admin.LoginPost)                    // 后台管理登录处理路由
-	back.GET("/manage-posts", admin.ManagePost)       // 显示文章管理界面的路由
-	back.GET("/manage-pages", admin.ManagePage)       // 显示页面管理界面的路由
-	back.GET("/manage-comments", admin.ManageComment) // 显示评论管理界面的路由
-	back.GET("/manage-medias", admin.ManageMedia)     // 显示媒体管理界面的路由
-	back.GET("/write-post", admin.WritePost)          // 显示添加文章页面的路由
-	back.GET("/write-page", admin.WritePage)          // 显示添加页面页面的路由
-	back.GET("/test", admin.Test)                     // 显示文章管理界面的路由
-	back.GET("/log-access", admin.LogAccess)
-	back.GET("/setting", admin.Setting)
+	back.GET("", handler.LoginGet)                      // 后台管理登录页面路由
+	back.POST("", handler.LoginPost)                    // 后台管理登录处理路由
+	back.GET("/manage-posts", handler.ManagePost)       // 显示文章管理界面的路由
+	back.GET("/manage-pages", handler.ManagePage)       // 显示页面管理界面的路由
+	back.GET("/manage-comments", handler.ManageComment) // 显示评论管理界面的路由
+	back.GET("/manage-medias", handler.ManageMedia)     // 显示媒体管理界面的路由
+	back.GET("/write-post", handler.WritePost)          // 显示添加文章页面的路由
+	back.GET("/write-page", handler.WritePage)          // 显示添加页面页面的路由
+	back.GET("/test", handler.Test)                     // 显示文章管理界面的路由
+	back.GET("/log-access", handler.LogAccess)
+	back.GET("/setting", handler.Setting)
 
 	// 文件上传路由
-	back.POST("/uploadImage", admin.UploadImage) // 处理图片上传请求的路由
-	back.GET("/uploadtest", admin.UploadTest)    // 文件上传测试路由，用于测试文件上传服务是否正常
+	back.POST("/uploadImage", handler.UploadImage) // 处理图片上传请求的路由
+	back.GET("/uploadtest", handler.UploadTest)    // 文件上传测试路由，用于测试文件上传服务是否正常
 }

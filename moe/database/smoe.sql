@@ -1,3 +1,4 @@
+--数据库到底需不需要null值
 CREATE TABLE typecho_comments ( "coid" INTEGER NOT NULL PRIMARY KEY,
                                 "cid" int(10) default '0' ,
                                 "created" int(10) default '0' ,
@@ -87,3 +88,5 @@ CREATE TABLE typecho_users ( "uid" INTEGER NOT NULL PRIMARY KEY,
 
 CREATE UNIQUE INDEX typecho_users_name ON typecho_users ("name");
 CREATE UNIQUE INDEX typecho_users_mail ON typecho_users ("mail");
+
+-- todo access

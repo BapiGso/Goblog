@@ -3,7 +3,6 @@ package database
 import (
 	"SMOE/moe/customw"
 	"bytes"
-	"database/sql"
 	"log/slog"
 	"strings"
 	"time"
@@ -12,25 +11,25 @@ import (
 )
 
 type Contents struct {
-	Cid          int            `db:"cid"`
-	Title        string         `db:"title"`
-	Slug         string         `db:"slug"`
-	Created      int64          `db:"created"`
-	Modified     int64          `db:"modified"`
-	Text         []byte         `db:"text"`
-	Order        uint8          `db:"order"`
-	AuthorId     uint8          `db:"authorId"`
-	Template     sql.NullString `db:"template"`
-	Type         string         `db:"type"`
-	Status       string         `db:"status"`
-	Password     sql.NullString `db:"password"`
-	AllowComment uint8          `db:"allowComment"`
-	AllowPing    uint8          `db:"allowPing"`
-	AllowFeed    uint8          `db:"allowFeed"`
-	CommentsNum  uint16         `db:"commentsNum"`
-	Parent       uint16         `db:"parent"`
-	Views        uint16         `db:"views"`
-	Likes        uint32         `db:"likes"`
+	Cid          int     `db:"cid"`
+	Title        string  `db:"title"` //用*string代替可能为null的值
+	Slug         string  `db:"slug"`
+	Created      int64   `db:"created"`
+	Modified     int64   `db:"modified"`
+	Text         []byte  `db:"text"`
+	Order        uint8   `db:"order"`
+	AuthorId     uint8   `db:"authorId"`
+	Template     *string `db:"template"`
+	Type         string  `db:"type"`
+	Status       string  `db:"status"`
+	Password     *string `db:"password"`
+	AllowComment uint8   `db:"allowComment"`
+	AllowPing    uint8   `db:"allowPing"`
+	AllowFeed    uint8   `db:"allowFeed"`
+	CommentsNum  uint16  `db:"commentsNum"`
+	Parent       uint16  `db:"parent"`
+	Views        uint16  `db:"views"`
+	Likes        uint32  `db:"likes"`
 }
 
 // MD2HTML markdown转换为html

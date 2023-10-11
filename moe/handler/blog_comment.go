@@ -1,8 +1,7 @@
-package blog
+package handler
 
 import (
 	"SMOE/moe/database"
-	"encoding/json"
 	"github.com/labstack/echo/v4"
 	"strings"
 )
@@ -24,16 +23,8 @@ func SubmitArticleComment(c echo.Context) error {
 	if !strings.HasPrefix(c.Request().Referer(), c.Request().Header.Get("Origin")+"/archives/"+c.Param("cid")) {
 		return echo.NewHTTPError(400, "请从评论区提交评论")
 	}
-	b, err := json.Marshal(&req)
-	if err != nil {
-		return err
-	}
-	m := make(map[string]any)
-	err = json.Unmarshal(b, &m)
-	if err != nil {
-		return err
-	}
-	if err = database.InsertComment(m); err != nil {
+	reqMap := struct2map(req)
+	if err := database.InsertComment(reqMap); err != nil {
 		return err
 	}
 	return c.JSON(200, "success")

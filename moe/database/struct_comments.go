@@ -2,26 +2,25 @@ package database
 
 import (
 	"crypto/md5"
-	"database/sql"
 	"fmt"
 	"time"
 )
 
 type Comments struct {
-	Coid     uint32         `db:"coid"     form:"coid"`
-	Cid      uint32         `db:"cid"      form:"cid"`
-	OwnerId  uint32         `db:"ownerId"  form:"ownerId"`
-	Parent   uint32         `db:"parent"   form:"parent"`
-	Created  int64          `db:"created"  form:"created"`
-	Author   string         `db:"author"   form:"author"`
-	Mail     string         `db:"mail"     form:"mail"`
-	Ip       string         `db:"ip"       form:"ip"`
-	Agent    string         `db:"agent"    form:"agent"`
-	Text     string         `db:"text"     form:"text"`
-	Type     string         `db:"type"     form:"type"`
-	Status   string         `db:"status"   form:"status"`
-	AuthorId uint8          `db:"authorId" form:"authorId"`
-	Url      sql.NullString `db:"url"      form:"url"`
+	Coid     uint32  `db:"coid"     form:"coid"`
+	Cid      uint32  `db:"cid"      form:"cid"`
+	OwnerId  uint32  `db:"ownerId"  form:"ownerId"`
+	Parent   uint32  `db:"parent"   form:"parent"`
+	Created  int64   `db:"created"  form:"created"`
+	Author   string  `db:"author"   form:"author"`
+	Mail     string  `db:"mail"     form:"mail"`
+	Ip       string  `db:"ip"       form:"ip"`
+	Agent    string  `db:"agent"    form:"agent"`
+	Text     string  `db:"text"     form:"text"`
+	Type     string  `db:"type"     form:"type"`
+	Status   string  `db:"status"   form:"status"`
+	AuthorId uint8   `db:"authorId" form:"authorId"`
+	Url      *string `db:"url"      form:"url"` //用*string代替可能为null的值
 }
 
 func (c Comments) UnixFormat() string {

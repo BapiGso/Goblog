@@ -1,59 +1,47 @@
-{{template "header.template" .Title}}
-<body class="">
+{{template "header.template" }}
+<body>
 <div id="loader"></div>
-<div class="nav">
-    <p>&copy; 2020 <a href="/">晓梦</a>. Power By <a href="https://github.com/BapiGso/smoe"
-                                                   rel="external nofollow">smoe</a>.
-        Theme <a href="https://github.com/LoeiFy/Diaspora">Diaspora</a>.
-    </p>
-</div>
 
-<div class="page" id="single">
-    <div id="top">
-        <a class="image-icon" href="javascript:history.back()"></a>
-    </div>
+<header id="top">
+    <nav class="components">
+        <a class="logo-min" href="javascript:history.back()"></a>
+    </nav>
+</header>
 
-    <div class="section" style="left: 0;">
-        <div class="article">
-            <div class="content">
-                <div class="bangumi">
-                    <h2><strong>看过</strong></h2>
+    <article class="page" >
+        <div class="content">
+            <div class="bangumi">
+                <h2><strong>看过</strong></h2>
                 <ul>
-                    {{range slice .Data 0 2}}
-                    {{range .List}}
+                {{range index .Data 2}}
+                {{with .Subject}}
+                <li>
+                    <a href="" target="_blank">
+                    <img alt="{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}{{.NameCn}}" class="cover" src="{{with .Images}}{{.Medium}}{{end}}">
+                    </a>
+                    <p>{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}</p>
+                </li>
+                {{end}}
+                {{end}}
+                </ul>
+            </div>
+            <div class="bangumi">
+                <h2><strong>想看</strong></h2>
+                <ul>
+                    {{range index .Data 1}}
                     {{with .Subject}}
                     <li>
-                        <a href="{{.URL}}" target="_blank">
-                        <img alt="{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}{{.NameCn}}" class="cover" src="{{with .Images}}{{.Medium}}{{end}}">
+                        <a href="" target="_blank">
+                        <img alt="{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}" class="cover" src="{{with .Images}}{{.Medium}}{{end}}">
                         </a>
                         <p>{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}</p>
                     </li>
                     {{end}}
                     {{end}}
-                    {{end}}
                 </ul>
-                </div>
-                <div class="bangumi">
-                    <h2><strong>在看</strong></h2>
-                    <ul>
-                        {{range slice .Data 2 3}}
-                        {{range .List}}
-                        {{with .Subject}}
-                        <li>
-                            <a href="{{.URL}}" target="_blank">
-                            <img alt="{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}" class="cover" src="{{with .Images}}{{.Medium}}{{end}}">
-                            </a>
-                            <p>{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}</p>
-                        </li>
-                        {{end}}
-                        {{end}}
-                        {{end}}
-                    </ul>
-                </div>
             </div>
         </div>
-    </div>
-</div>
+    </article>
 {{template "footer.template"}}
 </body>
 </html>

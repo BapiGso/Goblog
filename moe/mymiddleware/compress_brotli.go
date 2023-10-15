@@ -64,29 +64,28 @@ func BrotliWithConfig(config BrotliConfig) echo.MiddlewareFunc {
 				return next(c)
 			}
 
-			res := c.Response()
-			res.Header().Add(echo.HeaderVary, echo.HeaderAcceptEncoding)
+			c.Response().Header().Add(echo.HeaderVary, echo.HeaderAcceptEncoding)
 			if strings.Contains(c.Request().Header.Get(echo.HeaderAcceptEncoding), brotliScheme) {
-				res.Header().Set(echo.HeaderContentEncoding, brotliScheme) // Issue #806
-				rw := res.Writer
+				c.Response().Header().Set(echo.HeaderContentEncoding, brotliScheme) // Issue #806
+				rw := c.Response().Writer
 
 				w := brotli.NewWriterOptions(rw, brotli.WriterOptions{Quality: config.Level})
 
 				defer func() {
-					if res.Size == 0 {
-						if res.Header().Get(echo.HeaderContentEncoding) == brotliScheme {
-							res.Header().Del(echo.HeaderContentEncoding)
+					if c.Response().Size == 0 {
+						if c.Response().Header().Get(echo.HeaderContentEncoding) == brotliScheme {
+							c.Response().Header().Del(echo.HeaderContentEncoding)
 						}
 						// We have to reset response to it's pristine state when
 						// nothing is written to body or error is returned.
 						// See issue #424, #407.
-						res.Writer = rw
+						c.Response().Writer = rw
 						w.Reset(io.Discard)
 					}
 					w.Close()
 				}()
 				grw := &brotliResponseWriter{Writer: w, ResponseWriter: rw}
-				res.Writer = grw
+				c.Response().Writer = grw
 			}
 			return next(c)
 		}

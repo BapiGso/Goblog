@@ -43,6 +43,7 @@
     </div>
 </div>
 <script>
+    //todo 评论js
     // const commentForm = document.forms.commentform
     // commentForm.action=new URL(window.location.href).pathname + "/comment"
     //

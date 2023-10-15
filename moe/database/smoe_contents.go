@@ -39,7 +39,7 @@ func (q *QPU) GetPosts(status string, limit, pageNum int) error {
 	//多查一个判断是否有下一页
 	if len(q.PostArr) == 6 {
 		q.HaveNext = pageNum + 1
-		q.PostArr = q.PostArr[:5]
+		q.PostArr = q.PostArr[:len(q.PostArr)-1]
 	}
 	return err
 }

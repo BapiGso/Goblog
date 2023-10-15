@@ -4,7 +4,7 @@ package database
 func (q *QPU) GetOption(name string) (string, error) {
 	var value string
 	err := db.Get(&value, `
-		SELECT * FROM  typecho_options 
+		SELECT value FROM  typecho_options 
 		WHERE name=?`, name)
 	return value, err
 }

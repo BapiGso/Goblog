@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"SMOE/moe/database"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"time"
@@ -108,7 +109,8 @@ func QueryTime(Db *sqlx.DB) h3 {
 }
 
 func Archive(c echo.Context) error {
-	db := c.Get("db").(*sqlx.DB)
-	data := QueryTime(db)
-	return c.Render(200, "page-timeline.template", data)
+	qpu := database.NewQPU()
+	defer qpu.Free()
+	return echo.NewHTTPError(400, "")
+	return c.Render(200, "page-timeline.template", qpu)
 }

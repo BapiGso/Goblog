@@ -14,7 +14,7 @@ func (q *QPU) Media(limit, pageNum int) error {
 	return err
 }
 
-// GetPostWithCid 根据Cid查询文章
+// GetPostWithCid 根据Cid查询文章 todo 权限
 func (q *QPU) GetPostWithCid(cid int) error {
 	err := db.Select(&q.PostArr, `SELECT * FROM typecho_contents WHERE cid=? AND type='post'`, cid)
 	if len(q.PostArr) == 0 {
@@ -35,7 +35,12 @@ func (q *QPU) GetPosts(status string, limit, pageNum int) error {
 		SELECT * FROM  typecho_contents
 		WHERE type='post' AND status=?
 		ORDER BY ROWID DESC
-		LIMIT ? OFFSET ?`, status, limit, pageNum*limit-limit)
+		LIMIT ? OFFSET ?`, status, limit+1, pageNum*limit-limit)
+	//多查一个判断是否有下一页
+	if len(q.PostArr) == 6 {
+		q.HaveNext = pageNum + 1
+		q.PostArr = q.PostArr[:5]
+	}
 	return err
 }
 

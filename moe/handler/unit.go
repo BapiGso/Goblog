@@ -9,11 +9,14 @@ import (
 	"image/color"
 	"image/draw"
 	"image/jpeg"
+	"math/rand"
 	"path/filepath"
 	"reflect"
 	"strconv"
 	"time"
 )
+
+var SigningKey = []byte(strconv.Itoa(rand.Int()))
 
 // validateNum 首页返回1，不是数字返回err调用404，其他为对应页数
 func validateNum(numStr string) (int, error) {

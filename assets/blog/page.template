@@ -1,29 +1,21 @@
 {{template "header.template" }}
     <body>
     <div id="loader"></div>
-    <div class="nav">
-        <p>&copy; 2020 <a href="/">晓梦</a>. Power By <a href="https://github.com/BapiGso/smoe"
-                                                       rel="external nofollow">smoe</a>.
-            Theme <a href="https://github.com/LoeiFy/Diaspora">Diaspora</a>.
-        </p>
-    </div>
+    <header id="top">
+        <nav class="components">
+            <a class="logo-min" href="javascript:history.back()"></a>
+        </nav>
+    </header>
 
-    <div id="single" class="page">
-        <div id="top">
-            <a class="image-icon" href="javascript:history.back()"></a>
+    {{range .PageArr}}
+    <article data-id="{{.Cid}}" class="page">
+        <div class="content">
+            {{.MD2HTML}}
         </div>
-        {{range .PageArr}}
-        <div class="section" style="left: 0;">
-            <div class="article">
-                <div>
-                    <div class="content">
-                        {{.MD2HTML}}
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{end}}
-    </div>
+    </article>
+    {{end}}
+
+
     {{template "footer.template"}}
     </body>
 </html>

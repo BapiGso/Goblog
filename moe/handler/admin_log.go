@@ -2,21 +2,23 @@ package handler
 
 import (
 	"SMOE/moe/database"
-	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 func LogAccess(c echo.Context) error {
-	db := c.Get("db").(*sqlx.DB)
-	req := new(Param)
+	qpu := database.NewQPU()
+	defer qpu.Free()
+	req := &struct {
+		CommStatus string `query:"commstatus" default:"approved" `
+		Status     string `query:"status" default:"publish" `
+		Page       int    `query:"page" default:"1"`
+		Cid        int    `query:"cid" default:"1"`
+	}{}
 	if err := c.Bind(req); err != nil {
-		return c.String(http.StatusBadRequest, "参数Param错误")
+		return err
 	}
-	data := struct {
-		AccessArr []database.Access
-	}{
-		database.AccessArr(db, 10, req.Page),
+	if err := c.Validate(req); err != nil {
+		return err
 	}
-	return c.Render(200, "log-access.template", data)
+	return c.Render(200, "log-access.template", qpu)
 }

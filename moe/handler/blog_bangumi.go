@@ -77,7 +77,7 @@ type bgmCache struct {
 
 var Bgmcache = bgmCache{}
 
-// QueryBGM TODO 把这个移到query中
+// QueryBGM
 func QueryBGM(Db *sqlx.DB) string {
 	var data []byte
 	_ = Db.QueryRow(`SELECT value
@@ -100,8 +100,7 @@ func QueryBGM(Db *sqlx.DB) string {
 // Bangumi todo https://freefrontend.com/css-cards/
 func Bangumi(c echo.Context) error {
 	db := c.Get("db").(*sqlx.DB)
-	timeUnix := time.Now().Unix()
-	if timeUnix-Bgmcache.TTL > 604800 {
+	if time.Now().Unix()-Bgmcache.TTL > 604800 {
 		url := QueryBGM(db)
 		CurlBGM(url)
 	}

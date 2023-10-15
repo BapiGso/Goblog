@@ -1,24 +1,23 @@
 <div class="comment-wrap">
-    <div class="comment-respond" id="respond-post-150">
-        <form action="" class="comment-form" id="commentform" method="post" name="commentform">
-            <h2 class="comment-reply-title" id="reply-title">发表评论</h2>
-            <label for="textarea">评论</label>
-            <textarea cols="45" id="textarea" maxlength="65525" name="text" required="required" rows="8"></textarea>
-            <label for="author">昵称<span class="required">*</span></label>
-            <input id="author" maxlength="245" name="author" required="required" size="30" type="text" value="">
-            <label for="mail">电子邮件<span class="required">*</span></label>
-            <input aria-describedby="email-notes" id="mail" maxlength="100" name="mail" required="required" size="30" type="text"
-                   value="">
-            <label for="url">站点</label>
-            <input id="url" maxlength="200" name="url" size="30" type="text" value="">
-            <input class="submit" data-empty-comment="必须填写评论内容" data-init="提交评论" data-now="刚刚" data-posted="评论提交成功"
-                   data-posting="提交评论中..." id="submit" type="submit" value="发表评论" onsubmit="return save();">
-        </form>
-    </div>
+    <h2 class="comment-reply-title" id="reply-title">发表评论</h2>
+    <form action="" id="comment-form" method="post" name="comment-form" autocomplete="off">
+        <fieldset>
+            <input type="text" aria-label="name" name="name" id="name" placeholder="昵称*" required>
+            <input type="email" aria-label="email" name="mail" id="mail" placeholder="邮箱*" maxlength="100" required>
+            <input type="text" aria-label="url" name="url" id="url" placeholder="站点" maxlength="200">
+        </fieldset>
+        <textarea aria-label="comment" rows="5" id="textarea" name="text" maxlength="65525"  placeholder="说点什么..." required="required"></textarea>
+        <input class="submit" data-empty-comment="必须填写评论内容" data-init="提交评论" data-now="刚刚" data-posted="评论提交成功"
+                data-posting="提交评论中..." id="submit" type="submit" value="发表评论" onsubmit="return save();">
+        </input>
+    </form>
+
 
     <div class="comments-area" id="comments">
-        <h2>评论列表</h2>
-        {{range .}}
+        {{ if ne (len .SortComments) 0 }}
+            <h2>评论列表</h2>
+        {{ end }}
+        {{range .SortComments}}
         <ol class="comment-list">
             {{range .}}
             <li class="comment {{if eq .Parent 0}}comment-parent{{else}}comment-child{{end}} comment-odd" id="comment-68">
@@ -26,7 +25,11 @@
                     <img alt="{{.Author}}" class="avatar" src="https://gravatar.loli.net/avatar/{{.MD5Mail}}?s=40&amp;r=G&amp;d=identicon" width="40">
                     <div class="comment-meta">
                         <cite class="fn {{if (eq .AuthorId 1)}}master{{end}}">
-                            <a href="{{.Url}}" rel="external nofollow">{{.Author}}</a>
+                            {{if not .Url}}
+                                {{.Author}}
+                            {{else}}
+                                <a href="{{.Url}}" rel="external nofollow">{{.Author}}</a>
+                            {{end}}
                         </cite>
                         <span>{{.UnixFormat}}</span>
                     </div>
@@ -40,15 +43,15 @@
     </div>
 </div>
 <script>
-    const commentForm = document.forms.commentform
-    commentForm.action=new URL(window.location.href).pathname + "/comment"
-
-    function CommentReply(){
-        // 获取当前点击的按钮
-        const replyButton = event.target;
-        // 获取按钮的父节点的父节点
-        const grandParentNode = replyButton.parentNode.parentNode;
-        // 将表单插入到按钮的父节点的父节点后面
-        grandParentNode.insertAdjacentElement("afterend", commentForm);
-    }
+    // const commentForm = document.forms.commentform
+    // commentForm.action=new URL(window.location.href).pathname + "/comment"
+    //
+    // function CommentReply(){
+    //     // 获取当前点击的按钮
+    //     const replyButton = event.target;
+    //     // 获取按钮的父节点的父节点
+    //     const grandParentNode = replyButton.parentNode.parentNode;
+    //     // 将表单插入到按钮的父节点的父节点后面
+    //     grandParentNode.insertAdjacentElement("afterend", commentForm);
+    // }
 </script>

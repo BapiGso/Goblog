@@ -6,8 +6,7 @@
 let Home = location.href,
     Pages = 5,
     xhr,
-    xhrUrl = '',
-    scrollFunction,
+    xhrUrl = '';
     newCommentIndex = 1;
 
 if(document.getElementById("mark")){var parallax=new Parallax(document.getElementById("mark"))}//Parallax Plugin js
@@ -128,11 +127,9 @@ let Diaspora = {
             $('#preview').html($(data).filter('#single'))
 
             switch (flag) {
-
                 case 'push':
                     Diaspora.preview()
                     break;
-
                 case 'replace':
                     window.scrollTo(0, 0)
                     Diaspora.loaded()
@@ -142,7 +139,6 @@ let Diaspora = {
             setTimeout(function () {
                 if (!id) id = $('.icon-play').data('id');
                 Diaspora.player(id)
-
                 // get download link
                 $('.content img').each(function () {
                     if ($(this).attr('src').indexOf('/uploads/2014/downloading.png') > -1) {
@@ -154,7 +150,7 @@ let Diaspora = {
                 if (flag == 'replace') {
                     $('#top').show()
                 }
-            }, 0)
+            }, 100)
 
         })
     },
@@ -302,9 +298,9 @@ $(function () {
 
             })();
 
-            setTimeout(function () {
-                $('html, body').removeClass('loading')
-            }, 100)
+            // setTimeout(function () {
+            //     $('html, body').removeClass('loading')
+            // }, 100)
 
 
 
@@ -378,20 +374,13 @@ $(function () {
             $('.scrollbar').width((50 + st) / ct * 100 + '%')
 
             if (st > 80 && window.innerWidth > 800) {
-                //$('.subtitle').fadeIn()
+                document.querySelector(".subtitle").style.visibility="visible";
             } else {
-                //$('.subtitle').fadeOut()
+                document.querySelector(".subtitle").style.visibility="hidden";
             }
         }
     })
 
-    // $(window).on('scroll', scrollFunction = function (e) {
-    //     if ($('#single').length) {
-    //         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-    //             // Diaspora.loadDisqus ();
-    //         }
-    //     }
-    // })
 
 
     $(window).on('touchmove', function (e) {

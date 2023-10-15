@@ -12,10 +12,6 @@ func Index(c echo.Context) error {
 	//判断页数查数据库
 	qpu := database.NewQPU()
 	defer qpu.Free()
-	//_, err := session.Get("smoeSession", c)
-	//if err != nil {
-	//	return err
-	//}
 	PageNum, err := validateNum(c.Param("num"))
 	if err != nil {
 		return err
@@ -28,9 +24,13 @@ func Index(c echo.Context) error {
 	if err != nil {
 		return err
 	}
+	if err := c.Request().Header.Get("X-Requested-With"); err != "" {
+		return c.Render(http.StatusOK, "index-primary_ajax.template", qpu)
+	}
 	return c.Render(http.StatusOK, "index.template", qpu)
 }
 
+// Deprecated: use x-request-with instead of
 func IndexAjax(c echo.Context) error {
 	_ = c.Get("db").(*sqlx.DB)
 	_, err := validateNum(c.Param("num"))

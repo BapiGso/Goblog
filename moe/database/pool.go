@@ -12,7 +12,7 @@ type QPU struct {
 	MediaArr  []Contents
 	CommArr   []Comments
 	UserInfo  User
-	AccessLog []Access
+	AccessArr []Access
 }
 
 // Free 清空s结构体存储的data，然后返还到池中

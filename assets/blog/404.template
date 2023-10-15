@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" class="">
+<html lang="zh-Hans">
 <head>
     <title>晓梦 | 页面未找到</title>
     <meta charset="UTF-8">
@@ -10,8 +10,10 @@
     <meta content="遁隐缥缈霞云, 就此声销迹灭" name="description"/>
     <meta content="smoe.cc,晓梦,曉夢" name="keywords"/>
     <meta name="theme-color" content="#9370DB">
-    <link href="/assets/blog/css/Diaspora.css" rel="stylesheet">
-    <link rel="icon" type="image/png" href="/assets/favicon.ico">
+    <style>
+        {{template "Diaspora.css"}}
+    </style>
+    <link rel="icon" type="image/png" href="/assets/root/favicon.ico">
     <link rel="alternate" type="application/rss+xml" title="晓梦 &raquo; RSS 2.0" href="/feed/" />
     <link rel="alternate" type="application/rdf+xml" title="晓梦 &raquo; RSS 1.0" href="/feed/rss/" />
     <link rel="alternate" type="application/atom+xml" title="晓梦 &raquo; ATOM 1.0" href="/feed/atom/" />
@@ -20,24 +22,14 @@
     <header id="top">
         <nav class="components">
             <a class="logo-min" href="javascript:history.back()"></a>
-
-
         </nav>
-        <div class="bar">
-        </div>
     </header>
-    <div id="single" class="page">
-        <div class="section">
-            <div class="article">
-            <div>
-                <div class="content">
-                    <h1>404 Not Found</h1>
-                    <p>The page you were looking for is no longer available.</p>
-                    <p>{{ with .}}{{.}}{{ end }}</p>
-                </div>
-            </div>
-            </div>
+    <article class="page">
+        <div class="content">
+            <h1>404 Not Found</h1>
+            <p>The page you were looking for is no longer available.</p>
+            <p>{{ with .}}{{.}}{{ end }}</p>
         </div>
-    </div>
+    </article>
 </body>
 </html>

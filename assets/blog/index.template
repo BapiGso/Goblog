@@ -1,5 +1,5 @@
 {{template "header.template"}}
-    <body class="loading">
+    <body>
     <div id="loader"></div>
     <div class="nav">
         <ul id="menu-menu" class="menu">
@@ -15,14 +15,16 @@
     </div>
 
     <div id="container">
-        {{- template "index-container.template" index .PostArr 0 -}}
+        {{- template "index-container.template" . -}}
         <div id="primary">
-            {{- template "index-primary.template" .PostArr -}}
+            {{- template "index-primary.template" . -}}
         </div>
 
+        {{if ne .HaveNext 0}}
         <div id="pager">
-            <a href="/page/" data-url="/page/" class="more">加载更多</a>
+            <a href="/page/{{.HaveNext}}" data-url="/page/{{.HaveNext}}" class="more">加载更多</a>
         </div>
+        {{end}}
 
     </div>
 

@@ -1,7 +1,8 @@
-{{range slice . 1}}
+
+{{range slice .PostArr 1}}
     <div class="post">
         <a data-id="{{ .Cid }}" href="/archives/{{.Cid}}" title="{{.Title}}">
-            <img src="{{.GetCoverList}}" alt="illustration">
+            <img src="/usr/uploads{{.GetCoverList}}" alt="illustration">
         </a>
         <div class="else">
             <p>{{ .UnixToStr }}</p>

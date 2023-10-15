@@ -52,8 +52,7 @@ func Brotli() echo.MiddlewareFunc {
 func BrotliWithConfig(config BrotliConfig) echo.MiddlewareFunc {
 	// Defaults
 	if config.Skipper == nil {
-		config.Skipper = middleware.DefaultSkipper
-
+		config.Skipper = DefaultBrotliConfig.Skipper
 	}
 	if config.Level == 0 {
 		config.Level = DefaultBrotliConfig.Level
@@ -69,20 +68,25 @@ func BrotliWithConfig(config BrotliConfig) echo.MiddlewareFunc {
 			res.Header().Add(echo.HeaderVary, echo.HeaderAcceptEncoding)
 			if strings.Contains(c.Request().Header.Get(echo.HeaderAcceptEncoding), brotliScheme) {
 				res.Header().Set(echo.HeaderContentEncoding, brotliScheme) // Issue #806
-				w := brotli.NewWriterOptions(res.Writer, brotli.WriterOptions{Quality: config.Level})
+				rw := res.Writer
+
+				w := brotli.NewWriterOptions(rw, brotli.WriterOptions{Quality: config.Level})
+
 				defer func() {
 					if res.Size == 0 {
 						if res.Header().Get(echo.HeaderContentEncoding) == brotliScheme {
 							res.Header().Del(echo.HeaderContentEncoding)
 						}
-						// We have to reset response to its pristine state when
+						// We have to reset response to it's pristine state when
 						// nothing is written to body or error is returned.
 						// See issue #424, #407.
+						res.Writer = rw
 						w.Reset(io.Discard)
 					}
 					w.Close()
 				}()
-				res.Writer = &brotliResponseWriter{Writer: w, ResponseWriter: res.Writer}
+				grw := &brotliResponseWriter{Writer: w, ResponseWriter: rw}
+				res.Writer = grw
 			}
 			return next(c)
 		}

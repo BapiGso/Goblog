@@ -9,7 +9,7 @@
             {{range .PostArr }}
             <div class="post">
                 <a data-id="{{ .Cid }}" href="/archives/{{.Cid}}" title="{{.Title}}">
-                    <img width="680" height="440" src="wait" class="cover" alt="illustration">
+                    <img width="680" height="440" src="/usr/uploads{{.GetCoverList}}" class="cover" alt="illustration">
                 </a>
                 <div class="else">
                     <p>{{ .UnixToStr }}</p>
@@ -29,9 +29,9 @@
             </div>
             {{- end }}
         </div>>
-        {{if (ne .NextPageNum 0)}}
+        {{if (ne .HaveNext 0)}}
         <div id="pager">
-            <a href="/page/{{.NextPageNum}}" data-url="/page/{{.NextPageNum}}" class="more">加载更多</a>
+            <a href="/page/{{.HaveNext}}" data-url="/page/{{.HaveNext}}" class="more">加载更多</a>
         </div>
         {{end}}
     </div>

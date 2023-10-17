@@ -103,13 +103,12 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 	back := s.e.Group("/admin")
 
 	// 前台页面路由
-	front.GET("/", handler.Index)          // 首页路由
-	front.GET("/page/:num", handler.Index) // 分页路由，显示指定页数的文章列表
-	//todo 不跟据请求方法，根据req header是否有x request
+	front.GET("/", handler.Index)                                      // 首页路由
+	front.GET("/page/:num", handler.Index)                             // 分页路由，显示指定页数的文章列表
 	front.GET("/archives/:cid", handler.Post)                          // 根据分类ID显示该分类下的文章列表
 	front.POST("/archives/:cid/comment", handler.SubmitArticleComment) // 管理评论提交
 	front.GET("/:page", handler.Page)                                  //独立页面，注册在特殊独立页面前
-	front.GET("/archives", handler.Archive)                            // 归档页面路由，显示所有文章的归档分类
+	front.GET("/archives", handler.Archives)                           // 归档页面路由，显示所有文章的归档分类
 	front.GET("/bangumi", handler.Bangumi)                             // 显示番剧相关信息的页面路由
 	front.Static("/usr/uploads", "/usr/uploads")                       //用户上传的文件，最后注册
 	front.StaticFS("/assets", s.themeFS)                               // 静态文件路由,最后注册

@@ -22,9 +22,8 @@ func InitDB() {
 	//}
 	slog.Info("You are not set mysql parameter,using sqlite mode")
 
-	db, err = sqlx.Connect("sqlite", "usr/smoe.db")
-	if err != nil {
-		slog.Error("创建sqlite数据库失败，请检查读写权限", err)
+	if db, err = sqlx.Connect("sqlite", "usr/smoe.db"); err != nil {
+		slog.Error("连接sqlite数据库失败，请检查读写权限", err)
 	}
 	if err := db.Ping(); err != nil {
 		slog.Error("连接数据库失败")

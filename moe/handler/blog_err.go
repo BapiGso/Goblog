@@ -2,17 +2,13 @@ package handler
 
 import (
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 func FrontErr(err error, c echo.Context) {
-	func() error {
-		return c.Render(http.StatusNotFound, "404.template", err)
-	}()
-
+	c.Render(400, "404.template", err)
 	return
 }
 
 func BackErr(err error, c echo.Context) error {
-	return c.Render(http.StatusNotFound, "admin-err.template", err)
+	return c.Render(404, "admin-err.template", err)
 }

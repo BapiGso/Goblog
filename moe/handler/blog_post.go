@@ -3,7 +3,6 @@ package handler
 import (
 	"SMOE/moe/database"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 func Post(c echo.Context) error {
@@ -22,5 +21,5 @@ func Post(c echo.Context) error {
 		return err
 	}
 	//fmt.Println(data.Post)
-	return c.Render(http.StatusOK, "post.template", qpu)
+	return c.Render(200, "post.template", qpu)
 }

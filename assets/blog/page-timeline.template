@@ -1,23 +1,21 @@
-{{template "header.template" .Title}}
-<body class="">
+{{template "header.template" "时间线"}}
+<body>
 <div id="loader"></div>
 <header id="top">
     <nav class="components">
         <a class="logo-min" href="javascript:history.back()"></a>
     </nav>
 </header>
-
-
-    <article class="section" >
+    <article class="page" >
         <div class="content">
-            {{range .Data}}
+            {{range .SortContents}}
             <h2><strong>{{.Year}} 年 </strong></h2>
             <ul>
                 {{range .YData}}
                 <li><span><strong>{{.Mon}} 月</strong></span>
                     <ul>
                         {{range .MData}}
-                        <li>{{.Day}}日: <a href="https://smoe.cc/archives/{{.Cid}}/">{{.Title}}</a></li>
+                        <li><a href="https://smoe.cc/archives/{{.Cid}}/">{{.Title}}</a></li>
                         {{end}}
                     </ul>
                 </li>

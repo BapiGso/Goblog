@@ -175,7 +175,7 @@ let Diaspora = {
     },
 
     player: function (id) {
-        let p = $('#audio-' + id + '-1');
+        let p = $('#audio');
 
         if (!p.length) {
             $('.icon-play').css({

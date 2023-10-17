@@ -2,6 +2,7 @@ package database
 
 import (
 	"errors"
+	"time"
 )
 
 // Media 查询文件组，后台专用
@@ -64,18 +65,48 @@ func (q *QPU) GetPages() error {
 	return err
 }
 
-// CheckNext 查询是否有下一页，如果有则ture
-func (q *QPU) CheckNext() error {
-	err := db.Get(q.HaveNext, `
-		SELECT cid FROM  typecho_contents 
-		WHERE cid>?`, q.PostArr[len(q.PostArr)-1].Cid)
-	return err
-}
-
 func UpdateView(cid string) error {
 	_, err := db.Exec(`UPDATE typecho_contents SET views = views + 1 WHERE cid = ?`, cid)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (q *QPU) SortContents() any {
+	type yData struct {
+		Mon   string
+		MData []Contents
+	}
+	type Data struct {
+		Year  string
+		YData []yData
+	}
+	var final []Data
+	for _, v := range q.PostArr {
+		year := time.Unix(v.Created, 0).Format("2006")
+		mon := time.Unix(v.Created, 0).Format("01")
+		if len(final) != 0 && final[len(final)-1].Year == year {
+			if final[len(final)-1].YData[len(final[len(final)-1].YData)-1].Mon == mon {
+				final[len(final)-1].YData[len(final[len(final)-1].YData)-1].MData = append(final[len(final)-1].YData[len(final[len(final)-1].YData)-1].MData, v)
+			} else {
+				final[len(final)-1].YData = append(final[len(final)-1].YData, yData{
+					Mon:   mon,
+					MData: []Contents{v},
+				})
+			}
+		} else {
+			final = append(final, Data{
+				year,
+				[]yData{
+					{
+						mon,
+						[]Contents{v},
+					},
+				},
+			},
+			)
+		}
+	}
+	return final
 }

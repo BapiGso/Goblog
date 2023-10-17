@@ -1,4 +1,3 @@
-
 {{range slice .PostArr 1}}
     <div class="post">
         <a data-id="{{ .Cid }}" href="/archives/{{.Cid}}" title="{{.Title}}">

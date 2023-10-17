@@ -1,4 +1,4 @@
-{{template "header.template" }}
+{{template "header.template" (index .PageArr 0).Title}}
     <body>
     <div id="loader"></div>
     <header id="top">
@@ -7,7 +7,7 @@
         </nav>
     </header>
 
-    {{range .PageArr}}
+    {{with index .PageArr 0}}
     <article data-id="{{.Cid}}" class="page">
         <div class="content">
             {{.MD2HTML}}

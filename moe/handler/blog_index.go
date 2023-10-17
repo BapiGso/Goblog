@@ -25,9 +25,9 @@ func Index(c echo.Context) error {
 		return err
 	}
 	if err := c.Request().Header.Get("X-Requested-With"); err != "" {
-		return c.Render(http.StatusOK, "index-primary_ajax.template", qpu)
+		return c.Render(200, "index-primary_ajax.template", qpu)
 	}
-	return c.Render(http.StatusOK, "index.template", qpu)
+	return c.Render(200, "index.template", qpu)
 }
 
 // Deprecated: use x-request-with instead of
@@ -37,5 +37,5 @@ func IndexAjax(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusForbidden, err)
 	}
-	return c.Render(http.StatusOK, "index-primary_ajax.template", nil)
+	return c.Render(200, "index-primary_ajax.template", nil)
 }

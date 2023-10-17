@@ -141,6 +141,6 @@ func Bangumi(c echo.Context) error {
 			return err
 		}
 	}
-
-	return c.Render(http.StatusOK, "page-bangumi.template", bgm)
+	//return c.Render(200, "404.template", "维护中...")
+	return c.Render(200, "page-bangumi.template", bgm)
 }

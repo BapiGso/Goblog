@@ -14,6 +14,6 @@ func TestS_Struct2map(t *testing.T) {
 		"hello",
 		"a.com",
 	}
-	reqMap := struct2map(req)
+	reqMap, _ := struct2map(req)
 	t.Log(reqMap)
 }

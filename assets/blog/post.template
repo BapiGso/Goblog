@@ -1,10 +1,10 @@
-{{template "header.template" }}
+{{template "header.template" (index .PostArr 0).Title}}
 <body>
 <div id="loader"></div>
 <header id="top">
     <nav class="components">
         <a class="logo-min" href="javascript:history.back()"></a>
-        <button class="icon-play" data-id="" title="播放/暂停">
+        <button class="icon-play" title="播放/暂停">
             <svg viewBox="0 0 50 50">
                 <path class="left"/>
                 <path class="right"/>
@@ -16,11 +16,6 @@
                 <span class="icon-like"></span>
             </a>
         </div>
-{{/*            <button class="icon-night">*/}}
-{{/*                <svg  width="32" height="32" viewBox="0 0 120 120">*/}}
-{{/*                    <path class="line line4"/>*/}}
-{{/*                </svg>*/}}
-{{/*            </button>*/}}
         <div class="share">
             <a title="获取二维码" class="icon-wechat" href="javascript:"></a>
         </div>
@@ -32,7 +27,7 @@
 </header>
 {{/*todo 灯箱*/}}
 
-{{range .PostArr}}
+{{with index .PostArr 0}}
 <article data-id="{{.Cid}}">
     <h1 class="title">{{.Title}}</h1>
     <div class="stuff">
@@ -44,7 +39,7 @@
     <div class="content">
         {{.MD2HTML}}
     </div>
-    <audio id="audio-166-1" preload="auto" controls="controls">
+    <audio id="audio-{{.Cid}}-1" preload="auto" controls="controls">
         <source type="audio/mpeg" src="{{.GetMusicList}}">
     </audio>
 </article>

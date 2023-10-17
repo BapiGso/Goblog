@@ -1,15 +1,16 @@
 <div class="comment-wrap">
-    <h2 class="comment-reply-title" id="reply-title">发表评论</h2>
-    <form action="" id="comment-form" method="post" name="comment-form" autocomplete="off">
+
+    <form id="comment-form" method="post" name="comment-form" autocomplete="off">
+        <h2 class="comment-reply-title" id="reply-title">发表评论</h2>
         <fieldset>
-            <input type="text" aria-label="name" name="name" id="name" placeholder="昵称*" required>
+            <input type="text" aria-label="author" name="author" id="author" placeholder="昵称*" required>
             <input type="email" aria-label="email" name="mail" id="mail" placeholder="邮箱*" maxlength="100" required>
             <input type="text" aria-label="url" name="url" id="url" placeholder="站点" maxlength="200">
         </fieldset>
         <textarea aria-label="comment" rows="5" id="textarea" name="text" maxlength="65525"  placeholder="说点什么..." required="required"></textarea>
-        <input class="submit" data-empty-comment="必须填写评论内容" data-init="提交评论" data-now="刚刚" data-posted="评论提交成功"
-                data-posting="提交评论中..." id="submit" type="submit" value="发表评论" onsubmit="return save();">
-        </input>
+        <fieldset id="buttongroup">
+            <button id="submit" type="submit">发表评论</button>
+        </fieldset>
     </form>
 
 
@@ -20,7 +21,7 @@
         {{range .SortComments}}
         <ol class="comment-list">
             {{range .}}
-            <li class="comment {{if eq .Parent 0}}comment-parent{{else}}comment-child{{end}} comment-odd" id="comment-68">
+            <li class="{{if eq .Parent 0}}comment-parent{{else}}comment-child{{end}}" id="{{.Coid}}">
                 <div class="comment-body" id="div-comment-68">
                     <img alt="{{.Author}}" class="avatar" src="https://gravatar.loli.net/avatar/{{.MD5Mail}}?s=40&amp;r=G&amp;d=identicon" width="40">
                     <div class="comment-meta">
@@ -43,16 +44,100 @@
     </div>
 </div>
 <script>
-    //todo 评论js
-    // const commentForm = document.forms.commentform
-    // commentForm.action=new URL(window.location.href).pathname + "/comment"
-    //
-    // function CommentReply(){
-    //     // 获取当前点击的按钮
-    //     const replyButton = event.target;
-    //     // 获取按钮的父节点的父节点
-    //     const grandParentNode = replyButton.parentNode.parentNode;
-    //     // 将表单插入到按钮的父节点的父节点后面
-    //     grandParentNode.insertAdjacentElement("afterend", commentForm);
-    // }
+    function CommentReply(){
+        let commentForm = document.getElementById("comment-form")
+        const buttongroup = commentForm.querySelector("#buttongroup")
+        const cancelButton = document.createElement('button');
+        cancelButton.className="cancelButton";
+        cancelButton.innerText="取消回复";
+        cancelButton.addEventListener('click', function() {
+            const commentWrap =document.querySelector(".comment-wrap")
+            commentWrap.insertAdjacentElement("afterbegin",commentForm)
+            cancelButton.remove()
+        });
+        if (!buttongroup.querySelector(".cancelButton")){
+            buttongroup.insertAdjacentElement("afterbegin", cancelButton);
+        }
+
+        commentForm.action=new URL(window.location.href).pathname + "/comment"
+        // 获取当前点击的按钮
+        const replyButton = event.target;
+        // 获取按钮的父节点的父节点
+        const grandParentNode = replyButton.parentNode.parentNode;
+        // 将表单插入到按钮的父节点的父节点后面
+        grandParentNode.insertAdjacentElement("afterend", commentForm);
+    }
+
+    function save(e){
+        if (e.preventDefault) e.preventDefault();
+        // 获取表单元素
+        const form = document.querySelector('form');
+
+        // 设置表单action
+        const localpath = window.location.pathname
+        form.action = localpath+'/comment';
+        // 构建额外的参数
+        const extraData = {
+            timestamp: Date.now(),
+        };
+        // 构建FormData对象
+        const formData = new FormData(form);
+        if (form.parentElement.firstChild!==form){
+
+        }else {
+            extraData.parent="0"
+        }
+        extraData.cid=localpath.split("/")[localpath.length-1]
+
+        // 追加额外参数
+        Object.keys(extraData).forEach(key => {
+            formData.append(key, extraData[key]);
+        });
+        // 提交表单
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    // 成功提交
+                    alert('评论发表成功!');
+                } else {
+                    // 请求失败
+                    alert('评论发表失败,请重试!');
+                }
+            });
+
+        // 阻止表单默认提交行为
+        return false;
+    }
+
+
+    document.getElementById("comment-form").addEventListener("submit",function (e) {
+        e.preventDefault();
+        const form = document.querySelector('form');
+        const formData = new FormData(form);
+        const local = window.location.pathname
+        if (form.parentElement.firstElementChild!==form){
+            //获取要回复评论的id
+            formData.append('parent', form.previousElementSibling.id);
+        }
+        formData.append('cid',local.split("/")[local.split("/").length-1])
+        // 提交表单
+        fetch(local+'/comment', {
+            method: 'POST',
+            body: formData
+        })
+            .then(function(response) {
+                // 处理响应
+                console.log(response);
+            })
+            .catch(function(error) {
+                // 处理错误
+                console.error(error);
+            });
+    })
+
+
+    //todo 页面加载完后检查localstorage
 </script>

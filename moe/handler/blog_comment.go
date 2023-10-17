@@ -9,12 +9,12 @@ import (
 // SubmitArticleComment todo 工作量证明
 func SubmitArticleComment(c echo.Context) error {
 	req := &struct {
-		Coid   string `xml:"coid"     form:"coid" validate:"required"`
-		Cid    string `xml:"cid"      form:"cid" validate:"required"`
+		Parent uint   `xml:"parent"   form:"parent" validate:""`
+		Cid    uint   `xml:"cid"      form:"cid"    validate:"required"`
 		Author string `xml:"author"   form:"author" validate:"required,min=1,max=200"`
-		Mail   string `xml:"mail"     form:"mail" validate:"email,required,min=1,max=200"`
-		Text   string `xml:"text"     form:"text" validate:"required,min=1,max=1000"`
-		Url    string `xml:"url"      form:"url" validate:"omitempty,url,min=1,max=200" `
+		Mail   string `xml:"mail"     form:"mail"   validate:"email,required,min=1,max=200"`
+		Text   string `xml:"text"     form:"text"   validate:"required,min=1,max=1000"`
+		Url    string `xml:"url"      form:"url"    validate:"omitempty,url,min=1,max=200" `
 	}{}
 	if err := c.Bind(req); err != nil {
 		return err
@@ -25,7 +25,13 @@ func SubmitArticleComment(c echo.Context) error {
 	if !strings.HasPrefix(c.Request().Referer(), c.Request().Header.Get("Origin")+"/archives/"+c.Param("cid")) {
 		return echo.NewHTTPError(400, "请从评论区提交评论")
 	}
-	reqMap := struct2map(req)
+	reqMap, err := struct2map(*req)
+	if err != nil {
+		return err
+	} else {
+		reqMap["Ip"] = c.RealIP()
+		reqMap["Agent"] = c.Request().UserAgent()
+	}
 	if err := database.InsertComment(reqMap); err != nil {
 		return err
 	}

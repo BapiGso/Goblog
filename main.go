@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	//todo ajax加载动画、音乐播放进度条、js重置、后台重构
+	//todo ajax加载动画、音乐播放进度条、js重置、后台重构、sql语句权限管理
 	s := moe.New()
 	s.Bind()
 	s.Init()

@@ -25,7 +25,7 @@
                 <div class="comment-body" id="div-comment-68">
                     <img alt="{{.Author}}" class="avatar" src="https://gravatar.loli.net/avatar/{{.MD5Mail}}?s=40&amp;r=G&amp;d=identicon" width="40">
                     <div class="comment-meta">
-                        <cite class="fn {{if (eq .AuthorId 1)}}master{{end}}">
+                        <cite class="{{if (eq .AuthorId 1)}}master{{end}}">
                             {{if not .Url}}
                                 {{.Author}}
                             {{else}}

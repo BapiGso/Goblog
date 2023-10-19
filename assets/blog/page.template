@@ -1,6 +1,5 @@
 {{template "header.template" (index .PageArr 0).Title}}
-    <body>
-    <div id="loader"></div>
+<body>
     <header id="top">
         <nav class="components">
             <a class="logo-min" href="javascript:history.back()"></a>
@@ -17,5 +16,5 @@
 
 
     {{template "footer.template"}}
-    </body>
+</body>
 </html>

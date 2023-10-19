@@ -1,11 +1,10 @@
 {{template "header.template"}}
     <body>
-    <div id="loader"></div>
     <div class="nav">
         <ul id="menu-menu" class="menu">
             {{ range .PageArr }}
-            <li class="pview menu-item menu-item-type-post_type menu-item-object-page {{.Slug}}">
-                <a href="/{{.Slug}}" class="pviewa">{{.Title}}</a>
+            <li class="{{.Slug}}">
+                <a href="/{{.Slug}}" class="pagelist">{{.Title}}</a>
             </li>
             {{ end }}
         </ul>
@@ -27,8 +26,22 @@
         {{end}}
 
     </div>
-
-    <div id="preview" class="trans"></div>
     {{template "footer.template"}}
+    <script>
+        const coverElement = document.getElementById('cover');
+        const vibrant = new Vibrant(coverElement);
+        new Parallax(document.getElementById("mark"))
+        const swatches = vibrant.swatches();
+        if (swatches['DarkVibrant']) {
+            document.querySelectorAll('#vibrant polygon').forEach(function (polygon) {
+                polygon.style.fill = swatches['DarkVibrant'].getHex();
+            });
+        }
+        if (swatches['Vibrant']) {
+            document.querySelectorAll('.icon-menu .line').forEach(function (icon) {
+                icon.style.stroke = swatches['Vibrant'].getHex();
+            });
+        }
+    </script>
     </body>
 </html>

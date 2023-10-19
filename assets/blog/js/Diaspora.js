@@ -9,44 +9,87 @@ let Home = location.href,
     xhrUrl = '';
     newCommentIndex = 1;
 
-if(document.getElementById("mark")){var parallax=new Parallax(document.getElementById("mark"))}//Parallax Plugin js
 
-console.time("1");
 let Diaspora = {
 
+    //ajax请求封装
     L: function (url, f, err) {
-        if (url == xhrUrl) {
+        debugger
+        if (url === xhrUrl) {
             return false
         }
-
         xhrUrl = url;
 
         if (xhr) {
             xhr.abort()
         }
+        xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.timeout = 10000;
 
-
-        xhr = $.ajax({
-            type: 'GET',
-            url: url,
-            timeout: 10000,
-            success: function (data) {
-                f(data)
-                xhrUrl = '';
-            },
-            error: function (a, b, c) {
-                if (b == 'abort') {
-                    err && err()
-                } else {
-                    window.location.href = url
-                }
-                xhrUrl = '';
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                f(xhr.responseText);
+            } else {
+                console.log(xhr.statusText, xhr.status);
             }
-        })
+        };
+
+        xhrUrl = '';
+        xhr.send();
+        // xhr = $.ajax({
+        //     type: 'GET',
+        //     url: url,
+        //     timeout: 10000,
+        //     success: function (data) {
+        //         f(data)
+        //         xhrUrl = '';
+        //     },
+        //     error: function (a, b, c) {
+        //         if (b === 'abort') {
+        //             err && err()
+        //         } else {
+        //             window.location.href = url
+        //         }
+        //         xhrUrl = '';
+        //     }
+        // })
     },
 
-    P: function () {
-        return !!('ontouchstart' in window);
+    SWLoader:function (){
+      if(document.querySelector("#loader")){
+          document.querySelector("#loader").remove()
+      }else{
+          let l=document.createElement("div")
+          l.id="loader"
+          document.body.insertAdjacentElement("afterbegin",l)
+      }
+    },
+
+    SWPreview:function (){
+        let l=document.createElement("div")
+        l.id="preview"
+        document.body.insertAdjacentElement("afterbegin",l)
+    },
+
+    AJAX:function (url){
+        this.SWLoader()
+        fetch(url)
+            .then(function(response) {
+                return response.text(); // 将响应转换为文本
+            })
+            .then(function(data) {
+                let l=document.createElement("div")
+                l.id="preview"
+                l.innerHTML=data
+                document.body.insertAdjacentElement("afterbegin",l)
+                setTimeout(function(){document.querySelector("#container").style.display="none"}, 500);
+            })
+            .catch(function(error) {
+                // 处理错误
+                console.error('请求失败', error);
+            });
+        this.SWLoader()
     },
 
     PS: function () {
@@ -61,7 +104,7 @@ let Diaspora = {
 
             document.title = state.t;
 
-            if (state.u == Home) {
+            if (state.u === Home) {
                 $('#preview').css('position', 'fixed')
                 setTimeout(function () {
                     $('#preview').removeClass('show').addClass('trans')
@@ -73,13 +116,13 @@ let Diaspora = {
                     }, 300)
                 }, 0)
             } else {
-                Diaspora.loading()
+                Diaspora.SWLoader()
 
                 Diaspora.L(state.u, function (data) {
 
                     document.title = state.t;
 
-                    $('#preview').html($(data).filter('#single'));
+                    $('#preview').html($(data).filter('body'));
 
                     Diaspora.preview();
 
@@ -92,20 +135,21 @@ let Diaspora = {
         })
     },
 
+    //传进来a标签和自定义flag
     HS: function (tag, flag) {
+        debugger
         let id = tag.data('id') || 0,
             url = tag.attr('href'),
             title = tag.attr('title') || tag.text();
 
         if (!$('#preview').length || !(window.history && history.pushState)) location.href = url;
 
-        Diaspora.loading()
+        Diaspora.SWLoader()
 
         let state = { d: id, t: title, u: url };
-
+        debugger
         Diaspora.L(url, function (data) {
-
-            if (!$(data).filter('#single').length) {
+            if (!$(data).filter().length) {
                 location.href = url;
                 return
             }
@@ -121,10 +165,9 @@ let Diaspora = {
                     break;
 
             }
-
             document.title = title;
 
-            $('#preview').html($(data).filter('#single'))
+            $('#preview').html($(data).filter())
 
             switch (flag) {
                 case 'push':
@@ -132,7 +175,7 @@ let Diaspora = {
                     break;
                 case 'replace':
                     window.scrollTo(0, 0)
-                    Diaspora.loaded()
+                    Diaspora.SWLoader()
                     break;
             }
 
@@ -140,6 +183,7 @@ let Diaspora = {
                 if (!id) id = $('.icon-play').data('id');
                 Diaspora.player(id)
                 // get download link
+                //给文章中的图片添加占位图用的
                 $('.content img').each(function () {
                     if ($(this).attr('src').indexOf('/uploads/2014/downloading.png') > -1) {
                         $(this).hide()
@@ -147,7 +191,7 @@ let Diaspora = {
                     }
                 })
 
-                if (flag == 'replace') {
+                if (flag === 'replace') {
                     $('#top').show()
                 }
             }, 100)
@@ -155,6 +199,7 @@ let Diaspora = {
         })
     },
 
+    //只给preview添加动画用的，里面的数据是在这个方法之前调用
     preview: function () {
         setTimeout(function () {
             $('#preview').addClass('show')
@@ -168,53 +213,49 @@ let Diaspora = {
                     }).removeClass('trans')
                     $('#top').show()
 
-                    Diaspora.loaded()
+                    Diaspora.SWLoader()
                 }, 500)
             }, 300)
         }, 0)
     },
 
     player: function (id) {
-        let p = $('#audio');
+        let au = document.querySelector('#audio')
+        let playButton = document.querySelector('.icon-play');
+        let playbackBar = document.querySelector('.playbackbar');
 
-        if (!p.length) {
-            $('.icon-play').css({
-                'color': '#dedede',
-                'cursor': 'not-allowed'
-            })
-            return
-        }
+        // 检查
+        // if (!au.length()) {
+        //     //todo 颜色变暗
+        //     playButton.style.cursor = 'not-allowed';
+        //     return
+        // }
+        //自动播放，暂时关闭
+        // if (p.eq(0).data("autoplay") === false) {
+        //     p[0].play();
+        // }
+        au.addEventListener('timeupdate', function() {
+            let progress = (au.currentTime / au.duration) * 100;
+            playbackBar.style.width = progress + '%';
+        });
 
-        if (p.eq(0).data("autoplay") == false) {
-            p[0].play();
-        }
+        au.addEventListener('ended', function() {
+            playButton.classList.remove('icon-pause');
+            playButton.classList.add('icon-play');
+        });
 
-        p.on({
-            'timeupdate': function () {
-                $('.playbackbar').css('width', p[0].currentTime / p[0].duration * 100 + '%')
-            },
-            'ended': function () {
-                $('.icon-pause').removeClass('icon-pause').addClass('icon-play')
-            },
-            'playing': function () {
-                $('.icon-play').removeClass('icon-play').addClass('icon-pause')
-            }
-        })
+        au.addEventListener('playing', function() {
+            playButton.classList.remove('icon-play');
+            playButton.classList.add('icon-pause');
+        });
     },
 
+    //给loader添加动画用的
     loading: function () {
-        let w = window.innerWidth;
-        let css = '<style class="loaderstyle" id="loaderstyle' + w + '">' +
-            '@-moz-keyframes loader' + w + '{100%{background-position:' + w + 'px 0}}' +
-            '@-webkit-keyframes loader' + w + '{100%{background-position:' + w + 'px 0}}' +
-            '.loader' + w + '{-webkit-animation:loader' + w + ' 3s linear infinite;-moz-animation:loader' + w + ' 3s linear infinite;}' +
-            '</style>';
-        $('.loaderstyle').remove()
-        $('head').append(css)
-
-        $('#loader').removeClass().addClass('loader' + w).show()
+        $('#loader').removeClass().addClass('loader890').show()
     },
 
+    //给loader移除动画用的
     loaded: function () {
         $('#loader').removeClass().hide()
     },
@@ -235,19 +276,14 @@ let Diaspora = {
         id.style.left = (_width - parseInt(id.style.width)) / 2 + 'px';
         id.style.top = (_height - parseInt(id.style.height)) / 2 + 'px';
     },
-
-
 }
-console.timeEnd("1");
 
+function old () {
 
-console.time("2");
-$(function () {
-
-    if (Diaspora.P()) {
+    if (('ontouchstart' in window)) {
         $('body').addClass('touch')
     }
-
+    debugger
     if ($('#preview').length) {
 
         let cover = {};
@@ -298,22 +334,15 @@ $(function () {
 
             })();
 
-            // setTimeout(function () {
-            //     $('html, body').removeClass('loading')
-            // }, 100)
-
-
 
             let vibrant = new Vibrant(cover.t[0]);
             let swatches = vibrant.swatches()
 
             if (swatches['DarkVibrant']) {
                 $('#vibrant polygon').css('fill', swatches['DarkVibrant'].getHex())
-                $('#vibrant div').css('background-color', swatches['DarkVibrant'].getHex())
             }
             if (swatches['Vibrant']) {
                 $('.icon-menu').css('color', swatches['Vibrant'].getHex())
-                console.log(123)
             }
 
         })
@@ -326,28 +355,26 @@ $(function () {
 
         Diaspora.PS()
 
-        $('.pview a').addClass('pviewa')
 
         let T;
         $(window).on('resize', function () {
             clearTimeout(T)
 
             T = setTimeout(function () {
-                if (!Diaspora.P() && location.href == Home) {
+                if (!('ontouchstart' in window) && location.href == Home) {
                     cover.o()
                     cover.f()
                 }
 
                 if ($('#loader').attr('class')) {
-                    Diaspora.loading()
+                    Diaspora.SWLoader()
                 }
             }, 500)
         })
 
     } else {
 
-        $('#single').css('min-height', window.innerHeight)
-        $('html, body').removeClass('loading')
+        $('body').css('min-height', window.innerHeight)
 
         window.addEventListener('popstate', function (e) {
             if (e.state) location.href = e.state.u;
@@ -356,38 +383,8 @@ $(function () {
         Diaspora.player($('.icon-play').data('id'))
 
         $('.icon-icon, .image-icon').attr('href', '/')
-
-
-        $('#top').show()
-
     }
 
-    $(window).on('scroll', function () {
-        if ($('.scrollbar').length && !Diaspora.P() && !$('.icon-images').hasClass('active')) {
-            let st = $(window).scrollTop(),
-                ct = $('.content').height();
-
-            if (st > ct) {
-                st = ct
-            }
-
-            $('.scrollbar').width((50 + st) / ct * 100 + '%')
-
-            if (st > 80 && window.innerWidth > 800) {
-                document.querySelector(".subtitle").style.visibility="visible";
-            } else {
-                document.querySelector(".subtitle").style.visibility="hidden";
-            }
-        }
-    })
-
-
-
-    $(window).on('touchmove', function (e) {
-        if ($('body').hasClass('mu')) {
-            e.preventDefault()
-        }
-    })
 
 
     $('body').on('click', function (e) {
@@ -399,139 +396,21 @@ $(function () {
 
         switch (true) {
 
-            // nav menu
-            case (tag.indexOf('switchmenu') != -1):
-                window.scrollTo(0, 0)
-                $('html, body').toggleClass('mu')
-                break;
-
-            // next page
-            case (tag.indexOf('more') != -1):
-                tag = $('.more');
-
-                if (tag.data('status') == 'loading') {
-                    return false
-                }
-
-                let num = parseInt(tag.data('page')) || 1;
-
-                if (num == 1) {
-                    tag.data('page', 1)
-                }
-
-                if (num >= Pages) {
-                    return
-                }
-
-                tag.html('加载中..').data('status', 'loading')
-                Diaspora.loading()
-
-                Diaspora.L(tag.attr('href'), function (data) {
-                    let link = $(data).find('.more').attr('href');
-                    if (link != undefined) {
-                        tag.attr('href', link).html('加载更多').data('status', 'loaded')
-                        tag.data('page', parseInt(tag.data('page')) + 1)
-                    } else {
-                        $('#pager').remove()
-                    }
-
-                    let tempScrollTop = $(window).scrollTop();
-                    $('#primary').append($(data).find('.post'))
-                    $(window).scrollTop(tempScrollTop);
-                    Diaspora.loaded()
-                    $('html,body').animate({ scrollTop: tempScrollTop + 400 }, 500);
-                }, function () {
-                    tag.html('加载更多').data('status', 'loaded')
-                })
-
-                return false;
-                break;
-
-            // qrcode这里要改成vue的
-            case (tag.indexOf('icon-wechat') != -1):
-                var qrcode = new QRCode(document.getElementById("qr"), {
-                    width: 80,
-                    height: 80,
-                    useSVG: true,
-                    text: window.location.href
-                });
-                $('#qr').toggle()
-                break;
-
-            // audio play
-            case (tag.indexOf('icon-play') != -1):
-                document.getElementsByTagName("audio")[0].play()
-                $('.icon-play').removeClass('icon-play').addClass('icon-pause')
-                break;
-
-            // audio pause
-            case (tag.indexOf('icon-pause') != -1):
-                document.getElementsByTagName("audio")[0].pause()
-                $('.icon-pause').removeClass('icon-pause').addClass('icon-play')
-                break;
-
-            // post like
-            case (tag.indexOf('icon-like') != -1):
-                let t = $(e.target).parent(),
-                    classes = t.attr('class'),
-                    id = t.attr('id').split('like-');
-
-                if (t.prev().hasClass('icon-view')) return;
-                //if ((t.prev()).classList.contains('icon-view')) return;
-
-                classes = classes.split(' ');
-                if (classes[1] == 'active') return;
-
-                fetch(window.location.origin + '/action/like', {
-                    "headers": {"content-type": "application/x-www-form-urlencoded; charset=UTF-8"},
-                    "body": "cid="+id[1],
-                    "method": "POST",
-                })
-                    .then(function(response) {
-                        return response.text();
-                    })
-                    .then(function(text) {
-                        console.log('Request successful', text);
-                        let text1 = $('#like-' + id[1]).html();
-                        localStorage.setItem('isLike-' + id[1], 1);
-                        t.addClass('active');
-                        $('.count').html(JSON.parse(text).data.count);
-                    })
-                    .catch(function(error) {
-                        console.log('Request failed', error)
-                    });;
-                // $.ajax({
-                //     type: 'POST',
-                //     url: window.location.origin + '/action/like',
-                //     data: {
-                //         cid: id[1]
-                //     },
-                //     dataType: 'json',
-                //     success: function (ret) {
-                //         let text = $('#like-' + id[1]).html();
-
-                //         localStorage.setItem('isLike-' + id[1], 1);
-                //         t.addClass('active');
-                //         $('.count').html(ret.data.count);
-                //     }
-                // })
-                break;
-
             // history state
-            case (tag.indexOf('cover') != -1):
+            case (tag.indexOf('cover') !== -1):
                 Diaspora.HS($(e.target).parent(), 'push')
                 return false;
                 break;
 
             // history state
-            case (tag.indexOf('posttitle') != -1):
+            case (tag.indexOf('posttitle') !== -1):
                 Diaspora.HS($(e.target), 'push')
                 return false;
                 break;
 
             // prev, next post
-            case (rel == 'prev' || rel == 'next'):
-                if (rel == 'prev') {
+            case (rel === 'prev' || rel === 'next'):
+                if (rel === 'prev') {
                     let t = $('#prev_next a')[0].text
                 } else {
                     let t = $('#prev_next a')[1].text
@@ -542,23 +421,8 @@ $(function () {
                 return false;
                 break;
 
-            // quick view
-            case (tag.indexOf('pviewa') != -1):
-                //$('body').removeClass('mu')
-                document.body.classList.remove('mu');
-
-                setTimeout(function () {
-                    Diaspora.HS($(e.target), 'push')
-                }, 300)
-
-                return false;
-                break;
-
             default:
                 return;
-                break;
         }
-
     });
-});
-console.timeEnd("2");
+}

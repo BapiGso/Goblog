@@ -1,6 +1,5 @@
 {{template "header.template" "时间线"}}
 <body>
-<div id="loader"></div>
 <header id="top">
     <nav class="components">
         <a class="logo-min" href="javascript:history.back()"></a>

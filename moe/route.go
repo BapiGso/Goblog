@@ -27,13 +27,22 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 			),
 		),
 	}
-
 	//Secure防XSS，HSTS防中间人攻击 todo 防盗链
 	s.e.Pre(middleware.SecureWithConfig(middleware.SecureConfig{
 		HSTSMaxAge:            31536000,
 		HSTSPreloadEnabled:    true,
 		HSTSExcludeSubdomains: true,
 	}))
+	//cors防盗链
+	//s.e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	//	AllowOrigins: []string{"http://localhost:8080"}, // 允许的源地址
+	//	AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
+	//}))
+	// 中间件：禁用跨站请求伪造（CSRF）
+	//s.e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
+	//	TokenLookup: "header:X-CSRF-Token", // 从请求头中获取CSRF令牌
+	//}))
+
 	//s.e.Logger.SetLevel(log.INFO)
 	s.e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
 		LogMethod:   true,

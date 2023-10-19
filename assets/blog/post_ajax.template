@@ -1,5 +1,3 @@
-{{template "header.template" (index .PostArr 0).Title}}
-<body>
 <header id="top">
     <nav class="components">
         <a class="logo-min" href="javascript:history.back()"></a>
@@ -44,29 +42,3 @@
 </article>
 {{end}}
 {{template "comment.template" .}}
-{{template "footer.template"}}
-<script>
-
-    window.addEventListener('scroll', function () {
-        let scrollbar = document.querySelector('.scrollbar');
-        let subtitle = document.querySelector('.subtitle');
-        let content = document.querySelector('.content');
-
-        if (scrollbar && !('ontouchstart' in window)) {
-            let st = window.scrollY || document.documentElement.scrollTop;
-            let ct = content.offsetHeight;
-            if (st > ct) {
-                st = ct;
-            }
-            scrollbar.style.width = ((50 + st) / ct * 100) + '%';
-
-            if (st > 80 && window.innerWidth > 800) {
-                subtitle.style.visibility = 'visible';
-            } else {
-                subtitle.style.visibility = 'hidden';
-            }
-        }
-    });
-</script>
-</body>
-</html>

@@ -5,6 +5,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strings"
 )
 
 // Index TODO 加载更多、ajax
@@ -24,7 +25,7 @@ func Index(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	if err := c.Request().Header.Get("X-Requested-With"); err != "" {
+	if !strings.Contains(c.Request().Header.Get(echo.HeaderAccept), echo.MIMETextHTML) {
 		return c.Render(200, "index-primary_ajax.template", qpu)
 	}
 	return c.Render(200, "index.template", qpu)

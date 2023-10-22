@@ -1,7 +1,6 @@
 
 
 <script>
-    {{template "jquery.min.js"}}
     {{template "plugin.js"}}
     {{template "Diaspora.js"}}
     {{template "new_Diaspora.js"}}

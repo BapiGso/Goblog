@@ -9,7 +9,7 @@
                 <path class="right"/>
             </svg>
         </button>
-        <h3 class="subtitle"></h3>
+        <h3 class="subtitle">{{if ( index .PostArr 0)}}{{( index .PostArr 0).Title}}{{end}}</h3>
         <div class="like-icon">
             <a class="likeThis" href="javascript:" id="like-">
                 <span class="icon-like"></span>
@@ -45,28 +45,5 @@
 {{end}}
 {{template "comment.template" .}}
 {{template "footer.template"}}
-<script>
-
-    window.addEventListener('scroll', function () {
-        let scrollbar = document.querySelector('.scrollbar');
-        let subtitle = document.querySelector('.subtitle');
-        let content = document.querySelector('.content');
-
-        if (scrollbar && !('ontouchstart' in window)) {
-            let st = window.scrollY || document.documentElement.scrollTop;
-            let ct = content.offsetHeight;
-            if (st > ct) {
-                st = ct;
-            }
-            scrollbar.style.width = ((50 + st) / ct * 100) + '%';
-
-            if (st > 80 && window.innerWidth > 800) {
-                subtitle.style.visibility = 'visible';
-            } else {
-                subtitle.style.visibility = 'hidden';
-            }
-        }
-    });
-</script>
 </body>
 </html>

@@ -3,7 +3,6 @@ package handler
 import (
 	"SMOE/moe/database"
 	"github.com/labstack/echo/v4"
-	"strings"
 )
 
 func Post(c echo.Context) error {
@@ -22,8 +21,5 @@ func Post(c echo.Context) error {
 		return err
 	}
 	//fmt.Println(data.Post)
-	if !strings.Contains(c.Request().Header.Get(echo.HeaderAccept), echo.MIMETextHTML) {
-		return c.Render(200, "post_ajax.template", qpu)
-	}
 	return c.Render(200, "post.template", qpu)
 }

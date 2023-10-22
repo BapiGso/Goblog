@@ -4,92 +4,71 @@
  * @url http://lorem.in
  */
 let Home = location.href,
-    Pages = 5,
-    xhr,
-    xhrUrl = '';
-    newCommentIndex = 1;
+    preview = Object.assign(document.createElement("div"), { id: "preview" });
 
 
 let Diaspora = {
-
-    //ajax请求封装
-    L: function (url, f, err) {
-        debugger
-        if (url === xhrUrl) {
-            return false
-        }
-        xhrUrl = url;
-
-        if (xhr) {
-            xhr.abort()
-        }
-        xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.timeout = 10000;
-
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                f(xhr.responseText);
-            } else {
-                console.log(xhr.statusText, xhr.status);
-            }
-        };
-
-        xhrUrl = '';
-        xhr.send();
-        // xhr = $.ajax({
-        //     type: 'GET',
-        //     url: url,
-        //     timeout: 10000,
-        //     success: function (data) {
-        //         f(data)
-        //         xhrUrl = '';
-        //     },
-        //     error: function (a, b, c) {
-        //         if (b === 'abort') {
-        //             err && err()
-        //         } else {
-        //             window.location.href = url
-        //         }
-        //         xhrUrl = '';
-        //     }
-        // })
-    },
-
     SWLoader:function (){
-      if(document.querySelector("#loader")){
-          document.querySelector("#loader").remove()
+      if(document.getElementById("loader")){
+          document.getElementById("loader").remove()
       }else{
-          let l=document.createElement("div")
-          l.id="loader"
+          let l=Object.assign(document.createElement("div"), { id: "loader" });
           document.body.insertAdjacentElement("afterbegin",l)
       }
     },
 
-    SWPreview:function (){
-        let l=document.createElement("div")
-        l.id="preview"
-        document.body.insertAdjacentElement("afterbegin",l)
-    },
-
-    AJAX:function (url){
-        this.SWLoader()
+    // 传ajax的url和响应成功后需要执行的函数
+    AJAX:async function (url,func,errfunc){
         fetch(url)
             .then(function(response) {
                 return response.text(); // 将响应转换为文本
             })
             .then(function(data) {
-                let l=document.createElement("div")
-                l.id="preview"
-                l.innerHTML=data
-                document.body.insertAdjacentElement("afterbegin",l)
-                setTimeout(function(){document.querySelector("#container").style.display="none"}, 500);
+                    func(data)
             })
             .catch(function(error) {
+                errfunc()
                 // 处理错误
                 console.error('请求失败', error);
+                debugger;
+                window.location.href = url;
             });
-        this.SWLoader()
+    },
+
+    //传进来元素和flag状态
+    SingleLoader:function (tag,flag) {
+        let id = tag.getAttribute('data-id') || 0,
+            url = tag.getAttribute('href'),
+            title = tag.getAttribute('title') || tag.innerText || tag.textContent; // 根据需要获取文本内容
+        let state = { d: id, t: title, u: url };
+
+        Diaspora.AJAX(url,function (data) {
+            let parser = new DOMParser();
+            let htmlDoc = parser.parseFromString(data, 'text/html');
+            preview.innerHTML = htmlDoc.body.innerHTML;
+            document.body.insertAdjacentElement("afterbegin", preview)
+            Diaspora.player(id)
+            Diaspora.PS()
+            setTimeout(function () {
+                // 将window.scrollY的值设置为#container元素的data-scroll属性
+                document.getElementById('container').dataset.scroll = window.scrollY.toString();
+                preview.style.transform = "unset"
+                setTimeout(function () {
+                    document.querySelector("#container").style.display = "none"
+                }, 100)
+            },500)
+            document.title = title;
+            switch (flag) {
+                case 'push':
+                    debugger
+                    history.pushState(state, title, url)
+                    break;
+                //评论翻页的时候会用这个
+                case 'replace':
+                    history.replaceState(state, title, url)
+                    break;
+            }
+        })
     },
 
     PS: function () {
@@ -99,131 +78,36 @@ let Diaspora = {
 
         window.addEventListener('popstate', function (e) {
             let state = e.state;
-
             if (!state) return;
-
             document.title = state.t;
 
             if (state.u === Home) {
-                $('#preview').css('position', 'fixed')
+                preview.style.transform="translateX(100%)"
+                document.getElementById('container').style.display = 'block';
+                // window.scrollTo(0, parseInt(document.getElementById('container').dataset.scroll));
+            } else {//后退之后又前进
+                document.body.insertAdjacentElement("afterbegin", preview)
+                //todo 后退后前进滚动条会跳动
+                // window.scrollTo(0, parseInt(document.getElementById('container').dataset.scroll));
                 setTimeout(function () {
-                    $('#preview').removeClass('show').addClass('trans')
-                    $('#container').show()
-                    window.scrollTo(0, parseInt($('#container').data('scroll')))
+                    preview.style.transform = "unset"
                     setTimeout(function () {
-                        $('#preview').html('')
-                        $(window).trigger('resize')
-                    }, 300)
-                }, 0)
-            } else {
-                Diaspora.SWLoader()
-
-                Diaspora.L(state.u, function (data) {
-
-                    document.title = state.t;
-
-                    $('#preview').html($(data).filter('body'));
-
-                    Diaspora.preview();
-
-                    setTimeout(function () {
-                        Diaspora.player(state.d);
-                    }, 0);
-                })
+                        document.querySelector("#container").style.display = "none"
+                    }, 100)
+                },500)
             }
 
         })
-    },
-
-    //传进来a标签和自定义flag
-    HS: function (tag, flag) {
-        debugger
-        let id = tag.data('id') || 0,
-            url = tag.attr('href'),
-            title = tag.attr('title') || tag.text();
-
-        if (!$('#preview').length || !(window.history && history.pushState)) location.href = url;
-
-        Diaspora.SWLoader()
-
-        let state = { d: id, t: title, u: url };
-        debugger
-        Diaspora.L(url, function (data) {
-            if (!$(data).filter().length) {
-                location.href = url;
-                return
-            }
-
-            switch (flag) {
-
-                case 'push':
-                    history.pushState(state, title, url)
-                    break;
-
-                case 'replace':
-                    history.replaceState(state, title, url)
-                    break;
-
-            }
-            document.title = title;
-
-            $('#preview').html($(data).filter())
-
-            switch (flag) {
-                case 'push':
-                    Diaspora.preview()
-                    break;
-                case 'replace':
-                    window.scrollTo(0, 0)
-                    Diaspora.SWLoader()
-                    break;
-            }
-
-            setTimeout(function () {
-                if (!id) id = $('.icon-play').data('id');
-                Diaspora.player(id)
-                // get download link
-                //给文章中的图片添加占位图用的
-                $('.content img').each(function () {
-                    if ($(this).attr('src').indexOf('/uploads/2014/downloading.png') > -1) {
-                        $(this).hide()
-                        $('.downloadlink').attr('href', $(this).parent().attr('href'))
-                    }
-                })
-
-                if (flag === 'replace') {
-                    $('#top').show()
-                }
-            }, 100)
-
-        })
-    },
-
-    //只给preview添加动画用的，里面的数据是在这个方法之前调用
-    preview: function () {
-        setTimeout(function () {
-            $('#preview').addClass('show')
-            $('#container').data('scroll', window.scrollY)
-            setTimeout(function () {
-                $('#container').hide()
-                setTimeout(function () {
-                    $('#preview').css({
-                        'position': 'static',
-                        'overflow-y': 'auto'
-                    }).removeClass('trans')
-                    $('#top').show()
-
-                    Diaspora.SWLoader()
-                }, 500)
-            }, 300)
-        }, 0)
     },
 
     player: function (id) {
-        let au = document.querySelector('#audio')
+        let au = document.getElementById('audio')
         let playButton = document.querySelector('.icon-play');
         let playbackBar = document.querySelector('.playbackbar');
 
+        if(!au){
+            return
+        }
         // 检查
         // if (!au.length()) {
         //     //todo 颜色变暗
@@ -260,169 +144,112 @@ let Diaspora = {
         $('#loader').removeClass().hide()
     },
 
-    F: function (id, w, h) {
-        let _height = $(id).parent().height(),
-            _width = $(id).parent().width(),
-            ratio = h / w;
+    SubmitComment:function (e) {
+        if (e.preventDefault) e.preventDefault();
+        // 获取表单元素
+        const form = document.querySelector('form');
 
-        if (_height / _width > ratio) {
-            id.style.height = _height + 'px';
-            id.style.width = _height / ratio + 'px';
+        // 设置表单action
+        const localpath = window.location.pathname
+        form.action = localpath + '/comment';
+        // 构建额外的参数
+        const extraData = {
+            timestamp: Date.now(),
+        };
+        // 构建FormData对象
+        const formData = new FormData(form);
+        if (form.parentElement.firstChild !== form) {
+
         } else {
-            id.style.width = _width + 'px';
-            id.style.height = _width * ratio + 'px';
+            extraData.parent = "0"
         }
+        extraData.cid = localpath.split("/")[localpath.length - 1]
 
-        id.style.left = (_width - parseInt(id.style.width)) / 2 + 'px';
-        id.style.top = (_height - parseInt(id.style.height)) / 2 + 'px';
+        // 追加额外参数
+        Object.keys(extraData).forEach(key => {
+            formData.append(key, extraData[key]);
+        });
+        // 提交表单
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    // 成功提交
+                    alert('评论发表成功!');
+                } else {
+                    // 请求失败
+                    alert('评论发表失败,请重试!');
+                }
+            });
+
+        // 阻止表单默认提交行为
+        return false;
     },
-}
 
-function old () {
-
-    if (('ontouchstart' in window)) {
-        $('body').addClass('touch')
-    }
-    debugger
-    if ($('#preview').length) {
-
-        let cover = {};
-        cover.t = $('#cover');
-        cover.w = cover.t.attr('width');
-        cover.h = cover.t.attr('height');
-
-        ; (cover.o = function () {
-            $('#mark').height(window.innerHeight)
-        })();
-
-        if (cover.t.prop('complete')) {
-            // why setTimeout ?
-            setTimeout(function () { cover.t.load() }, 0)
-        }
-
-        cover.t.on('load', function () {
-
-            ; (cover.f = function () {
-
-                let _w = $('#mark').width(), _h = $('#mark').height(), x, y, i, e;
-
-                e = (_w >= 1000 || _h >= 1000) ? 1000 : 500;
-
-                if (_w >= _h) {
-                    i = _w / e * 50;
-                    y = i;
-                    x = i * _w / _h;
-                } else {
-                    i = _h / e * 50;
-                    x = i;
-                    y = i * _h / _w;
-                }
-
-                $('.layer').css({
-                    'width': _w + x,
-                    'height': _h + y,
-                    'marginLeft': - 0.5 * x,
-                    'marginTop': - 0.5 * y
-                })
-
-                if (!cover.w) {
-                    cover.w = cover.t.width();
-                    cover.h = cover.t.height();
-                }
-
-                Diaspora.F($('#cover')[0], cover.w, cover.h)
-
-            })();
-
-
-            let vibrant = new Vibrant(cover.t[0]);
-            let swatches = vibrant.swatches()
-
-            if (swatches['DarkVibrant']) {
-                $('#vibrant polygon').css('fill', swatches['DarkVibrant'].getHex())
-            }
-            if (swatches['Vibrant']) {
-                $('.icon-menu').css('color', swatches['Vibrant'].getHex())
-            }
-
-        })
-
-        if (!cover.t.attr('src')) {
-            alert('Please set the post thumbnail')
-        }
-
-        $('#preview').css('min-height', window.innerHeight)
-
-        Diaspora.PS()
-
-
-        let T;
-        $(window).on('resize', function () {
-            clearTimeout(T)
-
-            T = setTimeout(function () {
-                if (!('ontouchstart' in window) && location.href == Home) {
-                    cover.o()
-                    cover.f()
-                }
-
-                if ($('#loader').attr('class')) {
-                    Diaspora.SWLoader()
-                }
-            }, 500)
-        })
-
-    } else {
-
-        $('body').css('min-height', window.innerHeight)
-
-        window.addEventListener('popstate', function (e) {
-            if (e.state) location.href = e.state.u;
-        })
-
-        Diaspora.player($('.icon-play').data('id'))
-
-        $('.icon-icon, .image-icon').attr('href', '/')
-    }
-
-
-
-    $('body').on('click', function (e) {
-
-        let tag = $(e.target).attr('class') || '',
-            rel = $(e.target).attr('rel') || '';
-
-        if (!tag && !rel) return;
-
-        switch (true) {
-
-            // history state
-            case (tag.indexOf('cover') !== -1):
-                Diaspora.HS($(e.target).parent(), 'push')
-                return false;
-                break;
-
-            // history state
-            case (tag.indexOf('posttitle') !== -1):
-                Diaspora.HS($(e.target), 'push')
-                return false;
-                break;
-
-            // prev, next post
-            case (rel === 'prev' || rel === 'next'):
-                if (rel === 'prev') {
-                    let t = $('#prev_next a')[0].text
-                } else {
-                    let t = $('#prev_next a')[1].text
-                }
-                $(e.target).attr('title', t)
-
-                Diaspora.HS($(e.target), 'replace')
-                return false;
-                break;
-
-            default:
-                return;
-        }
+    ReplyComment:function () {
+    let commentForm = document.getElementById("comment-form")
+    const buttongroup = commentForm.querySelector("#buttongroup")
+    const cancelButton = document.createElement('button');
+    cancelButton.className = "cancelButton";
+    cancelButton.innerText = "取消回复";
+    cancelButton.addEventListener('click', function () {
+        const commentWrap = document.querySelector(".comment-wrap")
+        commentWrap.insertAdjacentElement("afterbegin", commentForm)
+        cancelButton.remove()
     });
+    if (!buttongroup.querySelector(".cancelButton")) {
+        buttongroup.insertAdjacentElement("afterbegin", cancelButton);
+    }
+
+    commentForm.action = new URL(window.location.href).pathname + "/comment"
+    // 获取当前点击的按钮
+    const replyButton = event.target;
+    // 获取按钮的父节点的父节点
+    const grandParentNode = replyButton.parentNode.parentNode;
+    // 将表单插入到按钮的父节点的父节点后面
+    grandParentNode.insertAdjacentElement("afterend", commentForm);
+},
+
+    scroller: function (){
+        let scrollbar = document.querySelector('.scrollbar');
+        let subtitle = document.querySelector('.subtitle');
+        let article = document.getElementsByTagName('article');
+
+        if (scrollbar && !('ontouchstart' in window)) {
+            let st = window.scrollY||document.documentElement.scrollTop ;
+            if (document.getElementById('preview')){
+                st= document.getElementById('preview').scrollTop;
+            }
+            let ct = article.offsetHeight;
+            if (st > ct) {
+                st = ct;
+            }
+            scrollbar.style.width = ((50 + st) / ct * 100) + '%';
+
+            if (st > 80 && window.innerWidth > 800) {
+                subtitle.style.visibility = 'visible';
+            } else {
+                subtitle.style.visibility = 'hidden';
+            }
+        }
+    },
+
+    init:function () {
+        if (('ontouchstart' in window)) {
+            $('body').addClass('touch')
+        }
+        if(document.getElementById("container")){
+            Diaspora.PS()
+        }else {
+            window.addEventListener('popstate', function (e) {
+                if (e.state) location.href = e.state.u;
+            })
+            document.querySelector(".logo-min").href="/";
+        }
+
+    }
 }
+
+Diaspora.init()

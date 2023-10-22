@@ -1,7 +1,7 @@
 {{range slice .PostArr 1}}
     <div class="post">
         <a data-id="{{ .Cid }}" href="/archives/{{.Cid}}" title="{{.Title}}">
-            <img src="/usr/uploads{{.GetCoverList}}" alt="illustration">
+            <img class="cover" width="680" height="440" src="/usr/uploads{{.GetCoverList}}" alt="illustration">
         </a>
         <div class="else">
             <p>{{ .UnixToStr }}</p>
@@ -20,3 +20,8 @@
         </div>
     </div>
 {{- end }}
+{{if ne .HaveNext 0}}
+    <div id="pager">
+        <a href="/page/{{.HaveNext}}" data-url="/page/{{.HaveNext}}" class="more">加载更多</a>
+    </div>
+{{end}}

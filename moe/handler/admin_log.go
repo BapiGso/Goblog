@@ -21,4 +21,5 @@ func LogAccess(c echo.Context) error {
 		return err
 	}
 	return c.Render(200, "log-access.template", qpu)
+
 }

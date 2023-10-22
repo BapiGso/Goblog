@@ -23,7 +23,6 @@
             {{end}}
         </div>
     </article>
-
 {{template "footer.template"}}
 </body>
 </html>

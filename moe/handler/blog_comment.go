@@ -3,6 +3,7 @@ package handler
 import (
 	"SMOE/moe/database"
 	"github.com/labstack/echo/v4"
+	"html"
 	"strings"
 )
 
@@ -31,6 +32,7 @@ func SubmitArticleComment(c echo.Context) error {
 	} else {
 		reqMap["Ip"] = c.RealIP()
 		reqMap["Agent"] = c.Request().UserAgent()
+		reqMap["Text"] = html.EscapeString(reqMap["Text"].(string)) //防止xss
 	}
 	if err := database.InsertComment(reqMap); err != nil {
 		return err

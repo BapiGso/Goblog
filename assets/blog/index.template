@@ -14,17 +14,12 @@
     </div>
 
     <div id="container">
-        {{- template "index-container.template" . -}}
+        <div id="screen">
+            {{- template "index-container.template" . -}}
+        </div>
         <div id="primary">
             {{- template "index-primary.template" . -}}
         </div>
-
-        {{if ne .HaveNext 0}}
-        <div id="pager">
-            <a href="/page/{{.HaveNext}}" data-url="/page/{{.HaveNext}}" class="more">加载更多</a>
-        </div>
-        {{end}}
-
     </div>
     {{template "footer.template"}}
     <script>

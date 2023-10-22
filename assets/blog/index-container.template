@@ -1,32 +1,30 @@
 {{with index .PostArr 0}}
-    <div id="screen">
-        <div id="mark">
-            <div class="layer" data-depth="0.4">
-                <img id="cover" crossorigin="anonymous" src="/usr/uploads/cover/1.webp" alt="illustration">
-            </div>
-        </div>
-
-        <div id="vibrant">
-            <svg viewBox="0 0 2880 1620" height="100%" preserveAspectRatio="xMaxYMax slice">
-                <polygon opacity="0.7" points="2000,1620 0,1620 0,0 600,0 "/>
-            </svg>
-        </div>
-
-        <div id="header">
-            <a class="logo" href="/"></a>
-            <button class="icon-menu switchmenu">
-                <svg  width="32" height="32" viewBox="0 0 100 100">
-                    <path class="line line1"/>
-                    <path class="line line2"/>
-                    <path class="line line3"/>
-                </svg>
-            </button>
-        </div>
-
-        <div id="post0">
-            <p>{{ .UnixToStr }}</p>
-            <h2><a data-id="{{ .Cid }}" class="posttitle" href="/archives/{{ .Cid }}">{{ .Title }}</a></h2>
-            <div class="summary"><p>{{- .MDSub -}}...</p></div>
-        </div>
+<div id="mark">
+    <div class="layer" data-depth="0.4">
+        <img id="cover" crossorigin="anonymous" src="/usr/uploads/cover/1.webp" alt="illustration">
     </div>
+</div>
+
+<div id="vibrant">
+    <svg viewBox="0 0 2880 1620" height="100%" preserveAspectRatio="xMaxYMax slice">
+        <polygon opacity="0.7" points="2000,1620 0,1620 0,0 600,0 "/>
+    </svg>
+</div>
+
+<div id="header">
+    <a class="logo" href="/"></a>
+    <button class="icon-menu switchmenu">
+        <svg  width="32" height="32" viewBox="0 0 100 100">
+            <path class="line line1"/>
+            <path class="line line2"/>
+            <path class="line line3"/>
+        </svg>
+    </button>
+</div>
+
+<div id="post0">
+    <p>{{ .UnixToStr }}</p>
+    <h2><a data-id="{{ .Cid }}" class="posttitle" href="/archives/{{ .Cid }}">{{ .Title }}</a></h2>
+    <div class="summary"><p>{{- .MDSub -}}...</p></div>
+</div>
 {{end}}

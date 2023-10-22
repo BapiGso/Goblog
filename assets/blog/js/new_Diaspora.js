@@ -4,7 +4,7 @@ window.addEventListener('touchmove', function (e) {
     }
 });
 
-document.body.addEventListener('click', function (e) {
+window.addEventListener('click', function (e) {
     let target = e.target;
     let tag = target.className || '';
     let rel = target.getAttribute('rel') || '';
@@ -14,23 +14,13 @@ document.body.addEventListener('click', function (e) {
         case (tag.indexOf('switchmenu') !== -1):
             window.scrollTo(0, 0);
             document.documentElement.classList.toggle('mu');
-            document.body.classList.toggle('mu');
             break;
         //加载更多
         case (tag.indexOf('more') !== -1):
-            var moreButton = document.querySelector('.more');
+            e.preventDefault();
+            let moreButton = document.querySelector('.more');
             // 如果已经在加载了
             if (moreButton.dataset.status === 'loading') {
-                return;
-            }
-
-            var num = parseInt(moreButton.dataset.page) || 1;
-
-            if (num === 1) {
-                moreButton.dataset.page = 1;
-            }
-
-            if (num >= Pages) {
                 return;
             }
 
@@ -39,29 +29,15 @@ document.body.addEventListener('click', function (e) {
             moreButton.dataset.status = 'loading';
             Diaspora.SWLoader();
 
-            Diaspora.L(moreButton.href, function (data) {
-                var link = $(data).find('.more').attr('href');
-                if (link !== undefined) {
-                    moreButton.href = link;
-                    moreButton.innerHTML = '加载更多';
-                    moreButton.dataset.status = 'loaded';
-                    moreButton.dataset.page = parseInt(moreButton.dataset.page) + 1;
-                } else {
-                    var pager = document.getElementById('pager');
-                    if (pager) {
-                        pager.remove();
-                    }
-                }
-
-                var tempScrollTop = window.scrollY || document.documentElement.scrollTop;
-                document.getElementById('primary').insertAdjacentHTML('beforeend', $(data).find('.post')[0].outerHTML);
-                window.scrollTo(0, tempScrollTop);
-                Diaspora.SWLoader();
-                window.scrollTo(0, tempScrollTop + 400);
+            Diaspora.AJAX(moreButton.href, function (data) {
+                let tmpScrollTop = window.scrollY || document.documentElement.scrollTop;
+                document.getElementById('pager').remove()
+                document.getElementById('primary').insertAdjacentHTML('beforeend', data);
             }, function () {
                 moreButton.innerHTML = '加载更多';
                 moreButton.dataset.status = 'loaded';
             });
+            Diaspora.SWLoader();
             break;
 
         // audio play
@@ -69,8 +45,6 @@ document.body.addEventListener('click', function (e) {
             audio = document.querySelector("audio");
             audio.play().then(function (){
                 let iconPlay = document.querySelector('.icon-play');
-                iconPlay.classList.remove('icon-play');
-                iconPlay.classList.add('icon-pause');
             }).catch(function (err){
                 console.log(err)
             });
@@ -85,29 +59,57 @@ document.body.addEventListener('click', function (e) {
             break;
         //点击独立页面时
         case (tag.indexOf('pagelist') !== -1):
-            //$('body').removeClass('mu')
-            document.body.classList.remove('mu');
-
-            setTimeout(function () {
-                Diaspora.HS($(e.target), 'push')
-            }, 300)
+            e.preventDefault();
+            document.documentElement.classList.remove('mu');
+            Diaspora.SingleLoader(e.target,'push')
             break;
-        // 其他情况的处理代码...
         // history state
         case (tag.indexOf('cover') !== -1):
-            Diaspora.HS($(e.target).parent(), 'push')
+            e.preventDefault();
+            debugger
+            Diaspora.SingleLoader(e.target.parentElement,'push')
             break;
 
         // history state
         case (tag.indexOf('posttitle') !== -1):
             e.preventDefault();
-            Diaspora.AJAX(e.target.getAttribute('href'))
+            Diaspora.SingleLoader(e.target,'push')
+            debugger
             break;
         default:
             return
     }
 });
 
+// 在document上添加滚动事件监听器
+window.addEventListener('scroll',Diaspora.scroller);
+preview.addEventListener('scroll',Diaspora.scroller);
 
 
+window.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const form = document.querySelector('form');
+    const formData = new FormData(form);
+    const local = window.location.pathname
+    if (form.parentElement.firstElementChild !== form) {
+        //获取要回复评论的id
+        formData.append('parent', form.previousElementSibling.id);
+    }
+    formData.append('cid', local.split("/")[local.split("/").length - 1])
+    // 提交表单
+    fetch(local + '/comment', {
+        method: 'POST',
+        body: formData
+    })
+        .then(function (response) {
+            // 处理响应
+            console.log(response);
+        })
+        .catch(function (error) {
+            // 处理错误
+            console.error(error);
+        });
+})
 
+
+//todo 页面加载完后检查localstorage

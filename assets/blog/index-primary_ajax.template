@@ -1,40 +1,28 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta name="ROBOTS" content="NOINDEX,FOLLOW" >
-    </head>
-    <body>
-    <div id="container">
-        <div id="primary">
-            {{range .PostArr }}
-            <div class="post">
-                <a data-id="{{ .Cid }}" href="/archives/{{.Cid}}" title="{{.Title}}">
-                    <img width="680" height="440" src="/usr/uploads{{.GetCoverList}}" class="cover" alt="illustration">
-                </a>
-                <div class="else">
-                    <p>{{ .UnixToStr }}</p>
-                    <h3><a data-id="{{ .Cid }}" class="posttitle" href="/archives/{{ .Cid }}">{{ .Title }}</a></h3>
-                    <div class="abstract">
-                        <p>{{- .MDSub -}}...</p>
-                    </div>
-                    <div class="here">
-                        <span class="icon-letter"></span>
-                        <p>{{ .MDCount }}</p>
-                        <span class="icon-view"></span>
-                        <p>{{ .Views }}</p>
-                        <span class="icon-like"></span>
-                        <p>{{ .Likes }}</p>
-                    </div>
-                </div>
-            </div>
-            {{- end }}
-        </div>>
-        {{if (ne .HaveNext 0)}}
-        <div id="pager">
-            <a href="/page/{{.HaveNext}}" data-url="/page/{{.HaveNext}}" class="more">加载更多</a>
+{{range .PostArr }}
+<div class="post">
+    <a data-id="{{ .Cid }}" href="/archives/{{.Cid}}" title="{{.Title}}">
+        <img class="cover" width="680" height="440" src="/usr/uploads{{.GetCoverList}}" alt="illustration">
+    </a>
+    <div class="else">
+        <p>{{ .UnixToStr }}</p>
+        <h3><a data-id="{{ .Cid }}" class="posttitle" href="/archives/{{ .Cid }}">{{ .Title }}</a></h3>
+        <div class="abstract">
+            <p>{{- .MDSub -}}...</p>
         </div>
-        {{end}}
+        <div class="here">
+            <span class="icon-letter"></span>
+            <p>{{ .MDCount }}</p>
+            <span class="icon-view"></span>
+            <p>{{ .Views }}</p>
+            <span class="icon-like"></span>
+            <p>{{ .Likes }}</p>
+        </div>
     </div>
-    <div id="preview" class="trans"></div>
-    </body>
-</html>
+</div>
+{{- end }}
+
+{{if (ne .HaveNext 0)}}
+<div id="pager">
+    <a href="/page/{{.HaveNext}}" data-url="/page/{{.HaveNext}}" class="more">加载更多</a>
+</div>
+{{end}}

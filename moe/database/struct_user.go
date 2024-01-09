@@ -1,6 +1,6 @@
 package database
 
-// 内存对齐 https://geektutu.com/post/hpg-struct-alignment.html
+// User 内存对齐 https://geektutu.com/post/hpg-struct-alignment.html
 type User struct {
 	Uid        string  `db:"uid"`
 	Name       string  `db:"name"`
@@ -13,4 +13,9 @@ type User struct {
 	Logged     int     `db:"logged"`
 	Group      string  `db:"group"`
 	AuthCode   string  `db:"authCode"`
+}
+
+type person struct {
+	*User
+	*Comments
 }

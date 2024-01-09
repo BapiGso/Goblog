@@ -6,6 +6,7 @@ import (
 	"log/slog"
 )
 
+// LogAccess todo 不要依赖database
 func LogAccess(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		go func() {

@@ -5,19 +5,35 @@ import (
 	"time"
 )
 
-// CommentsWithCid 根据文章cid查询该文章的评论
-func (q *QPU) CommentsWithCid(cid int) error {
-	err := db.Select(&q.CommArr, `SELECT * FROM  typecho_comments 
-		WHERE cid=?
-		ORDER BY created`, cid)
+// GetComms  根据条件查询多条评论 状态 条数 页数
+func (q *QPU) GetComms(status string, limit, pageNum int) error {
+	err := DB.Select(&q.Comments, `
+		SELECT * FROM  typecho_comments
+		WHERE status=?
+		ORDER BY ROWID DESC
+		LIMIT ? OFFSET ?`, status, limit+1, pageNum*limit-limit)
+	//多查一个判断是否有下一页
+	if len(q.Comments) == limit+1 {
+		//q.HaveNext = pageNum + 1
+		q.Contents = q.Contents[:len(q.Contents)-1]
+	}
 	return err
 }
 
-// SortComments 排序评论
+// CommentsWithCid 根据文章cid查询该文章的评论
+func (q *QPU) CommentsWithCid(status string, cid int) error {
+	err := DB.Select(&q.Comments, `SELECT * FROM  typecho_comments 
+		WHERE cid=?
+		AND status=?
+		ORDER BY created`, cid, status)
+	return err
+}
+
+// SortComments 文章页面的评论区用到了该函数 排序评论
 func (q *QPU) SortComments() [][]Comments {
 	var final [][]Comments
 	parentMap := make(map[uint]int)
-	for _, v := range q.CommArr {
+	for _, v := range q.Comments {
 		//父评论新建一个组，因为按时间排序肯定比子评论先
 		if v.Parent == 0 {
 			//初始化tmp的同时就把v加入切片
@@ -56,7 +72,7 @@ func InsertComment(data map[string]any) error {
 			return &url
 		}(data["Url"].(string)),
 	}
-	tx, err := db.Beginx()
+	tx, err := DB.Beginx()
 	if err != nil {
 		tx.Rollback()
 		return err

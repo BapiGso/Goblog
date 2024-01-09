@@ -7,27 +7,10 @@
 </header>
 
     <article class="page" >
-        <div class="content">
-            <div class="bangumi">
-                <h2><strong>看过</strong></h2>
-                <ul>
-                {{range index .Data 2}}
+        <h2><strong>看过</strong></h2>
+        <ul>
+            {{range index .Data 2}}
                 {{with .Subject}}
-                <li>
-                    <a href="" target="_blank">
-                    <img alt="{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}{{.NameCn}}" class="cover" src="{{with .Images}}{{.Medium}}{{end}}">
-                    </a>
-                    <p>{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}</p>
-                </li>
-                {{end}}
-                {{end}}
-                </ul>
-            </div>
-            <div class="bangumi">
-                <h2><strong>想看</strong></h2>
-                <ul>
-                    {{range index .Data 1}}
-                    {{with .Subject}}
                     <li>
                         <figure>
                             <img alt="{{.Name}}" class="cover" src="{{with .Images}}{{.Small}}{{end}}">
@@ -37,24 +20,29 @@
                                 <h6>{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}</h6>
                                 <p>{{.Score}}/10</p>
                             </section>
-                            <section>
-                                <time>{{.Date}}</time>
-                                <span>
-                                    {{range $k ,$v := .Tags }}
-                                        {{if le $k 2}}
-                                            {{.Name}}
-                                        {{end}}
-                                    {{end}}
-                                </span>
-                            </section>
                         </figcaption>
                     </li>
-                    {{end}}
-                    {{end}}
-                </ul>
-            </div>
-        </div>
+                {{end}}
+            {{end}}
+        </ul>
+        <h2><strong>想看</strong></h2>
+        <ul>
+            {{range index .Data 1}}
+            {{with .Subject}}
+            <li>
+                <figure>
+                    <img alt="{{.Name}}" class="cover" src="{{with .Images}}{{.Small}}{{end}}">
+                </figure>
+                <figcaption>
+                    <section>
+                        <h6>{{if .NameCn}}{{.NameCn}}{{else}}{{.Name}}{{end}}</h6>
+                        <p>{{.Score}}/10</p>
+                    </section>
+                </figcaption>
+            </li>
+            {{end}}
+            {{end}}
+        </ul>
     </article>
 {{template "footer.template"}}
 </body>
-</html>

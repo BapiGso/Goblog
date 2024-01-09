@@ -1,7 +1,7 @@
 package database
 
 func InsertAccess(data map[string]any) error {
-	err := db.Select(&data, `SELECT * FROM  main.typecho_access_log
+	err := DB.Select(&data, `SELECT * FROM  main.typecho_access_log
         WHERE robot=0
 		ORDER BY id DESC
 		LIMIT ? OFFSET ?`)
@@ -9,8 +9,8 @@ func InsertAccess(data map[string]any) error {
 }
 
 // Access  查询日志
-func (q *QPU) Access(limit, pageNum int) error {
-	err := db.Select(&q.AccessArr, `
+func (q *QPU) GetAccess(limit, pageNum int) error {
+	err := DB.Select(&q.Access, `
 		SELECT * FROM  typecho_access_log
 		ORDER BY ROWID DESC
 		LIMIT ? OFFSET ?`, limit, pageNum*limit-limit)

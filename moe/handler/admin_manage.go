@@ -5,14 +5,14 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func ManagePost(c echo.Context) error {
+func Manage(c echo.Context) error {
 	qpu := database.NewQPU()
 	defer qpu.Free()
 	req := &struct {
+		Type       string `param:"type"       default:"post" `
 		CommStatus string `query:"commstatus" default:"approved" `
-		Status     string `query:"status" default:"publish" `
-		Page       int    `query:"page" default:"1"`
-		Cid        int    `query:"cid" default:"1"`
+		Status     string `query:"status"     default:"publish" `
+		Page       int    `query:"page"       default:"1"`
 	}{}
 	if err := c.Bind(req); err != nil {
 		return err
@@ -20,69 +20,21 @@ func ManagePost(c echo.Context) error {
 	if err := c.Validate(req); err != nil {
 		return err
 	}
-	if err := qpu.GetPosts(req.Status, 10, req.Page); err != nil {
-		return err
+	switch req.Type {
+	case "post":
+		if err := qpu.GetPosts(req.Status, 10, req.Page); err != nil {
+			return err
+		}
+	case "page":
+		if err := qpu.GetPages(); err != nil {
+			return err
+		}
+	case "comment":
+		if err := qpu.GetComms(req.CommStatus, 10, req.Page); err != nil {
+			//fmt.Println(len(qpu.CommArr))
+			return err
+		}
 	}
-	return c.Render(200, "manage-posts.template", qpu)
-}
 
-func ManagePage(c echo.Context) error {
-	qpu := database.NewQPU()
-	defer qpu.Free()
-	req := &struct {
-		CommStatus string `query:"commstatus" default:"approved" `
-		Status     string `query:"status" default:"publish" `
-		Page       int    `query:"page" default:"1"`
-		Cid        int    `query:"cid" default:"1"`
-	}{}
-	if err := c.Bind(req); err != nil {
-		return err
-	}
-	if err := c.Validate(req); err != nil {
-		return err
-	}
-	if err := qpu.GetPages(); err != nil {
-		return err
-	}
-	return c.Render(200, "manage-pages.template", qpu)
-}
-
-func ManageComment(c echo.Context) error {
-	qpu := database.NewQPU()
-	defer qpu.Free()
-	req := &struct {
-		CommStatus string `query:"commstatus" default:"approved" `
-		Status     string `query:"status" default:"publish" `
-		Page       int    `query:"page" default:"1"`
-		Cid        int    `query:"cid" default:"1"`
-	}{}
-	if err := c.Bind(req); err != nil {
-		return err
-	}
-	if err := c.Validate(req); err != nil {
-		return err
-	}
-	//if err := qpu.CommentsWithCid(); err != nil {
-	//	return err
-	//}
-	//qpu.
-	return c.Render(200, "manage-comments.template", qpu)
-}
-
-func ManageMedia(c echo.Context) error {
-	qpu := database.NewQPU()
-	defer qpu.Free()
-	req := &struct {
-		CommStatus string `query:"commstatus" default:"approved" `
-		Status     string `query:"status" default:"publish" `
-		Page       int    `query:"page" default:"1"`
-		Cid        int    `query:"cid" default:"1"`
-	}{}
-	if err := c.Bind(req); err != nil {
-		return err
-	}
-	if err := c.Validate(req); err != nil {
-		return err
-	}
-	return c.Render(200, "manage-medias.template", qpu)
+	return c.Render(200, "manage.template", qpu)
 }

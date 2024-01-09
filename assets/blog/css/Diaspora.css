@@ -1078,7 +1078,7 @@ h1.title {
 .content ul,
 .content ol {
     margin: 10px 0;
-    padding-left: 20px;
+    padding-left: 35px;
 }
 
 .content ul li {
@@ -1112,21 +1112,25 @@ h1.title {
 
 .bangumi img {
     width: 100%;
-    height: auto;
+    height: 200px;
     object-fit: cover;
 }
 
 .bangumi li section {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 5px 10px;
 }
 
-.bangumi section h5 {
-    flex: 3;
-    word-break: break-all;
+.bangumi section h6{
+    margin: 0;
+    padding: 0;
+}
+
+.bangumi section p,
+.bangumi figcaption time{
+    transform: scale(0.6);
 }
 
 

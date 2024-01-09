@@ -11,18 +11,35 @@ import (
 // Index TODO 加载更多、ajax
 func Index(c echo.Context) error {
 	//判断页数查数据库
-	qpu := database.NewQPU()
-	defer qpu.Free()
-	PageNum, err := validateNum(c.Param("num"))
+	qpu := new(database.QPU)
+	pageNum, err := validateNum(c.Param("num"))
 	if err != nil {
 		return err
 	}
-	err = qpu.GetPages()
-	if err != nil {
+	//查询文章和独立页面
+	if err := database.DB.Select(&qpu.Contents, `
+		SELECT * FROM (
+		  SELECT * FROM typecho_contents 
+		  WHERE type='post' AND status= ?
+		  ORDER BY ROWID DESC
+		  LIMIT ? OFFSET ?  
+		) t1
+		UNION ALL
+		SELECT * FROM  typecho_contents
+		WHERE type='page'
+		ORDER BY "order"
+		`, "publish", 6, pageNum*5-5); err != nil {
 		return err
 	}
-	err = qpu.GetPosts("publish", 5, PageNum)
-	if err != nil {
+	if err := database.DB.Select(&qpu.Fields, `
+		SELECT * FROM  typecho_fields
+		WHERE name='coverList' AND cid IN (
+			SELECT cid FROM typecho_contents
+			WHERE type='post' AND status= ?
+			ORDER BY ROWID DESC
+			LIMIT ? OFFSET ?
+		)
+		`, "publish", 5, pageNum*5-5); err != nil {
 		return err
 	}
 	if !strings.Contains(c.Request().Header.Get(echo.HeaderAccept), echo.MIMETextHTML) {

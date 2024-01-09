@@ -1,4 +1,4 @@
-{{template "header.template" (index .PostArr 0).Title}}
+{{template "header.template" (index .Contents 0).Title}}
 <body>
 <header id="top">
     <nav class="components">
@@ -9,7 +9,7 @@
                 <path class="right"/>
             </svg>
         </button>
-        <h3 class="subtitle">{{if ( index .PostArr 0)}}{{( index .PostArr 0).Title}}{{end}}</h3>
+        <h3 class="subtitle">{{with ( index .Contents 0)}}{{.Title}}{{end}}</h3>
         <div class="like-icon">
             <a class="likeThis" href="javascript:" id="like-">
                 <span class="icon-like"></span>
@@ -26,7 +26,7 @@
 </header>
 {{/*todo 灯箱*/}}
 
-{{with index .PostArr 0}}
+{{with index .Contents 0}}
 <article data-id="{{.Cid}}">
     <h1 class="title">{{.Title}}</h1>
     <div class="stuff">
@@ -45,8 +45,4 @@
 {{end}}
 {{template "comment.template" .}}
 {{template "footer.template"}}
-<script>
-    console.log(123)
-</script>
 </body>
-</html>

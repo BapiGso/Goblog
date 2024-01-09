@@ -12,8 +12,6 @@
             <button id="submit" type="submit">发表评论</button>
         </fieldset>
     </form>
-
-
     <div class="comments-area" id="comments">
         {{ if ne (len .SortComments) 0 }}
             <h2>评论列表</h2>

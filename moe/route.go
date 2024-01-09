@@ -3,7 +3,7 @@ package moe
 import (
 	"SMOE/moe/handler"
 	"SMOE/moe/mymiddleware"
-	"fmt"
+	"context"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -16,7 +16,7 @@ import (
 
 func (s *Smoe) LoadMiddlewareRoutes() {
 	s.e.Validator = &mymiddleware.Validator{}
-	s.e.Renderer = &mymiddleware.TemplateRender{
+	s.e.Renderer = &mymiddleware.TemplateRenderWithCache{
 		Template: template.Must(
 			template.ParseFS(
 				s.themeFS,
@@ -25,7 +25,7 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 				"blog/css/*.css",
 				"new-admin/*.template",
 			),
-		),
+		).Funcs(template.FuncMap{}),
 	}
 	//Secure防XSS，HSTS防中间人攻击 todo 防盗链
 	s.e.Pre(middleware.SecureWithConfig(middleware.SecureConfig{
@@ -51,11 +51,22 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 		LogRemoteIP: true,
 		LogError:    true,
 		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
-			go slog.Info(fmt.Sprint(v.Error),
-				slog.String("Method", v.Method),
-				slog.String("Url", v.URI),
-				slog.Int("Status", v.Status),
-				slog.String("IP", v.RemoteIP))
+			if v.Error == nil {
+				slog.LogAttrs(context.Background(), slog.LevelInfo, "REQUEST",
+					slog.String("Method", v.Method),
+					slog.String("Url", v.URI),
+					slog.String("IP", v.RemoteIP),
+					slog.Int("Status", v.Status),
+				)
+			} else {
+				slog.LogAttrs(context.Background(), slog.LevelError, "REQUEST_ERROR",
+					slog.String("Method", v.Method),
+					slog.String("Url", v.URI),
+					slog.Int("Status", v.Status),
+					slog.String("IP", v.RemoteIP),
+					slog.String("err", v.Error.Error()),
+				)
+			}
 			return nil
 		},
 	}))
@@ -84,7 +95,7 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 		RedirectCode: http.StatusMovedPermanently,
 	}))
 
-	//使用session
+	//使用jwt
 	s.e.Use(echojwt.WithConfig(echojwt.Config{
 		Skipper: func(c echo.Context) bool {
 			//判断当前路径是否是受限制路径（除了登录页面以外的后台路径）
@@ -92,17 +103,16 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 			if _, err := c.Cookie("smoe_token"); err != nil && !restricted {
 				return true
 			}
-			slog.Warn("someone not have token visit restricted!")
 			return false
 		},
 		ErrorHandler: func(c echo.Context, err error) error {
 			//因为我只在正确登录后发正确token,要么就是没token
 			//所以只有错误token会触发该函数 todo 触发错误后ip限制
 			c.SetCookie(&http.Cookie{Name: "smoe_token", Expires: time.Now(), MaxAge: -1, HttpOnly: true})
-			return echo.ErrUnauthorized
+			return echo.ErrTeapot
 		},
 		//todo 成功后给qpu权限
-		SigningKey:  handler.SigningKey,
+		SigningKey:  mymiddleware.JWTKey,
 		TokenLookup: "cookie:smoe_token",
 	}))
 
@@ -119,22 +129,20 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 	front.GET("/:page", handler.Page)                                  //独立页面，注册在特殊独立页面前
 	front.GET("/archives", handler.Archives)                           // 归档页面路由，显示所有文章的归档分类
 	front.GET("/bangumi", handler.Bangumi)                             // 显示番剧相关信息的页面路由
-	front.Static("/usr/uploads", "/usr/uploads")                       //用户上传的文件，最后注册
-	front.StaticFS("/assets", s.themeFS)                               // 静态文件路由,最后注册
+	front.Static("/usr/uploads", "usr/uploads")                        //用户上传的文件，最后注册
+	//todo 给这个路由单独分个group然后用中间件
+	front.StaticFS("/assets", s.themeFS) // 静态文件路由,最后注册
 
 	// 后台管理
 	// 后台管理的路由组
 	back.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(3))) //每秒限制3次请求
 	// 后台管理页面路由
-	back.GET("", handler.LoginGet)                      // 后台管理登录页面路由
-	back.POST("", handler.LoginPost)                    // 后台管理登录处理路由
-	back.GET("/manage-posts", handler.ManagePost)       // 显示文章管理界面的路由
-	back.GET("/manage-pages", handler.ManagePage)       // 显示页面管理界面的路由
-	back.GET("/manage-comments", handler.ManageComment) // 显示评论管理界面的路由
-	back.GET("/manage-medias", handler.ManageMedia)     // 显示媒体管理界面的路由
-	back.GET("/write-post", handler.WritePost)          // 显示添加文章页面的路由
-	back.GET("/write-page", handler.WritePage)          // 显示添加页面页面的路由
-	back.GET("/test", handler.Test)                     // 显示文章管理界面的路由
+	back.GET("", handler.LoginGet)   // 后台管理登录页面路由
+	back.POST("", handler.LoginPost) // 后台管理登录处理路由
+	back.Any("/write/:cid", handler.Write)
+	back.Any("/manage/:type", handler.Manage)
+
+	back.GET("/test", handler.Test) // 显示文章管理界面的路由
 	back.GET("/log-access", handler.LogAccess)
 	back.GET("/setting", handler.Setting)
 

@@ -6,7 +6,7 @@ import (
 	"log/slog"
 )
 
-// ViewCount todo 怎样别统计到爬虫
+// ViewCount todo 怎样别统计到爬虫，不要依赖database
 func ViewCount(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		go func() {

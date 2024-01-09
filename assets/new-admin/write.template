@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="/assets/root/favicon.ico">
+    <title>はくぎょくろう</title>
+    <link rel="stylesheet" href="/assets/new-admin/css/http_unpkg.com_spectre.css">
+    <link rel="stylesheet" href="/assets/new-admin/css/http_unpkg.com_bytemd_dist_index.css" />
+    <link rel="stylesheet" href="https://unpkg.com/github-markdown-css" />
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        form{
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            #title,
+            >*{
+                margin-top: 20px;
+                width: 80%;
+            }
+            #editor{
+                .bytemd{
+                    height: 60vh;
+                }
+            }
+            #background{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .button-group{
+                    .popover{
+                        width: 100px;
+                    }
+                }
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <form name="write" id="write">
+        <input id="title" name="title" class="form-input" type="text" autocomplete="off" placeholder="标题">
+
+        <div id="editor"></div>
+
+        <div id="background">
+            <div class="popover popover-bottom">
+                <button class="btn" data-src="#fields-modal">设置封面和背景音乐</button>
+                <div class="modal" id="fields-modal">
+                    <button class="modal-overlay" aria-label="Close"></button>
+                    <div class="modal-container" role="document">
+                        <div class="modal-header">
+                            <button class="btn btn-clear float-right" aria-label="Close"></button>
+                            <div class="modal-title h5">设置封面和背景音乐</div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="content">
+                                <h4>背景音乐</h4>
+                                <p>
+                                    <input class="form-input" type="text" autocomplete="off" placeholder="音乐链接">
+                                </p>
+                                <p>
+                                    <audio src="audiofile.mp3" controls></audio>
+                                </p>
+                                <h4>上传封面或使用现有链接</h4>
+                                <input type="file">
+                                <input class="form-input" type="text" autocomplete="off" placeholder="封面链接">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" aria-label="Close">确认</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn" data-src="#fields-modal">设置发布日期和Slug</button>
+            </div>
+
+            <div class="button-group">
+                {{/* 如果数据不为0说明是修改文章，则不能修改type属性*/}}
+                {{if not .}}
+                <div class="popover popover-bottom">
+                    <input class="form-input" type="text" placeholder="slug" name="slug" disabled>
+                    <div class="popover-container">
+                        <label class="form-switch">
+                            <input type="checkbox">
+                            <i class="form-icon"></i>作为独立页面发布
+                        </label>
+                    </div>
+                </div>
+                {{end}}
+                <button type="submit" class="btn">保存草稿</button>
+                <button type="submit" class="btn btn-primary">发布文章</button>
+            </div>
+        </div>
+    </form>
+<script>
+    let process = {}
+    process.env={}
+    process.env.NODE_ENV='production'
+</script>
+<script  src="https://unpkg.com/bytemd"></script>
+<script  src="https://unpkg.com/@bytemd/plugin-gfm"></script>
+<script  src="https://unpkg.com/@bytemd/plugin-math"></script>
+<script  src="https://unpkg.com/@bytemd/plugin-medium-zoom"></script>
+<script>
+    window.addEventListener("submit", function (e) {
+        e.preventDefault();
+        let method = "POST"
+        {{if .}}method="PUT"{{end}}//如果有内容则为PUT修改文章
+        const form = document.querySelector('form');
+        const formData = new FormData(form);
+        formData.append("text",content.text||content.v[0])
+        formData.append("slug",content.slug||"")
+        fetch(window.location.href, {
+            method: method,
+            body: formData
+        })
+            .then(function (response) {
+                // 处理响应
+                console.log(response);
+            })
+            .catch(function (error) {
+                // 处理错误
+                console.error(error);
+            });
+    })
+</script>
+<script>
+    let content={}
+    content.v=[]
+    {{if .Contents}}
+    {{range .Contents }}
+    content.title=`{{.Title}}`
+    content.v=[{{- printf "%q," .Text -}}]
+    content.slug=`{{.Slug}}`
+    const form = document.querySelector('form')
+    form.title.value=content.title
+    form.CoverList.value=content.coverList
+    form.MusicList.value=content.musicList
+    {{end}}
+    {{end}}
+    const editor = new bytemd.Editor({
+        target: document.getElementById('editor'),
+        props: {
+            value: content.v[0]||"",
+            uploadImages: async (files) => {
+                const formData = new FormData();
+                formData.append("image", files[0]);
+                // console.log(files)
+                try {
+                    const response = await fetch("/admin/uploadImage", {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Failed to upload image");
+                    }
+
+                    const data = await response.json();
+                    return [
+                        {
+                            url: data.url,
+                            alt: data.alt,
+                            title: data.title,
+                        },
+                    ];
+                } catch (error) {
+                    console.error("Error uploading image:", error);
+                    return [];
+                }
+            },
+            plugins:[
+                bytemdPluginGfm(),
+                bytemdPluginMath(),
+                bytemdPluginMediumZoom(),
+            ],
+
+        },
+
+    })
+    editor.$on('change', (e) => {
+        editor.$set({ value: e.detail.value })
+        content.text = e.detail.value;
+    })
+</script>
+    <script>
+        // 选择所有带有data-src属性的按钮
+        document.querySelectorAll('button[data-src]').forEach(button => {
+            button.addEventListener('click', () => {
+                const src = button.dataset.src;
+                // 判断src内容
+                if (src.startsWith('#') || src.startsWith('.')) {
+                    // 如果是id或class选择器
+                    document.querySelector(src).classList.add('active');
+                } else {
+                    // 否则就是fetch
+                    fetch(src)
+                        .then(response => response.text())
+                        .then(html => {
+                            const modal = document.createElement('div');
+                            modal.innerHTML = html;
+                            document.body.appendChild(modal);
+                            // Assuming there's a script tag in the fetched HTML
+                            const scriptTags = modal.querySelectorAll('script');
+                            // Iterate through script tags and execute their content using eval
+                            scriptTags.forEach(scriptTag => {
+                                const scriptCode = scriptTag.textContent || scriptTag.innerText;
+                                eval(scriptCode);
+                            });
+                        })
+                }
+            });
+        });
+
+        document.querySelectorAll('button[aria-label]').forEach(closeButton => {
+            closeButton.addEventListener('click', () => {
+                // 移除active类 instead of 移除元素
+                document.querySelectorAll(".modal").forEach(modal => {
+                    modal.classList.remove('active')
+                });
+            });
+        });
+    </script>
+</body>
+</html>

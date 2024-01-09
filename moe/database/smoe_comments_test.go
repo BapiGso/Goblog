@@ -6,7 +6,10 @@ import (
 
 func BenchmarkS_SortComments(b *testing.B) {
 	qpu := NewQPU()
-	qpu.CommentsWithCid(48)
+	err := qpu.CommentsWithCid("publish", 48)
+	if err != nil {
+		return
+	}
 	for i := 0; i < b.N; i++ {
 		qpu.SortComments()
 	}

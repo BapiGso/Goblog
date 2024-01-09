@@ -5,7 +5,7 @@ import (
 )
 
 func FrontErr(err error, c echo.Context) {
-	c.Render(400, "404.template", err)
+	c.Render(404, "404.template", err)
 	return
 }
 

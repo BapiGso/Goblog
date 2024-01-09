@@ -10,14 +10,11 @@ import (
 	"image/color"
 	"image/draw"
 	"image/jpeg"
-	"math/rand"
 	"path/filepath"
 	"reflect"
 	"strconv"
 	"time"
 )
-
-var SigningKey = []byte(strconv.Itoa(rand.Int()))
 
 // validateNum 首页返回1，不是数字返回err调用404，其他为对应页数
 func validateNum(numStr string) (int, error) {
@@ -102,9 +99,8 @@ func renameWithUUIDAndDate(originalFilename string) string {
 	uuider := uuid.New()
 	extension := filepath.Ext(originalFilename)
 	uuidFilename := uuider.String() + extension
-	now := time.Now()
-	year := now.Year()
-	month := now.Month()
+	year := time.Now().Year()
+	month := time.Now().Month()
 	newFilename := filepath.Join("usr", "uploads", fmt.Sprintf("%d", year), fmt.Sprintf("%02d", month), uuidFilename)
 	return newFilename
 }

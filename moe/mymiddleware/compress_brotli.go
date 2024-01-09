@@ -15,12 +15,12 @@ type (
 	// BrotliConfig defines the config for Brotli middleware.
 	BrotliConfig struct {
 		// Skipper defines a function to skip middleware.
-		Skipper middleware.Skipper
+		Skipper func(c echo.Context) bool
 
 		// Brotli compression level.
 		// Optional. Default value -1.
 		// Range 0-11 0 speed 11 best compression
-		Level int `yaml:"level"`
+		Level int
 	}
 
 	brotliResponseWriter struct {
@@ -29,17 +29,13 @@ type (
 	}
 )
 
-const (
-	brotliScheme = "br"
-)
+const brotliScheme = "br"
 
-var (
-	// DefaultBrotliConfig is the default Brotli middleware config.
-	DefaultBrotliConfig = BrotliConfig{
-		Skipper: middleware.DefaultSkipper,
-		Level:   brotli.DefaultCompression,
-	}
-)
+// DefaultBrotliConfig is the default Brotli middleware config.
+var DefaultBrotliConfig = BrotliConfig{
+	Skipper: middleware.DefaultSkipper,
+	Level:   brotli.DefaultCompression,
+}
 
 // Brotli returns a middleware which compresses HTTP response using brotli compression
 // scheme.

@@ -81,9 +81,9 @@ func String2Bytes(s string) []byte {
 
 func (c Contents) GetMusicList() string {
 	var data string
-	err := db.Get(&data, `
+	err := DB.Get(&data, `
 		SELECT str_value FROM  typecho_fields 
-		WHERE cid=? and name='bgMusicList'`, c.Cid)
+		WHERE cid=? and name='musicList'`, c.Cid)
 	if err != nil {
 		slog.Error(err.Error())
 	}
@@ -93,7 +93,7 @@ func (c Contents) GetMusicList() string {
 // GetCoverList TODO 数据库无数据时随机添加一个封面
 func (c Contents) GetCoverList() string {
 	var data string
-	err := db.Get(&data, `
+	err := DB.Get(&data, `
 		SELECT str_value FROM  typecho_fields 
 		WHERE cid=? and name='coverList'`, c.Cid)
 	if err != nil {

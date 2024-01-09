@@ -7,22 +7,20 @@
 </header>
     <article class="page" >
         <div class="content">
-            {{range .SortContents}}
-            <h2><strong>{{.Year}} 年 </strong></h2>
-            <ul>
-                {{range .YData}}
-                <li><span><strong>{{.Mon}} 月</strong></span>
-                    <ul>
-                        {{range .MData}}
-                        <li><a href="https://smoe.cc/archives/{{.Cid}}/">{{.Title}}</a></li>
-                        {{end}}
-                    </ul>
-                </li>
+            {{$DateTmp := "2006年01月02日"}}
+            {{range .Contents}}
+                {{if ne (slice .UnixFormat 0 4) (slice $DateTmp 0 4)}}
+                    <h2><strong>{{slice .UnixFormat 0 4}} 年 </strong></h2>
                 {{end}}
-            </ul>
+                    {{if ne (slice .UnixFormat 0 9) (slice $DateTmp 0 9)}}
+                        <span><b>&nbsp {{slice .UnixFormat 7 9 }} 月</b></span>
+                        {{$DateTmp = .UnixFormat}}
+                    {{end}}
+                    <ul>
+                        <li><a href="/archives/{{.Cid}}/">{{.Title}}</a></li>
+                    </ul>
             {{end}}
         </div>
     </article>
 {{template "footer.template"}}
 </body>
-</html>

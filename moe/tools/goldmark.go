@@ -32,7 +32,7 @@ var GoldMark = goldmark.New(
 		extension.Linkify,
 		mathjax.MathJax,
 		&mermaid.Extender{
-			MermaidJS: "/assets/blog/js/mermaid.js", //自定义js静态资源路径
+			MermaidURL: "/assets/blog/js/mermaid.js", //自定义js静态资源路径
 		},
 		latex.NewLatex(),
 		highlighting.NewHighlighting(

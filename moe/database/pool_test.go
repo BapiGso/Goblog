@@ -16,7 +16,7 @@ func TestMain(m *testing.M) {
 		// 文件不存在
 		log.Fatal("数据库文件不存在，请检查路径是否正确")
 	}
-	db, err = sqlx.Connect("sqlite", "../../usr/smoe.db")
+	DB, err = sqlx.Connect("sqlite", "../../usr/smoe.db")
 	if err != nil {
 		result := m.Run() //运行go的测试，相当于调用main方法
 		os.Exit(result)   //退出程序
@@ -64,6 +64,6 @@ func Benchmark_NaiveSql(b *testing.B) {
 func BenchmarkS_GetPostWithCid(b *testing.B) {
 	qpu := NewQPU()
 	for i := 0; i < b.N; i++ {
-		qpu.GetPostWithCid(166)
+		qpu.GetPostWithCid("publish", 166)
 	}
 }

@@ -1,27 +1,42 @@
-{{range slice .PostArr 1}}
+{{range $idx, $val := (slice .Contents 1) }}
+    {{if eq $val.Type "post"}}
     <div class="post">
-        <a data-id="{{ .Cid }}" href="/archives/{{.Cid}}" title="{{.Title}}">
-            <img class="cover" width="680" height="440" src="/usr/uploads{{.GetCoverList}}" alt="illustration">
+        <a data-id="{{ $val.Cid }}" href="/archives/{{$val.Cid}}" title="{{$val.Title}}">
+            <img class="cover" width="680" height="440" src="/usr/uploads{{(index $.Fields $idx).StrValue}}" alt="illustration">
         </a>
         <div class="else">
-            <p>{{ .UnixToStr }}</p>
-            <h3><a data-id="{{ .Cid }}" class="posttitle" href="/archives/{{ .Cid }}">{{ .Title }}</a></h3>
+            <p>{{ $val.UnixToStr }}</p>
+            <h3><a data-id="{{ .Cid }}" class="posttitle" href="/archives/{{ $val.Cid }}">{{ $val.Title }}</a></h3>
             <div class="abstract">
-                <p>{{- .MDSub -}}...</p>
+                <p>{{- $val.MDSub -}}...</p>
             </div>
             <div class="here">
                 <span class="icon-letter"></span>
-                <p>{{ .MDCount }}</p>
+                <p>{{ $val.MDCount }}</p>
                 <span class="icon-view"></span>
-                <p>{{ .Views }}</p>
+                <p>{{ $val.Views }}</p>
                 <span class="icon-like"></span>
-                <p>{{ .Likes }}</p>
+                <p>{{ $val.Likes }}</p>
             </div>
         </div>
     </div>
-{{- end }}
-{{if ne .HaveNext 0}}
-    <div id="pager">
-        <a href="/page/{{.HaveNext}}" data-url="/page/{{.HaveNext}}" class="more">加载更多</a>
-    </div>
+    {{end}}
+{{end}}
+{{if ge (len .Contents) 5}}
+    {{if eq (index .Contents 5).Type "post"}}
+        <div id="pager">
+            <a href="/page/2" class="more">加载更多</a>
+        </div>
+        <script>
+            // 获取当前页面URL
+            const url = window.location.pathname;
+            // 正则匹配提取页码
+            const pageMatch = url.match(/\/page\/(\d+)/);
+
+            // 拼接新的链接
+            const newUrl = `/page/${pageMatch}`;
+
+            document.querySelector('.more').href = newUrl;
+        </script>
+    {{end}}
 {{end}}

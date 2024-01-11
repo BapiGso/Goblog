@@ -8,7 +8,3 @@ func FrontErr(err error, c echo.Context) {
 	c.Render(404, "404.template", err)
 	return
 }
-
-func BackErr(err error, c echo.Context) error {
-	return c.Render(404, "admin-err.template", err)
-}

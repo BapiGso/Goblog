@@ -120,8 +120,7 @@ var bgm = bgmCache{}
 
 // Bangumi todo https://freefrontend.com/css-cards/
 func Bangumi(c echo.Context) error {
-	qpu := database.NewQPU()
-	defer qpu.Free()
+	qpu := new(database.QPU)
 	ops, err := qpu.GetOption("Goplugin:BangumiList")
 	if err != nil {
 		return err

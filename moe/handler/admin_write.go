@@ -3,13 +3,12 @@ package handler
 import (
 	"SMOE/moe/database"
 	"github.com/labstack/echo/v4"
-	"strconv"
 )
 
 func Write(c echo.Context) error {
 	qpu := new(database.QPU)
 	req := &struct {
-		Cid       int    `param:"cid" `
+		Cid       string `param:"cid" `
 		Slug      string `form:"slug" `
 		Title     string `form:"title" `
 		Text      string `form:"text"`
@@ -24,15 +23,15 @@ func Write(c echo.Context) error {
 		return err
 	}
 	if reqMap["Slug"] == "" {
-		reqMap["Slug"] = strconv.Itoa(req.Cid)
+		reqMap["Slug"] = req.Cid
 		reqMap["Type"] = "post"
 	} else {
 		reqMap["Type"] = "page"
 	}
 	switch c.Request().Method {
-	case "GET": //渲染拽写文章页面
-		//如果cid为0也就是没有，则是写新文章
-		if req.Cid == 0 {
+	case "GET": //渲染攥写文章页面
+		//如果cid为new，则是写新文章
+		if req.Cid == "new" {
 			return c.Render(200, "write.template", nil)
 		}
 		cid, err := validateNum(c.Param("cid"))
@@ -40,12 +39,7 @@ func Write(c echo.Context) error {
 			return err
 		}
 		if err := database.DB.Select(&qpu.Contents, `
-			SELECT * FROM typecho_contents 
-        	WHERE cid=?`, cid); err != nil {
-			return err
-		}
-		if err := database.DB.Select(&qpu.Fields, `
-			SELECT * FROM typecho_fields 
+			SELECT * FROM smoe_contents 
         	WHERE cid=?`, cid); err != nil {
 			return err
 		}
@@ -56,7 +50,9 @@ func Write(c echo.Context) error {
 		}
 		return c.JSON(201, nil)
 	case "PUT": //更新文章的API
-		if err := database.UpdateContent(reqMap); err != nil {
+		if _, err := database.DB.NamedExec(`UPDATE smoe_contents
+		SET title=:title,slug=:slug,text=:text
+		WHERE cid=:cid`, req); err != nil {
 			return err
 		}
 		return c.JSON(200, nil)

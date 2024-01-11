@@ -6,8 +6,7 @@ import (
 )
 
 func LogAccess(c echo.Context) error {
-	qpu := database.NewQPU()
-	defer qpu.Free()
+	qpu := new(database.QPU)
 	req := &struct {
 		CommStatus string `query:"commstatus" default:"approved" `
 		Status     string `query:"status" default:"publish" `
@@ -21,5 +20,4 @@ func LogAccess(c echo.Context) error {
 		return err
 	}
 	return c.Render(200, "log-access.template", qpu)
-
 }

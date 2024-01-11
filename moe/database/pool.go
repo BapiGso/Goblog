@@ -10,17 +10,6 @@ type QPU struct {
 	Contents []Contents
 	Comments []Comments
 	Access   []Access
-	Fields   []Fields
-}
-
-// Free 清空s结构体存储的data，然后返还到池中
-// 记得清空数据，因为sqlx的select方法是append，而不是clear后scan
-func (q *QPU) Free() {
-	clear(q.Contents)
-	clear(q.Comments)
-	clear(q.Access)
-	clear(q.Fields)
-	qpuPool.Put(q)
 }
 
 // qpu对象池
@@ -34,4 +23,13 @@ var qpuPool = sync.Pool{
 func NewQPU() *QPU {
 	q := qpuPool.Get().(*QPU)
 	return q
+}
+
+// FreeQPU 清空s结构体存储的data，然后返还到池中
+// 记得清空数据，因为sqlx的select方法是append，而不是clear后scan
+func FreeQPU(q *QPU) {
+	clear(q.Contents)
+	clear(q.Comments)
+	clear(q.Access)
+	qpuPool.Put(q)
 }

@@ -3,7 +3,6 @@ package database
 import (
 	"SMOE/moe/tools"
 	"bytes"
-	"log/slog"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -11,25 +10,20 @@ import (
 )
 
 type Contents struct {
-	Cid          int     `db:"cid"`
-	Title        string  `db:"title"` //用*string代替可能为null的值
-	Slug         string  `db:"slug"`
-	Created      int64   `db:"created"`
-	Modified     int64   `db:"modified"`
-	Text         []byte  `db:"text"`
-	Order        uint    `db:"order"`
-	AuthorId     uint    `db:"authorId"`
-	Template     *string `db:"template"`
-	Type         string  `db:"type"`
-	Status       string  `db:"status"`
-	Password     *string `db:"password"`
-	AllowComment uint    `db:"allowComment"`
-	AllowPing    uint    `db:"allowPing"`
-	AllowFeed    uint    `db:"allowFeed"`
-	CommentsNum  uint    `db:"commentsNum"`
-	Parent       uint    `db:"parent"`
-	Views        uint    `db:"views"`
-	Likes        uint    `db:"likes"`
+	Cid          int    `db:"cid"`
+	Mid          int    `db:"mid"`
+	Title        string `db:"title"` //用*string代替可能为null的值
+	Slug         string `db:"slug"`
+	Created      int64  `db:"created"`
+	Text         []byte `db:"text"`
+	Type         string `db:"type"`
+	Status       string `db:"status"`
+	AllowComment uint   `db:"allowComment"`
+	AllowFeed    uint   `db:"allowFeed"`
+	Views        uint   `db:"views"`
+	Likes        uint   `db:"likes"`
+	CoverList    string `db:"coverList"`
+	MusicList    string `db:"musicList"`
 }
 
 // MD2HTML markdown转换为html
@@ -77,27 +71,4 @@ func (c Contents) Bytes2String() string {
 // String2Bytes https://github.com/kubernetes/apiserver/blob/706a6d89cf35950281e095bb1eeed5e3211d6272/pkg/authentication/token/cache/cached_token_authenticator.go#L263-L271
 func String2Bytes(s string) []byte {
 	return *(*[]byte)(unsafe.Pointer(&s))
-}
-
-func (c Contents) GetMusicList() string {
-	var data string
-	err := DB.Get(&data, `
-		SELECT str_value FROM  typecho_fields 
-		WHERE cid=? and name='musicList'`, c.Cid)
-	if err != nil {
-		slog.Error(err.Error())
-	}
-	return data
-}
-
-// GetCoverList TODO 数据库无数据时随机添加一个封面
-func (c Contents) GetCoverList() string {
-	var data string
-	err := DB.Get(&data, `
-		SELECT str_value FROM  typecho_fields 
-		WHERE cid=? and name='coverList'`, c.Cid)
-	if err != nil {
-		slog.Error(err.Error())
-	}
-	return data
 }

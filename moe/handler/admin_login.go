@@ -36,7 +36,7 @@ func LoginPost(c echo.Context) error {
 	if err := c.Validate(req); err != nil {
 		return err
 	}
-	if err := database.DB.Get(&qpu.User, `SELECT * FROM  typecho_users WHERE name = ?`, req.Name); err != nil {
+	if err := database.DB.Get(&qpu.User, `SELECT * FROM  smoe_users WHERE name = ?`, req.Name); err != nil {
 		return err
 	}
 	//计算提交表单的密码与盐 scrypt和数据库中密码是否一致

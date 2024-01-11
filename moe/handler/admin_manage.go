@@ -6,8 +6,7 @@ import (
 )
 
 func Manage(c echo.Context) error {
-	qpu := database.NewQPU()
-	defer qpu.Free()
+	qpu := new(database.QPU)
 	req := &struct {
 		Type       string `param:"type"       default:"post" `
 		CommStatus string `query:"commstatus" default:"approved" `
@@ -22,16 +21,26 @@ func Manage(c echo.Context) error {
 	}
 	switch req.Type {
 	case "post":
-		if err := qpu.GetPosts(req.Status, 10, req.Page); err != nil {
+		if err := database.DB.Select(&qpu.Contents, `
+		SELECT * FROM  smoe_contents
+		WHERE type='post' AND status=?
+		ORDER BY ROWID DESC
+		LIMIT ? OFFSET ?`, req.Status, 10+1, req.Page*10-10); err != nil {
 			return err
 		}
 	case "page":
-		if err := qpu.GetPages(); err != nil {
+		if err := database.DB.Select(&qpu.Contents, `
+		SELECT * FROM  typecho_contents 
+		WHERE type='page'
+		ORDER BY "order" `); err != nil {
 			return err
 		}
 	case "comment":
-		if err := qpu.GetComms(req.CommStatus, 10, req.Page); err != nil {
-			//fmt.Println(len(qpu.CommArr))
+		if err := database.DB.Select(&qpu.Comments, `
+		SELECT * FROM  typecho_comments
+		WHERE status=?
+		ORDER BY ROWID DESC
+		LIMIT ? OFFSET ?`, req.CommStatus, 10+1, req.Page*10-10); err != nil {
 			return err
 		}
 	}

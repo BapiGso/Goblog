@@ -9,10 +9,6 @@ import (
 	"strings"
 )
 
-type UploadParam struct {
-	Cid uint16 `query:"cid" form:"cid" json:"cid"`
-}
-
 // UploadImage 处理上传图片的请求 todo 多文件上传
 func UploadImage(c echo.Context) error {
 	// 从表单中获取上传的文件

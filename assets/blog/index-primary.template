@@ -1,22 +1,22 @@
-{{range $idx, $val := (slice .Contents 1) }}
-    {{if eq $val.Type "post"}}
+{{range (slice .Contents 1) }}
+    {{if eq .Type "post"}}
     <div class="post">
-        <a data-id="{{ $val.Cid }}" href="/archives/{{$val.Cid}}" title="{{$val.Title}}">
-            <img class="cover" width="680" height="440" src="/usr/uploads{{(index $.Fields $idx).StrValue}}" alt="illustration">
+        <a data-id="{{ .Cid }}" href="/archives/{{.Cid}}" title="{{.Title}}">
+            <img class="cover" width="680" height="440" src="/usr/uploads{{.CoverList}}" alt="illustration">
         </a>
         <div class="else">
-            <p>{{ $val.UnixToStr }}</p>
-            <h3><a data-id="{{ .Cid }}" class="posttitle" href="/archives/{{ $val.Cid }}">{{ $val.Title }}</a></h3>
+            <p>{{ .UnixToStr }}</p>
+            <h3><a data-id="{{ .Cid }}" class="posttitle" href="/archives/{{ .Cid }}">{{ .Title }}</a></h3>
             <div class="abstract">
-                <p>{{- $val.MDSub -}}...</p>
+                <p>{{ .MDSub }}...</p>
             </div>
             <div class="here">
                 <span class="icon-letter"></span>
-                <p>{{ $val.MDCount }}</p>
+                <p>{{ .MDCount }}</p>
                 <span class="icon-view"></span>
-                <p>{{ $val.Views }}</p>
+                <p>{{ .Views }}</p>
                 <span class="icon-like"></span>
-                <p>{{ $val.Likes }}</p>
+                <p>{{ .Likes }}</p>
             </div>
         </div>
     </div>
@@ -24,6 +24,7 @@
 {{end}}
 {{if ge (len .Contents) 5}}
     {{if eq (index .Contents 5).Type "post"}}
+        {{/* todo */}}
         <div id="pager">
             <a href="/page/2" class="more">加载更多</a>
         </div>

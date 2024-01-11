@@ -54,7 +54,6 @@ func InsertComment(data map[string]any) error {
 	insertData := Comments{
 		Coid:     0,
 		Cid:      data["Cid"].(uint),
-		OwnerId:  1,
 		Parent:   data["Parent"].(uint),
 		Created:  time.Now().Unix(),
 		Author:   data["Author"].(string),
@@ -62,7 +61,6 @@ func InsertComment(data map[string]any) error {
 		Ip:       data["Ip"].(string),
 		Agent:    data["Agent"].(string),
 		Text:     data["Text"].(string),
-		Type:     "comment",
 		Status:   "waiting",
 		AuthorId: 0,
 		Url: func(url string) *string {

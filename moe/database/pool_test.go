@@ -34,7 +34,7 @@ func BenchmarkUnmarshalWithPool(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		qpu := NewQPU()
 		json.Unmarshal(nil, qpu)
-		qpu.Free()
+		FreeQPU(qpu)
 	}
 }
 

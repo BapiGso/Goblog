@@ -12,7 +12,7 @@ func Post(c echo.Context) error {
 		return err
 	}
 	if err := database.DB.Select(&qpu.Contents, `
-		SELECT * FROM typecho_contents 
+		SELECT * FROM smoe_contents 
 		WHERE cid=? AND status=?
 		AND type='post'`, cid, "publish"); err != nil {
 		return err
@@ -20,12 +20,7 @@ func Post(c echo.Context) error {
 	if len(qpu.Contents) == 0 {
 		return echo.NotFoundHandler(c)
 	}
-	if err := database.DB.Select(&qpu.Fields, `
-		SELECT * FROM typecho_fields
-		WHERE cid=? AND name='musicList'`, cid); err != nil {
-		return err
-	}
-	if err := database.DB.Select(&qpu.Comments, `SELECT * FROM  typecho_comments 
+	if err := database.DB.Select(&qpu.Comments, `SELECT * FROM  smoe_comments 
 		WHERE cid=?
 		AND status=?
 		ORDER BY created`, cid, "approved"); err != nil {

@@ -9,18 +9,16 @@ import (
 type Comments struct {
 	Coid     uint    `db:"coid"     form:"coid"`
 	Cid      uint    `db:"cid"      form:"cid"`
-	OwnerId  uint    `db:"ownerId"  form:"ownerId"`
-	Parent   uint    `db:"parent"   form:"parent"`
 	Created  int64   `db:"created"  form:"created"`
 	Author   string  `db:"author"   form:"author"`
+	AuthorId uint    `db:"authorId" form:"authorId"`
 	Mail     string  `db:"mail"     form:"mail"`
+	Url      *string `db:"url"      form:"url"` //用*string代替可能为null的值
 	Ip       string  `db:"ip"       form:"ip"`
 	Agent    string  `db:"agent"    form:"agent"`
 	Text     string  `db:"text"     form:"text"`
-	Type     string  `db:"type"     form:"type"`
 	Status   string  `db:"status"   form:"status"`
-	AuthorId uint    `db:"authorId" form:"authorId"`
-	Url      *string `db:"url"      form:"url"` //用*string代替可能为null的值
+	Parent   uint    `db:"parent"   form:"parent"`
 }
 
 func (c Comments) UnixFormat() string {

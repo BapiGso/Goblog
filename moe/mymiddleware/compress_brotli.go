@@ -16,7 +16,7 @@ type (
 	BrotliConfig struct {
 		// Skipper defines a function to skip middleware.
 		Skipper func(c echo.Context) bool
-
+		//如果同时启用了Gzip压缩，设置GzipSkipper为ture会在调用Brotli后跳过Gzip
 		// Brotli compression level.
 		// Optional. Default value -1.
 		// Range 0-11 0 speed 11 best compression
@@ -63,6 +63,7 @@ func BrotliWithConfig(config BrotliConfig) echo.MiddlewareFunc {
 			c.Response().Header().Add(echo.HeaderVary, echo.HeaderAcceptEncoding)
 			if strings.Contains(c.Request().Header.Get(echo.HeaderAcceptEncoding), brotliScheme) {
 				c.Response().Header().Set(echo.HeaderContentEncoding, brotliScheme) // Issue #806
+				//如果浏览器支持Brotli，设置GzipSkipper跳过Gzip
 				rw := c.Response().Writer
 
 				w := brotli.NewWriterOptions(rw, brotli.WriterOptions{Quality: config.Level})

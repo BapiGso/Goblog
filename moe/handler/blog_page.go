@@ -6,10 +6,9 @@ import (
 )
 
 func Page(c echo.Context) error {
-	qpu := database.NewQPU()
-	defer qpu.Free()
+	qpu := new(database.QPU)
 	err := database.DB.Select(&qpu.Contents, `
-		SELECT * FROM  typecho_contents 
+		SELECT * FROM  smoe_contents 
 		WHERE type='page' AND slug = ?`, c.Param("page"))
 	if len(qpu.Contents) == 0 {
 		return echo.NotFoundHandler(c)

@@ -141,8 +141,8 @@
     content.slug=`{{.Slug}}`
     const form = document.querySelector('form')
     form.title.value=content.title
-    form.CoverList.value=content.coverList
-    form.MusicList.value=content.musicList
+    // form.CoverList.value=content.coverList
+    // form.MusicList.value=content.musicList
     {{end}}
     {{end}}
     const editor = new bytemd.Editor({

@@ -39,7 +39,7 @@
         {{.MD2HTML}}
     </div>
     <audio id="audio" preload="auto" controls="controls">
-        <source type="audio/mpeg" src="{{.GetMusicList}}">
+        <source type="audio/mpeg" src="{{.MusicList}}">
     </audio>
 </article>
 {{end}}

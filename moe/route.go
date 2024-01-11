@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"log/slog"
 	"net/http"
+	"path/filepath"
 	"strings"
 	"text/template"
 	"time"
@@ -16,7 +17,7 @@ import (
 
 func (s *Smoe) LoadMiddlewareRoutes() {
 	s.e.Validator = &mymiddleware.Validator{}
-	s.e.Renderer = &mymiddleware.TemplateRenderWithCache{
+	s.e.Renderer = &mymiddleware.TemplateRender{
 		Template: template.Must(
 			template.ParseFS(
 				s.themeFS,
@@ -75,16 +76,15 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 	s.e.Use(middleware.Recover())
 
 	//echoV5更新时换成broitil编码
-	s.e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
-		Skipper: func(c echo.Context) bool {
-			//浏览器支持br的时候跳过使用gzip压缩
-			return strings.Contains(c.Request().Header.Get(echo.HeaderAcceptEncoding), "br")
-		},
-		Level: 3,
-	}))
-
 	s.e.Use(mymiddleware.BrotliWithConfig(mymiddleware.BrotliConfig{
 		Level: 0,
+	}))
+	s.e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
+		Skipper: func(c echo.Context) bool {
+			//如果调用了brotli，那么就跳过Gzip
+			return c.Response().Header().Get(echo.HeaderContentEncoding) == "br"
+		},
+		Level: 3,
 	}))
 
 	//http重定向https
@@ -115,7 +115,14 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 		SigningKey:  mymiddleware.JWTKey,
 		TokenLookup: "cookie:smoe_token",
 	}))
-
+	s.e.Group("/assets", middleware.StaticWithConfig(middleware.StaticConfig{
+		//skipper跳过一些不想让用户和爬虫看到的文件
+		Skipper: func(c echo.Context) bool {
+			ext := filepath.Ext(c.Request().URL.Path)
+			return !(ext == ".css" || ext == ".js" || ext == ".ico" || ext == ".svg")
+		},
+		Filesystem: http.FS(s.themeFS),
+	}))
 	//自定义404
 	s.e.HTTPErrorHandler = handler.FrontErr //自定义404
 	front := s.e.Group("")
@@ -130,8 +137,6 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 	front.GET("/archives", handler.Archives)                           // 归档页面路由，显示所有文章的归档分类
 	front.GET("/bangumi", handler.Bangumi)                             // 显示番剧相关信息的页面路由
 	front.Static("/usr/uploads", "usr/uploads")                        //用户上传的文件，最后注册
-	//todo 给这个路由单独分个group然后用中间件
-	front.StaticFS("/assets", s.themeFS) // 静态文件路由,最后注册
 
 	// 后台管理
 	// 后台管理的路由组
@@ -141,8 +146,6 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 	back.POST("", handler.LoginPost) // 后台管理登录处理路由
 	back.Any("/write/:cid", handler.Write)
 	back.Any("/manage/:type", handler.Manage)
-
-	back.GET("/test", handler.Test) // 显示文章管理界面的路由
 	back.GET("/log-access", handler.LogAccess)
 	back.GET("/setting", handler.Setting)
 

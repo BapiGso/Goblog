@@ -8,7 +8,7 @@ import (
 func Archives(c echo.Context) error {
 	qpu := new(database.QPU)
 	if err := database.DB.Select(&qpu.Contents, `
-		SELECT * FROM typecho_contents 
+		SELECT * FROM smoe_contents 
 		WHERE type='post'
 		AND status=?
 		ORDER BY ROWID DESC `, "publish"); err != nil {

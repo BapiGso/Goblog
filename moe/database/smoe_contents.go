@@ -128,19 +128,11 @@ func InsertContent(data map[string]any) error {
 		Title:        data["Title"].(string),
 		Slug:         data["Slug"].(string),
 		Created:      time.Now().Unix(),
-		Modified:     time.Now().Unix(),
 		Text:         []byte(data["Text"].(string)),
-		Order:        0,
-		AuthorId:     1,
-		Template:     nil,
 		Type:         data["Type"].(string),
 		Status:       "publish",
-		Password:     nil,
 		AllowComment: 1,
-		AllowPing:    0,
 		AllowFeed:    0,
-		CommentsNum:  0,
-		Parent:       0,
 		Views:        0,
 		Likes:        0,
 	}
@@ -186,12 +178,10 @@ func InsertContent(data map[string]any) error {
 func UpdateContent(data map[string]any) error {
 	fmt.Println(data)
 	insertData := Contents{
-		Cid:      data["Cid"].(int),
-		Title:    data["Title"].(string),
-		Slug:     data["Slug"].(string),
-		Modified: time.Now().Unix(),
-		Text:     []byte(data["Text"].(string)),
-		Order:    0,
+		Cid:   data["Cid"].(int),
+		Title: data["Title"].(string),
+		Slug:  data["Slug"].(string),
+		Text:  []byte(data["Text"].(string)),
 	}
 	tx, err := DB.Beginx()
 	if err != nil {

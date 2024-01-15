@@ -116,6 +116,7 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 	s.e.Group("/assets", middleware.StaticWithConfig(middleware.StaticConfig{
 		//skipper跳过一些不想让用户和爬虫看到的文件
 		Skipper: func(c echo.Context) bool {
+			c.Response().Header().Set("Cache-Control", "public, max-age=3600")
 			ext := filepath.Ext(c.Request().URL.Path)
 			return !(ext == ".css" || ext == ".js" || ext == ".ico" || ext == ".svg" || ext == ".webp")
 		},

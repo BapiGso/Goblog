@@ -1,7 +1,8 @@
-
-
-<script>
-    {{template "plugin.js"}}
-    {{template "Diaspora.js"}}
-    {{template "new_Diaspora.js"}}
-</script>
+{{/*<script>*/}}
+{{/*    {{template "plugin.js"}}*/}}
+{{/*    {{template "Diaspora.js"}}*/}}
+{{/*    {{template "new_Diaspora.js"}}*/}}
+{{/*</script>*/}}
+<script src="/assets/blog/js/plugin.js"></script>
+<script src="/assets/blog/js/Diaspora.js"></script>
+<script src="/assets/blog/js/new_Diaspora.js"></script>

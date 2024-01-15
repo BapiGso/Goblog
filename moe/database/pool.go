@@ -6,9 +6,11 @@ import (
 
 // QPU Query Processing Unit 输出一些需要查询结果的sql处理器
 type QPU struct {
+	Options  Options
 	User     User
 	Contents []Contents
 	Comments []Comments
+	Metas    []Metas
 	Access   []Access
 }
 
@@ -28,8 +30,5 @@ func NewQPU() *QPU {
 // FreeQPU 清空s结构体存储的data，然后返还到池中
 // 记得清空数据，因为sqlx的select方法是append，而不是clear后scan
 func FreeQPU(q *QPU) {
-	clear(q.Contents)
-	clear(q.Comments)
-	clear(q.Access)
 	qpuPool.Put(q)
 }

@@ -3,8 +3,8 @@ package handler
 import (
 	"SMOE/moe/database"
 	"github.com/labstack/echo/v4"
-	"html"
 	"strings"
+	"time"
 )
 
 // SubmitArticleComment todo 工作量证明
@@ -26,16 +26,13 @@ func SubmitArticleComment(c echo.Context) error {
 	if !strings.HasPrefix(c.Request().Referer(), c.Request().Header.Get("Origin")+"/archives/"+c.Param("cid")) {
 		return echo.NewHTTPError(400, "请从评论区提交评论")
 	}
-	reqMap, err := struct2map(*req)
-	if err != nil {
-		return err
-	} else {
-		reqMap["Ip"] = c.RealIP()
-		reqMap["Agent"] = c.Request().UserAgent()
-		reqMap["Text"] = html.EscapeString(reqMap["Text"].(string)) //防止xss
-	}
-	if err := database.InsertComment(reqMap); err != nil {
+	if _, err := database.DB.Exec(`
+	INSERT INTO smoe_comments
+	VALUES ((SELECT MAX(coid) FROM smoe_comments)+1,
+	?,?,?,1,?,?,?,?,?,'waiting',?)`,
+		req.Cid, time.Now().Unix(), req.Author, req.Mail, req.Url,
+		c.RealIP(), c.Request().UserAgent(), req.Text, req.Parent); err != nil {
 		return err
 	}
-	return c.JSON(200, "success")
+	return c.JSON(200, nil)
 }

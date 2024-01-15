@@ -20,13 +20,11 @@ let Diaspora = {
     // 传ajax的url和响应成功后需要执行的函数
     AJAX:async function (url,func,errfunc){
         fetch(url)
-            .then(function(response) {
-                return response.text(); // 将响应转换为文本
+            .then(response => response.text())
+            .then(html => {
+                    func(html)
             })
-            .then(function(data) {
-                    func(data)
-            })
-            .catch(function(error) {
+            .catch(error => {
                 errfunc()
                 // 处理错误
                 console.error('请求失败', error);
@@ -49,14 +47,13 @@ let Diaspora = {
             document.body.insertAdjacentElement("afterbegin", preview)
             Diaspora.player(id)
             Diaspora.PS()
-            setTimeout(function () {
-                // 将window.scrollY的值设置为#container元素的data-scroll属性
-                document.getElementById('container').dataset.scroll = window.scrollY.toString();
-                preview.style.transform = "unset"
-                setTimeout(function () {
-                    document.querySelector("#container").style.display = "none"
-                }, 100)
-            },500)
+            // 将window.scrollY的值设置为#container元素的data-scroll属性
+            document.getElementById('container').dataset.scroll = window.scrollY.toString();
+            preview.style.transform = "unset";
+            (async function () {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                document.querySelector("#container").style.display = "none"
+            })()
             document.title = title;
             switch (flag) {
                 case 'push':
@@ -89,12 +86,11 @@ let Diaspora = {
                 document.body.insertAdjacentElement("afterbegin", preview)
                 //todo 后退后前进滚动条会跳动
                 // window.scrollTo(0, parseInt(document.getElementById('container').dataset.scroll));
-                setTimeout(function () {
-                    preview.style.transform = "unset"
-                    setTimeout(function () {
-                        document.querySelector("#container").style.display = "none"
-                    }, 100)
-                },500)
+                preview.style.transform = "unset";
+                (async function () {
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    document.querySelector("#container").style.display = "none"
+                })()
             }
 
         })

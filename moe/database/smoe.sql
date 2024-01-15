@@ -1,4 +1,5 @@
---数据库到底需不需要null值
+--开启外键
+PRAGMA FOREIGN_KEYS=ON;
 CREATE TABLE smoe_comments (    "coid" INTEGER NOT NULL PRIMARY KEY,
                                 "cid" int(10) NOT NULL default 0 ,
                                 "created" int(10) NOT NULL default 0 ,
@@ -16,7 +17,7 @@ CREATE INDEX smoe_comments_cid ON smoe_comments ("cid");
 CREATE INDEX smoe_comments_created ON smoe_comments ("created");
 
 -- 用来保存文章和独立页面
-CREATE TABLE smoe_contents (    "cid" INTEGER NOT NULL PRIMARY KEY,
+CREATE TABLE smoe_contents (    "cid" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                 "mid" INTEGER NOT NULL default 0 ,
                                 "title" varchar(200) NOT NULL default '',
                                 "slug" varchar(200) NOT NULL default '' ,
@@ -29,7 +30,8 @@ CREATE TABLE smoe_contents (    "cid" INTEGER NOT NULL PRIMARY KEY,
                                 "views" int(10) default 0 ,
                                 "likes" int(10) default 0 ,
                                 "coverList" varchar(32) default '',
-                                "musicList" varchar(32) default '' );
+                                "musicList" varchar(32) default '' ,
+                                FOREIGN KEY("cid") REFERENCES "smoe_comments"("cid") ON DELETE CASCADE ON UPDATE CASCADE );
 
 CREATE UNIQUE INDEX smoe_contents_slug ON smoe_contents ("slug");
 CREATE INDEX smoe_contents_created ON smoe_contents ("created");

@@ -999,8 +999,8 @@ h1.title {
     align-items: center;
     transform: translateX(100%);
     transition: transform .5s  cubic-bezier(0.25, 0.5, 0.5, 0.9);
-    animation: preshow;
-    animation-delay: .5s;
+    /*animation: preshow;*/
+    /*animation-delay: 1.5s;*/
 }
 
 #preview.show{
@@ -1089,6 +1089,9 @@ h1.title {
     list-style: decimal;
 }
 
+.bangumi {
+    width: 850px;
+}
 
 .bangumi ul {
     list-style: none;
@@ -1097,40 +1100,26 @@ h1.title {
 }
 
 .bangumi ul li {
-    width: 160px;
-    list-style: none;
+    width: 150px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-    margin: 30px;
+    margin: 20px 10px 20px 10px;
     display: flex;
     flex-direction: column;
-}
-
-.bangumi figure {
-    width: 100%;
-    margin: 0;
+    align-items: center;
 }
 
 .bangumi img {
-    width: 100%;
+    width: 96%;
     height: 200px;
+    margin-top: 2%;
     object-fit: cover;
 }
 
-.bangumi li section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 5px 10px;
-}
-
-.bangumi section h6{
+.bangumi p{
+    font-size: 12px;
     margin: 0;
     padding: 0;
-}
-
-.bangumi section p,
-.bangumi figcaption time{
-    transform: scale(0.6);
+    height: 32px;
 }
 
 

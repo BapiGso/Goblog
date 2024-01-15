@@ -33,6 +33,9 @@ window.addEventListener('click', function (e) {
                 let tmpScrollTop = window.scrollY || document.documentElement.scrollTop;
                 document.getElementById('pager').remove()
                 document.getElementById('primary').insertAdjacentHTML('beforeend', data);
+                if (document.getElementById("pagescript")) {
+                    eval(document.getElementById("pagescript").innerText);
+                }
             }, function () {
                 moreButton.innerHTML = '加载更多';
                 moreButton.dataset.status = 'loaded';
@@ -53,7 +56,7 @@ window.addEventListener('click', function (e) {
         case (tag.indexOf('icon-pause') !== -1):
             audio = document.querySelector("audio");
             audio.pause()
-            var iconPause = document.querySelector('.icon-pause');
+            const iconPause = document.querySelector('.icon-pause');
             iconPause.classList.remove('icon-pause');
             iconPause.classList.add('icon-play');
             break;

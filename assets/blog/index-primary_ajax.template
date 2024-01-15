@@ -1,7 +1,8 @@
-{{range .PostArr }}
+{{range slice .Contents 0 5 }}
+{{if eq .Type "post"}}
 <div class="post">
     <a data-id="{{ .Cid }}" href="/archives/{{.Cid}}" title="{{.Title}}">
-        <img class="cover" width="680" height="440" src="/usr/uploads{{.GetCoverList}}" alt="illustration">
+        <img class="cover" width="680" height="440" src="/usr/uploads{{.CoverList}}" alt="illustration">
     </a>
     <div class="else">
         <p>{{ .UnixToStr }}</p>
@@ -19,10 +20,17 @@
         </div>
     </div>
 </div>
-{{- end }}
+{{end}}
+{{end}}
 
-{{if (ne .HaveNext 0)}}
-<div id="pager">
-    <a href="/page/{{.HaveNext}}" data-url="/page/{{.HaveNext}}" class="more">加载更多</a>
-</div>
+{{if ge (len .Contents) 5}}
+    {{if eq (index .Contents 5).Type "post"}}
+        <div id="pager">
+            <a href="" class="more">加载更多</a>
+            <script id="pagescript">
+                pagenum+=1
+                document.querySelector('.more').href = `/page/${pagenum+1}`;
+            </script>
+        </div>
+    {{end}}
 {{end}}

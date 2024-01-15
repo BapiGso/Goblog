@@ -53,9 +53,8 @@ func Benchmark_NaiveSql(b *testing.B) {
 		var fos []Contents
 		for rows.Next() {
 			f := Contents{}
-			rows.Scan(&f.Cid, &f.Title, &f.Slug, &f.Created, &f.Modified, &f.Text, &f.Order,
-				&f.AuthorId, &f.Template, &f.Type, &f.Status, &f.Password, &f.CommentsNum,
-				&f.AllowComment, &f.AllowPing, &f.AllowFeed, &f.Parent, &f.Views, &f.Likes)
+			rows.Scan(&f.Cid, &f.Title, &f.Slug, &f.Created, &f.Text, &f.Type, &f.Status,
+				&f.AllowComment, &f.AllowFeed, &f.Views, &f.Likes)
 			fos = append(fos, f)
 		}
 	}

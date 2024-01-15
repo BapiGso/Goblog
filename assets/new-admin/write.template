@@ -78,7 +78,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn" data-src="#fields-modal">设置发布日期和Slug</button>
+                <button class="btn" data-src="#fields-modal">其他设置（发布日期、slug、允许评论、允许rss等</button>
             </div>
 
             <div class="button-group">

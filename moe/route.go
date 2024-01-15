@@ -98,20 +98,18 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 	//使用jwt
 	s.e.Use(echojwt.WithConfig(echojwt.Config{
 		Skipper: func(c echo.Context) bool {
-			//判断当前路径是否是受限制路径（除了登录页面以外的后台路径）
-			restricted := strings.HasPrefix(c.Path(), "/admin") && c.Path() != "/admin"
-			if _, err := c.Cookie("smoe_token"); err != nil && !restricted {
-				return true
-			}
-			return false
+			restricted := strings.HasPrefix(c.Path(), "/admin/") //判断当前路径是否是受限制路径（除了登录页面以外的后台路径）
+			_, err := c.Cookie("smoe_token")
+			return err != nil && !restricted //如果读不到cookie且不是受限制路径就跳过
 		},
 		ErrorHandler: func(c echo.Context, err error) error {
-			//因为我只在正确登录后发正确token,要么就是没token
-			//所以只有错误token会触发该函数 todo 触发错误后ip限制
+			//todo 触发错误后ip限制
 			c.SetCookie(&http.Cookie{Name: "smoe_token", Expires: time.Now(), MaxAge: -1, HttpOnly: true})
 			return echo.ErrTeapot
 		},
-		//todo 成功后给qpu权限
+		SuccessHandler: func(c echo.Context) {
+
+		},
 		SigningKey:  mymiddleware.JWTKey,
 		TokenLookup: "cookie:smoe_token",
 	}))
@@ -119,7 +117,7 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 		//skipper跳过一些不想让用户和爬虫看到的文件
 		Skipper: func(c echo.Context) bool {
 			ext := filepath.Ext(c.Request().URL.Path)
-			return !(ext == ".css" || ext == ".js" || ext == ".ico" || ext == ".svg")
+			return !(ext == ".css" || ext == ".js" || ext == ".ico" || ext == ".svg" || ext == ".webp")
 		},
 		Filesystem: http.FS(s.themeFS),
 	}))

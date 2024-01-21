@@ -4,6 +4,7 @@ import (
 	"SMOE/moe/database"
 	"github.com/labstack/echo/v4"
 	"strings"
+	"text/template"
 	"time"
 )
 
@@ -30,8 +31,8 @@ func SubmitArticleComment(c echo.Context) error {
 	INSERT INTO smoe_comments
 	VALUES ((SELECT MAX(coid) FROM smoe_comments)+1,
 	?,?,?,1,?,?,?,?,?,'waiting',?)`,
-		req.Cid, time.Now().Unix(), req.Author, req.Mail, req.Url,
-		c.RealIP(), c.Request().UserAgent(), req.Text, req.Parent); err != nil {
+		req.Cid, time.Now().Unix(), template.HTMLEscapeString(req.Author), req.Mail, req.Url,
+		c.RealIP(), c.Request().UserAgent(), template.HTMLEscapeString(req.Text), req.Parent); err != nil {
 		return err
 	}
 	return c.JSON(200, nil)

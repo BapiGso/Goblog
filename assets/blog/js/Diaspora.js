@@ -4,7 +4,28 @@
  * @url http://lorem.in
  */
 let Home = location.href,
-    preview = Object.assign(document.createElement("div"), { id: "preview" });
+    preview = Object.assign(document.createElement("div"), { id: "preview"  }),
+    pagenum=(()=> {
+        const path = window.location.href.split('?')[0];
+        // 从路径中提取最后一个斜杠后的参数
+        const param = path.substring(path.lastIndexOf('/') + 1);
+        // 将参数转成数字
+        return Number(param) | 1
+    })()
+    scrollWidth=()=>{
+        if (!('ontouchstart' in window)) {
+            let st = window.scrollY||document.documentElement.scrollTop ;
+            if (document.getElementById('preview')){
+                st= document.getElementById('preview').scrollTop;
+            }
+            let ct = document.getElementsByTagName('article').offsetHeight;
+            if (st > ct) {
+                st = ct;
+            }
+            return ((50 + st) / ct * 100) + '%';
+        }
+    };
+
 
 
 let Diaspora = {
@@ -45,7 +66,7 @@ let Diaspora = {
             let htmlDoc = parser.parseFromString(data, 'text/html');
             preview.innerHTML = htmlDoc.body.innerHTML;
             document.body.insertAdjacentElement("afterbegin", preview)
-            Diaspora.player(id)
+            // Diaspora.player(id)
             Diaspora.PS()
             // 将window.scrollY的值设置为#container元素的data-scroll属性
             document.getElementById('container').dataset.scroll = window.scrollY.toString();
@@ -185,27 +206,27 @@ let Diaspora = {
     },
 
     ReplyComment:function () {
-    let commentForm = document.getElementById("comment-form")
-    const buttongroup = commentForm.querySelector("#buttongroup")
-    const cancelButton = document.createElement('button');
-    cancelButton.className = "cancelButton";
-    cancelButton.innerText = "取消回复";
-    cancelButton.addEventListener('click', function () {
-        const commentWrap = document.querySelector(".comment-wrap")
-        commentWrap.insertAdjacentElement("afterbegin", commentForm)
-        cancelButton.remove()
-    });
-    if (!buttongroup.querySelector(".cancelButton")) {
-        buttongroup.insertAdjacentElement("afterbegin", cancelButton);
-    }
+        let commentForm = document.getElementById("comment-form")
+        const buttongroup = commentForm.querySelector("#buttongroup")
+        const cancelButton = document.createElement('button');
+        cancelButton.className = "cancelButton";
+        cancelButton.innerText = "取消回复";
+        cancelButton.addEventListener('click', function () {
+            const commentWrap = document.querySelector(".comment-wrap")
+            commentWrap.insertAdjacentElement("afterbegin", commentForm)
+            cancelButton.remove()
+        });
+        if (!buttongroup.querySelector(".cancelButton")) {
+            buttongroup.insertAdjacentElement("afterbegin", cancelButton);
+        }
 
-    commentForm.action = new URL(window.location.href).pathname + "/comment"
-    // 获取当前点击的按钮
-    const replyButton = event.target;
-    // 获取按钮的父节点的父节点
-    const grandParentNode = replyButton.parentNode.parentNode;
-    // 将表单插入到按钮的父节点的父节点后面
-    grandParentNode.insertAdjacentElement("afterend", commentForm);
+        commentForm.action = new URL(window.location.href).pathname + "/comment"
+        // 获取当前点击的按钮
+        const replyButton = event.target;
+        // 获取按钮的父节点的父节点
+        const grandParentNode = replyButton.parentNode.parentNode;
+        // 将表单插入到按钮的父节点的父节点后面
+        grandParentNode.insertAdjacentElement("afterend", commentForm);
 },
 
     scroller: function (){

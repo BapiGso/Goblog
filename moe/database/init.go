@@ -18,7 +18,6 @@ var DB = func() *sqlx.DB {
 	//	}
 	//}
 	db := sqlx.MustConnect("sqlite", "usr/smoe.db")
-
 	//读取sql文件创建表
 	_, err := db.Exec(sqlTable)
 	if err != nil {

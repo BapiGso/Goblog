@@ -22,7 +22,6 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 			template.ParseFS(
 				s.themeFS,
 				"blog/*.template",
-				"blog/js/*.js",
 				"blog/css/*.css",
 				"new-admin/*.template",
 			),
@@ -128,6 +127,7 @@ func (s *Smoe) LoadMiddlewareRoutes() {
 	back := s.e.Group("/admin")
 
 	// 前台页面路由
+	front.Use(mymiddleware.LogAccess)
 	front.GET("/", handler.Index)                                      // 首页路由
 	front.GET("/page/:num", handler.Index)                             // 分页路由，显示指定页数的文章列表
 	front.GET("/archives/:cid", handler.Post)                          // 根据分类ID显示该分类下的文章列表

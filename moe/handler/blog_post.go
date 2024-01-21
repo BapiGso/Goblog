@@ -20,10 +20,16 @@ func Post(c echo.Context) error {
 	if len(qpu.Contents) == 0 {
 		return echo.NotFoundHandler(c)
 	}
-	if err := database.DB.Select(&qpu.Comments, `SELECT * FROM  smoe_comments 
-		WHERE cid=?
-		AND status=?
-		ORDER BY created`, cid, "approved"); err != nil {
+	// 递归查询 https://www.sqlite.org/lang_with.html
+	if err := database.DB.Select(&qpu.Comments, `
+		WITH RECURSIVE cte AS (
+		SELECT * FROM smoe_comments WHERE parent=0 AND cid=? AND status=?
+		UNION ALL
+		SELECT s.* FROM smoe_comments AS s, cte AS c
+		WHERE s.parent = c.coid
+		ORDER BY ROWID DESC--深度优先
+		)
+		SELECT * FROM cte;`, cid, "approved"); err != nil {
 		return err
 	}
 	return c.Render(200, "post.template", qpu)

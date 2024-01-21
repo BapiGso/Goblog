@@ -2,23 +2,24 @@
 
     <form id="comment-form" method="post" name="comment-form" autocomplete="off">
         <h2 class="comment-reply-title" id="reply-title">发表评论</h2>
-        <fieldset>
+        <p>
             <input type="text" aria-label="author" name="author" id="author" placeholder="昵称*" required>
             <input type="email" aria-label="email" name="mail" id="mail" placeholder="邮箱*" maxlength="100" required>
             <input type="text" aria-label="url" name="url" id="url" placeholder="站点" maxlength="200">
-        </fieldset>
+        </p>
         <textarea aria-label="comment" rows="5" id="textarea" name="text" maxlength="65525"  placeholder="说点什么..." required="required"></textarea>
-        <fieldset id="buttongroup">
+        <p id="buttongroup">
             <button id="submit" type="submit">发表评论</button>
-        </fieldset>
+        </p>
     </form>
+
     <div class="comments-area" id="comments">
-        {{ if ne (len .SortComments) 0 }}
+        {{ if ne (len .Comments) 0 }}
             <h2>评论列表</h2>
         {{ end }}
-        {{range .SortComments}}
-        <ol class="comment-list">
-            {{range .}}
+        <ol class="comment-list" x-init="$el.remove()">
+        {{range .Comments}}
+            {{if eq .Parent 0}}</ol><ol class="comment-list">{{end}}
             <li class="{{if eq .Parent 0}}comment-parent{{else}}comment-child{{end}}" id="{{.Coid}}">
                 <div class="comment-body" id="div-comment-68">
                     <img alt="{{.Author}}" class="avatar" src="https://gravatar.loli.net/avatar/{{.MD5Mail}}?s=40&amp;r=G&amp;d=identicon" width="40">
@@ -36,8 +37,7 @@
                 </div>
                 <div class="comment-content"><p>{{.Text}}</p></div>
             </li>
-            {{end}}
-        </ol>
         {{end}}
+        </ol>
     </div>
 </div>

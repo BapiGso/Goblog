@@ -4,6 +4,7 @@ window.addEventListener('touchmove', function (e) {
     }
 });
 
+
 window.addEventListener('click', function (e) {
     let target = e.target;
     let tag = target.className || '';
@@ -33,9 +34,6 @@ window.addEventListener('click', function (e) {
                 let tmpScrollTop = window.scrollY || document.documentElement.scrollTop;
                 document.getElementById('pager').remove()
                 document.getElementById('primary').insertAdjacentHTML('beforeend', data);
-                if (document.getElementById("pagescript")) {
-                    eval(document.getElementById("pagescript").innerText);
-                }
             }, function () {
                 moreButton.innerHTML = '加载更多';
                 moreButton.dataset.status = 'loaded';
@@ -44,22 +42,22 @@ window.addEventListener('click', function (e) {
             break;
 
         // audio play
-        case (tag.indexOf('icon-play') !== -1):
-            audio = document.querySelector("audio");
-            audio.play().then(function (){
-                let iconPlay = document.querySelector('.icon-play');
-            }).catch(function (err){
-                console.log(err)
-            });
-            break;
-        // audio pause
-        case (tag.indexOf('icon-pause') !== -1):
-            audio = document.querySelector("audio");
-            audio.pause()
-            const iconPause = document.querySelector('.icon-pause');
-            iconPause.classList.remove('icon-pause');
-            iconPause.classList.add('icon-play');
-            break;
+        // case (tag.indexOf('icon-play') !== -1):
+        //     audio = document.querySelector("audio");
+        //     audio.play().then(function (){
+        //         let iconPlay = document.querySelector('.icon-play');
+        //     }).catch(function (err){
+        //         console.log(err)
+        //     });
+        //     break;
+        // // audio pause
+        // case (tag.indexOf('icon-pause') !== -1):
+        //     audio = document.querySelector("audio");
+        //     audio.pause()
+        //     const iconPause = document.querySelector('.icon-pause');
+        //     iconPause.classList.remove('icon-pause');
+        //     iconPause.classList.add('icon-play');
+        //     break;
         //点击独立页面时
         case (tag.indexOf('pagelist') !== -1):
             e.preventDefault();
@@ -85,8 +83,8 @@ window.addEventListener('click', function (e) {
 });
 
 // 在document上添加滚动事件监听器
-window.addEventListener('scroll',Diaspora.scroller);
-preview.addEventListener('scroll',Diaspora.scroller);
+// window.addEventListener('scroll',Diaspora.scroller);
+// preview.addEventListener('scroll',Diaspora.scroller);
 
 
 window.addEventListener("submit", function (e) {

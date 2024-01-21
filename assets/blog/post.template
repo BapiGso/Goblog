@@ -1,27 +1,22 @@
 {{template "header.template" (index .Contents 0).Title}}
-<body>
+<body x-data>
 <header id="top">
     <nav class="components">
         <a class="logo-min" href="javascript:history.back()"></a>
-        <button class="icon-play" title="播放/暂停">
+        <button class="icon-play" title="播放/暂停" @click="$refs.bgmPlayer.paused?(()=>{$refs.bgmPlayer.play();$el.className='icon-pause'})():(()=>{$refs.bgmPlayer.pause();$el.className='icon-play'})()">
             <svg viewBox="0 0 50 50">
                 <path class="left"/>
                 <path class="right"/>
             </svg>
         </button>
-        <h3 class="subtitle">{{with ( index .Contents 0)}}{{.Title}}{{end}}</h3>
-        <div class="like-icon">
-            <a class="likeThis" href="javascript:" id="like-">
-                <span class="icon-like"></span>
-            </a>
-        </div>
-        <div class="share">
-            <a title="获取二维码" class="icon-wechat" href="javascript:"></a>
-        </div>
+        {{/*    suntitle动画效果 */}}
+        <h3 class="subtitle" x-show.transition.in="1">{{with index .Contents 0}}{{.Title}}{{end}}</h3>
+        <div class="icon-like" @click="console.log(123)"></div>
+        <div class="icon-wechat"></div>
     </nav>
     <div class="bar">
-        <div class="scrollbar"></div>
-        <div class="playbackbar"></div>
+        <div class="scrollbar" x-bind:style="scrollY+'%'"></div>
+        <div class="playbackbar" ></div>
     </div>
 </header>
 {{/*todo 灯箱*/}}
@@ -38,9 +33,7 @@
     <div class="content">
         {{.MD2HTML}}
     </div>
-    <audio id="audio" preload="auto" controls="controls">
-        <source type="audio/mpeg" src="{{.MusicList}}">
-    </audio>
+    <audio id="audio" preload="auto" src="{{.MusicList}}" x-ref="bgmPlayer" ></audio>
 </article>
 {{end}}
 {{template "comment.template" .}}

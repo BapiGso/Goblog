@@ -1,7 +1,7 @@
 {{with index .Contents 0}}
-<div id="mark">
+<div id="mark" x-init="new Parallax($el)">
     <div class="layer" data-depth="0.4">
-        <img id="cover" crossorigin="anonymous" src="/usr/uploads/cover/1.webp" alt="illustration">
+        <img id="cover" crossorigin="anonymous" src="/usr/uploads/Background/Cover/1.webp" alt="illustration" x-init="testVibrant($el)">
     </div>
 </div>
 

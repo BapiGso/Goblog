@@ -42,7 +42,7 @@ func Write(c echo.Context) error {
 			        :allowComment,:allowFeed,0,0,:coverList,:musicList)`, req); err != nil {
 			return err
 		}
-		return c.JSON(201, nil)
+		return c.NoContent(204)
 	case "PUT": //更新文章的API
 		if _, err := database.DB.NamedExec(`
 			UPDATE smoe_contents

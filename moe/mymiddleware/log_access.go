@@ -4,25 +4,20 @@ import (
 	"SMOE/moe/database"
 	"github.com/labstack/echo/v4"
 	"log/slog"
+	"time"
 )
 
 // LogAccess todo 不要依赖database
 func LogAccess(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		go func() {
-			data := map[string]any{
-				"ua":    c.Request().UserAgent(),
-				"url":   c.Request().RequestURI,
-				"query": c.Request(),
-				"ip":    c.RealIP(),
-
-				"path": c.Path(),
-			}
-			err := database.InsertAccess(data)
+		c.Response().After(func() {
+			_, err := database.DB.Exec(`INSERT INTO smoe_access_log (ua, url, path, ip, referer, time) VALUES (?, ?, ?, ?, ?,?)`,
+				c.Request().UserAgent(), c.Request().URL.String(), c.Path(), c.RealIP(), c.Request().Referer(), time.Now().Unix())
 			if err != nil {
+				//todo database is locked (5) (SQLITE_BUSY)
 				slog.Error(err.Error())
 			}
-		}()
+		})
 		return next(c)
 	}
 }

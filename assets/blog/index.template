@@ -1,10 +1,10 @@
 {{template "header.template"}}
-    <body>
+    <body x-data>
     <div class="nav">
         <ul id="menu-menu" class="menu">
             {{ range .Contents }}
                 {{if eq .Type "page"}}
-                    <li class="{{.Slug}}">
+                    <li id="{{.Slug}}">
                         <a href="/{{.Slug}}" class="pagelist">{{.Title}}</a>
                     </li>
                 {{end}}
@@ -24,20 +24,23 @@
         </div>
     </div>
     {{template "footer.template"}}
-    <script>
-        const coverElement = document.getElementById('cover');
-        const vibrant = new Vibrant(coverElement);
-        new Parallax(document.getElementById("mark"))
+<script>
+
+    function testVibrant(el){
+        const vibrant = new Vibrant(el);
+        // new Parallax(document.getElementById("mark"))
         const swatches = vibrant.swatches();
-        if (swatches['DarkVibrant']) {
-            document.querySelectorAll('#vibrant polygon').forEach(function (polygon) {
-                polygon.style.fill = swatches['DarkVibrant'].getHex();
-            });
+        document.querySelectorAll('#vibrant polygon').forEach(function (polygon) {
+            polygon.style.fill = swatches['DarkVibrant'].getHex();
+        });
+        document.querySelectorAll('.icon-menu .line').forEach(function (icon) {
+            icon.style.stroke = swatches['Vibrant'].getHex();
+        });
+    }
+    document.body.addEventListener('animationstart',ev => {
+        if(ev.animationName==='fadeIn'){
+
         }
-        if (swatches['Vibrant']) {
-            document.querySelectorAll('.icon-menu .line').forEach(function (icon) {
-                icon.style.stroke = swatches['Vibrant'].getHex();
-            });
-        }
-    </script>
-    </body>
+    })
+</script>
+</body>

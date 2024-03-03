@@ -1,16 +1,16 @@
 {{template "header.template" (index .Contents 0).Title}}
 <body>
     <header id="top">
-        <nav class="components">
+        <div class="components">
             <a class="logo-min" href="javascript:history.back()"></a>
-        </nav>
+        </div>
     </header>
 
     {{with index .Contents 0}}
     <article data-id="{{.Cid}}" class="page">
-        <div class="content">
+        <section>
             {{.MD2HTML}}
-        </div>
+        </section>
     </article>
     {{end}}
 

@@ -1,18 +1,95 @@
 /*
- * Diaspora
- * @author LoeiFy
- * @url http://lorem.in
+ * Smoe
+ * @author Smoe
+ * @url https://smoe.cc
  */
-let Home = location.href,
-    preview = Object.assign(document.createElement("div"), { id: "preview"  }),
-    pagenum=(()=> {
-        const path = window.location.href.split('?')[0];
-        // 从路径中提取最后一个斜杠后的参数
-        const param = path.substring(path.lastIndexOf('/') + 1);
-        // 将参数转成数字
-        return Number(param) | 1
-    })()
-    scrollWidth=()=>{
+document.addEventListener('alpine:init', () => {
+    Alpine.data('smoe', () => ({
+        init() {
+            window.$ = (selector) => document.querySelector(selector);//封装一个简易的jquery选择器
+            window.preview = Object.assign(document.createElement("div"), { id: "preview" });
+            window.onpopstate=function (e) {
+                if (!e.state) location.href=location.origin;//如果没有state说明不是从首页来的，返回首页
+                document.title = e.state.t;
+                if (e.state.u === location.origin) {//如果是后退到主页
+                    preview.style.transform = "translateX(100%)";
+                    $('html').style.overflow = "";
+                    (async function () {
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        preview.remove();
+                    })()
+                } else {//如果是前进到文章或独立页面
+                    document.body.insertAdjacentElement("afterbegin", preview);
+                    (async function () {
+                        await new Promise(resolve => setTimeout(resolve, 95));
+                        document.documentElement.className='';
+                        document.documentElement.style.overflow = "hidden";
+                        preview.style.transform = "unset"
+                    })()
+                }
+            }
+        },
+
+        pageNum:(()=> {// 从路径中提取最后一个斜杠后的参数（页数
+            const path = window.location.href.split('?')[0];
+            const param = path.substring(path.lastIndexOf('/') + 1);
+            return Number(param) | 2;
+        })(),
+        // scrollTop : (function() {
+        //     window.addEventListener('scroll', function() {
+        //         return window.pageYOffset;
+        //     });
+        //     this.preview.addEventListener('scroll', function() {
+        //         if (!$("#preview") )return 0
+        //     })
+
+        //     return 0
+        // })(),
+        ajaxPost: function(url){
+            fetch(url)
+                .then(r => r.text())
+                .then(data => {
+                    let htmlDoc = new DOMParser().parseFromString(data, 'text/html');
+                    preview.innerHTML = htmlDoc.body.innerHTML;
+                    history.replaceState({t: document.title, u: location.origin}, '', location.href);//先保存当前记录
+                    history.pushState({t: htmlDoc.title, u: url}, '', url);
+                    window.dispatchEvent(new PopStateEvent('popstate', {
+                        state: {t: htmlDoc.title, u: url}
+                    }));//手动触发popstate
+                })
+        },
+        ajaxNextPage: function ()  {
+            fetch(`/page/${this.pageNum}`)
+                .then(r => r.text())
+                .then(data => {
+                    $('#primary').insertAdjacentHTML('beforeend', data);
+                    this.pageNum++;
+            })
+        },
+        bgmPlayerButton: {
+            '@click'() {
+                this.$refs.bgmPlayer.paused ? this.$refs.bgmPlayer.play() : this.$refs.bgmPlayer.pause();
+            },
+            'x-bind:class'(){
+                // console.log(this.$refs.bgmPlayer.paused)
+                return {'icon-pause':this.playing}
+            },
+        },
+        playing:false,
+        playProgress:0,
+        bgmPlayer: {
+            'x-ref':"bgmPlayer",
+            '@timeupdate'(e) {
+                this.playing = !e.target.paused;
+                this.playProgress = ((e.target.currentTime / e.target.duration) * 100).toFixed(2);
+                },
+            '@ended'() {console.log("bgm complete");}
+        },
+    }))
+})
+
+
+let scrollWidth=()=>{
         if (!('ontouchstart' in window)) {
             let st = window.scrollY||document.documentElement.scrollTop ;
             if (document.getElementById('preview')){
@@ -62,20 +139,7 @@ let Diaspora = {
         let state = { d: id, t: title, u: url };
 
         Diaspora.AJAX(url,function (data) {
-            let parser = new DOMParser();
-            let htmlDoc = parser.parseFromString(data, 'text/html');
-            preview.innerHTML = htmlDoc.body.innerHTML;
-            document.body.insertAdjacentElement("afterbegin", preview)
-            // Diaspora.player(id)
-            Diaspora.PS()
-            // 将window.scrollY的值设置为#container元素的data-scroll属性
-            document.getElementById('container').dataset.scroll = window.scrollY.toString();
-            preview.style.transform = "unset";
-            (async function () {
-                await new Promise(resolve => setTimeout(resolve, 500));
-                document.querySelector("#container").style.display = "none"
-            })()
-            document.title = title;
+
             switch (flag) {
                 case 'push':
                     debugger
@@ -100,14 +164,14 @@ let Diaspora = {
             document.title = state.t;
 
             if (state.u === Home) {
-                preview.style.transform="translateX(100%)"
+                this.preview.style.transform="translateX(100%)"
                 document.getElementById('container').style.display = 'block';
                 // window.scrollTo(0, parseInt(document.getElementById('container').dataset.scroll));
             } else {//后退之后又前进
                 document.body.insertAdjacentElement("afterbegin", preview)
                 //todo 后退后前进滚动条会跳动
                 // window.scrollTo(0, parseInt(document.getElementById('container').dataset.scroll));
-                preview.style.transform = "unset";
+                this.preview.style.transform = "unset";
                 (async function () {
                     await new Promise(resolve => setTimeout(resolve, 500));
                     document.querySelector("#container").style.display = "none"
@@ -269,4 +333,4 @@ let Diaspora = {
     }
 }
 
-Diaspora.init()
+// Diaspora.init()

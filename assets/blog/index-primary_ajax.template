@@ -1,21 +1,21 @@
 {{range slice .Contents 0 5 }}
 {{if eq .Type "post"}}
 <div class="post">
-    <a data-id="{{ .Cid }}" href="/archives/{{.Cid}}" title="{{.Title}}">
+    <a @click.prevent="ajaxPost($el.href)" href="/archives/{{.Cid}}" title="{{.Title}}">
         <img class="cover" width="680" height="440" src="/usr/uploads/Background/Cover{{.CoverList}}" alt="illustration">
     </a>
     <div class="else">
         <p>{{ .UnixToStr }}</p>
-        <h3><a data-id="{{ .Cid }}" class="posttitle" href="/archives/{{ .Cid }}">{{ .Title }}</a></h3>
+        <h3><a @click.prevent="ajaxPost($el.href)" class="posttitle" href="/archives/{{ .Cid }}">{{ .Title }}</a></h3>
         <div class="abstract">
             <p>{{- .MDSub -}}...</p>
         </div>
         <div class="here">
-            <span class="icon-letter"></span>
+            <i class="icon-letter"></i>
             <p>{{ .MDCount }}</p>
-            <span class="icon-view"></span>
+            <i class="icon-view"></i>
             <p>{{ .Views }}</p>
-            <span class="icon-like"></span>
+            <i class="icon-like"></i>
             <p>{{ .Likes }}</p>
         </div>
     </div>
@@ -24,9 +24,7 @@
 {{end}}
 
 {{if ge (len .Contents) 5}}
-    {{if eq (index .Contents 5).Type "post"}}
-        <div id="pager">
-            <a class="more" @click="pagenum++;$el.href=`/page/${pagenum+1}`">加载更多</a>
-        </div>
+    {{if ne (index .Contents 5).Type "post"}}
+        <template x-init="pageNum=0;$el.remove()"></template>
     {{end}}
 {{end}}

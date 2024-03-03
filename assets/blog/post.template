@@ -1,25 +1,19 @@
 {{template "header.template" (index .Contents 0).Title}}
-<body x-data>
-<header id="top">
-    <nav class="components">
-        <a class="logo-min" href="javascript:history.back()"></a>
-        <button class="icon-play" title="播放/暂停" @click="$refs.bgmPlayer.paused?(()=>{$refs.bgmPlayer.play();$el.className='icon-pause'})():(()=>{$refs.bgmPlayer.pause();$el.className='icon-play'})()">
+<body x-data="smoe">
+    <header id="top" :style="`box-shadow:inset ${playProgress}vw 0 #0001`">
+        <button class="logo-min" @click="history.back()"></button>
+        <button class="icon-play" title="播放/暂停" x-bind="bgmPlayerButton">
             <svg viewBox="0 0 50 50">
                 <path class="left"/>
                 <path class="right"/>
             </svg>
         </button>
         {{/*    suntitle动画效果 */}}
-        <h3 class="subtitle" x-show.transition.in="1">{{with index .Contents 0}}{{.Title}}{{end}}</h3>
-        <div class="icon-like" @click="console.log(123)"></div>
-        <div class="icon-wechat"></div>
-    </nav>
-    <div class="bar">
-        <div class="scrollbar" x-bind:style="scrollY+'%'"></div>
-        <div class="playbackbar" ></div>
-    </div>
-</header>
-{{/*todo 灯箱*/}}
+        <h3 class="subtitle">{{(index .Contents 0).Title}}</h3>
+        <button class="like" @click="console.log(123)"></button>
+        <button class="barcode"></button>
+    </header>
+    {{/*todo 灯箱*/}}
 
 {{with index .Contents 0}}
 <article data-id="{{.Cid}}">
@@ -30,10 +24,10 @@
         <span>字数 <span id="wordNum">{{.MDCount}}</span></span>
         <span>喜欢 <span class="count likeNum">{{.Likes}}</span></span>
     </div>
-    <div class="content">
+    <section>
         {{.MD2HTML}}
-    </div>
-    <audio id="audio" preload="auto" src="{{.MusicList}}" x-ref="bgmPlayer" ></audio>
+    </section>
+    <audio preload="auto" src="{{.MusicList}}" x-bind="bgmPlayer"></audio>
 </article>
 {{end}}
 {{template "comment.template" .}}

@@ -11,8 +11,8 @@ import (
 func LogAccess(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		c.Response().After(func() {
-			_, err := database.DB.Exec(`INSERT INTO smoe_access_log (ua, url, path, ip, referer, time) VALUES (?, ?, ?, ?, ?,?)`,
-				c.Request().UserAgent(), c.Request().URL.String(), c.Path(), c.RealIP(), c.Request().Referer(), time.Now().Unix())
+			_, err := database.DB.Exec(`INSERT INTO smoe_access_log (ua, url, ip, referer, time) VALUES (?, ?, ?, ?,?)`,
+				c.Request().UserAgent(), c.Request().URL.String(), c.RealIP(), c.Request().Referer(), time.Now().Unix())
 			if err != nil {
 				//todo database is locked (5) (SQLITE_BUSY)
 				slog.Error(err.Error())

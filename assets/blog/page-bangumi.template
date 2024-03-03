@@ -1,11 +1,12 @@
 {{template "header.template" "追番"}}
 <body>
 <header id="top">
-    <nav class="components">
+    <div class="components">
         <a class="logo-min" href="javascript:history.back()"></a>
-    </nav>
+    </div>
 </header>
     <article class="page bangumi" >
+        <section>
         <h2><strong>看过</strong></h2>
         <ul>
             {{range .Data}}
@@ -28,5 +29,6 @@
             {{end}}
             {{end}}
         </ul>
+        </section>
     </article>
 </body>

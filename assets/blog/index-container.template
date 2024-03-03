@@ -1,7 +1,7 @@
 {{with index .Contents 0}}
 <div id="mark" x-init="new Parallax($el)">
     <div class="layer" data-depth="0.4">
-        <img id="cover" crossorigin="anonymous" src="/usr/uploads/Background/Cover/1.webp" alt="illustration" x-init="testVibrant($el)">
+        <img id="cover" src="/usr/uploads/Background/Cover/1.webp" alt="illustration" x-init="testVibrant($el)">
     </div>
 </div>
 
@@ -14,7 +14,7 @@
 
 <div id="header">
     <a class="logo" href="/"></a>
-    <button class="icon-menu switchmenu">
+    <button class="switchmenu" @click="window.scrollTo(0, 0);document.documentElement.classList.toggle('mu');">
         <svg  width="32" height="32" viewBox="0 0 100 100">
             <path class="line line1"/>
             <path class="line line2"/>
@@ -25,7 +25,7 @@
 
 <div id="post0">
     <p>{{ .UnixToStr }}</p>
-    <h2><a data-id="{{ .Cid }}" class="posttitle" href="/archives/{{ .Cid }}">{{ .Title }}</a></h2>
-    <div class="summary"><p>{{- .MDSub -}}...</p></div>
+    <h2><a @click.prevent="ajaxPost($el.href)" class="posttitle" href="/archives/{{ .Cid }}">{{ .Title }}</a></h2>
+    <div class="summary"><p>{{ .MDSub }}...</p></div>
 </div>
 {{end}}

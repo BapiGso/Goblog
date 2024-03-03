@@ -12,7 +12,6 @@ type Access struct {
 	ID      int    `db:"id"`
 	UA      string `db:"ua"`
 	URL     string `db:"url"`
-	Path    string `db:"path"`
 	IP      string `db:"ip"`
 	Referer string `db:"referer"`
 	Time    int64  `db:"time"`

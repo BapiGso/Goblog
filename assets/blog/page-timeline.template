@@ -1,12 +1,12 @@
 {{template "header.template" "时间线"}}
 <body>
 <header id="top">
-    <nav class="components">
+    <div class="components">
         <a class="logo-min" href="javascript:history.back()"></a>
-    </nav>
+    </div>
 </header>
     <article class="page timeline" >
-        <div class="content">
+        <section>
             {{$DateTmp := "2006年01月02日"}}
             {{range .Contents}}
                 {{if ne (slice .UnixFormat 0 4) (slice $DateTmp 0 4)}}
@@ -20,7 +20,7 @@
                         <li><a href="/archives/{{.Cid}}/">{{.Title}}</a></li>
                     </ul>
             {{end}}
-        </div>
+        </section>
     </article>
 {{template "footer.template"}}
 </body>

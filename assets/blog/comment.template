@@ -7,7 +7,7 @@
             <input type="email" aria-label="email" name="mail" id="mail" placeholder="邮箱*" maxlength="100" required>
             <input type="text" aria-label="url" name="url" id="url" placeholder="站点" maxlength="200">
         </p>
-        <textarea aria-label="comment" rows="5" id="textarea" name="text" maxlength="65525"  placeholder="说点什么..." required="required"></textarea>
+        <textarea aria-label="comment" rows="5" id="textarea" name="text" maxlength="65525"  placeholder="说点什么..." required></textarea>
         <p id="buttongroup">
             <button id="submit" type="submit">发表评论</button>
         </p>
@@ -33,7 +33,7 @@
                         </cite>
                         <span>{{.UnixFormat}}</span>
                     </div>
-                    <span onclick="Diaspora.ReplyComment()" rel="nofollow">回复</span>
+                    <span onclick="Diaspora.ReplyComment()">回复</span>
                 </div>
                 <div class="comment-content"><p>{{.Text}}</p></div>
             </li>

@@ -29,21 +29,4 @@
         <button x-show="pageNum!==0" class="more" @click.prevent="ajaxNextPage()">加载更多</button>
     </main>
     {{template "footer.template"}}
-<script>
-    function testVibrant(el){
-        const vibrant = new Vibrant(el);
-        // new Parallax(document.getElementById("mark"))
-        const swatches = vibrant.swatches();
-        document.querySelectorAll('#vibrant polygon').forEach(function (polygon) {
-            polygon.style.fill = swatches['DarkVibrant'].getHex();
-        });
-        document.querySelectorAll('.icon-menu .line').forEach(function (icon) {
-            icon.style.stroke = swatches['Vibrant'].getHex();
-        });
-    }
-    document.body.addEventListener('animationstart',ev => {
-        if(ev.animationName==='fadeIn'){
-        }
-    })
-</script>
 </body>

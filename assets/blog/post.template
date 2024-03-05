@@ -1,8 +1,8 @@
 {{template "header.template" (index .Contents 0).Title}}
 <body x-data="smoe">
-    <header id="top" :style="`box-shadow:inset ${playProgress}vw 0 #0001`">
-        <button class="logo-min" @click="history.back()"></button>
-        <button class="icon-play" title="播放/暂停" x-bind="bgmPlayerButton">
+    <header id="top" :style="`box-shadow:inset ${bgmPlayer.playProgress}vw 0 #0001`">
+        <button class="logo-min" @click="if (!$('#preview')) return location.href='/';history.back()"></button>
+        <button class="icon-play" title="播放/暂停" x-bind="bgmPlayer.Button">
             <svg viewBox="0 0 50 50">
                 <path class="left"/>
                 <path class="right"/>

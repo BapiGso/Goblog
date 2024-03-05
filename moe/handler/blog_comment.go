@@ -13,10 +13,10 @@ func SubmitArticleComment(c echo.Context) error {
 	req := &struct {
 		Parent uint   `xml:"parent"   form:"parent" validate:""`
 		Cid    uint   `xml:"cid"      form:"cid"    validate:"required"`
-		Author string `xml:"author"   form:"author" validate:"required,min=1,max=200"`
-		Mail   string `xml:"mail"     form:"mail"   validate:"email,required,min=1,max=200"`
+		Author string `xml:"author"   form:"author" validate:"required,min=1,max=50"`
+		Mail   string `xml:"mail"     form:"mail"   validate:"email,required,min=1,max=50"`
 		Text   string `xml:"text"     form:"text"   validate:"required,min=1,max=1000"`
-		Url    string `xml:"url"      form:"url"    validate:"omitempty,url,min=1,max=200" `
+		Url    string `xml:"url"      form:"url"    validate:"omitempty,url,min=1,max=50" `
 	}{}
 	if err := c.Bind(req); err != nil {
 		return err

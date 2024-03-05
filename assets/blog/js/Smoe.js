@@ -29,7 +29,14 @@ document.addEventListener('alpine:init', () => {
                 }
             }
         },
-
+        vibrant:function (el) {
+            const vibranter = new Vibrant(el);
+            const swatches = vibranter.swatches();
+            $('#vibrant polygon').style.fill = swatches['DarkVibrant'].getHex();
+            document.querySelectorAll('.icon-menu .line').forEach(function (icon) {
+                icon.style.stroke = swatches['Vibrant'].getHex();
+            });
+        },
         pageNum:(()=> {// 从路径中提取最后一个斜杠后的参数（页数
             const path = window.location.href.split('?')[0];
             const param = path.substring(path.lastIndexOf('/') + 1);
@@ -66,24 +73,58 @@ document.addEventListener('alpine:init', () => {
                     this.pageNum++;
             })
         },
-        bgmPlayerButton: {
-            '@click'() {
-                this.$refs.bgmPlayer.paused ? this.$refs.bgmPlayer.play() : this.$refs.bgmPlayer.pause();
-            },
-            'x-bind:class'(){
-                // console.log(this.$refs.bgmPlayer.paused)
-                return {'icon-pause':this.playing}
-            },
-        },
-        playing:false,
-        playProgress:0,
         bgmPlayer: {
+            playing:false,
+            playProgress:0,
             'x-ref':"bgmPlayer",
             '@timeupdate'(e) {
-                this.playing = !e.target.paused;
-                this.playProgress = ((e.target.currentTime / e.target.duration) * 100).toFixed(2);
+                this.bgmPlayer.playing = !e.target.paused;
+                this.bgmPlayer.playProgress = ((e.target.currentTime / e.target.duration) * 100).toFixed(2);
                 },
-            '@ended'() {console.log("bgm complete");}
+            '@ended'() {console.log("bgm complete");},
+            Button: {
+                '@click'() {
+                    this.$refs.bgmPlayer.paused ? this.$refs.bgmPlayer.play() : this.$refs.bgmPlayer.pause();
+                },
+                'x-bind:class'(){
+                    // console.log(this.$refs.bgmPlayer.paused)
+                    return {'icon-pause':this.bgmPlayer.playing}
+                },
+            },
+        },
+        comment:{
+            parent: 0,
+            cid: window.location.pathname.split("/")[window.location.pathname.split("/").length - 1],
+            Reply: {
+                '@click'() {
+                    let parent = event.target.parentElement.parentElement;
+                    parent.insertAdjacentElement("afterend", this.$refs.comment);
+                    this.comment.parent = parent.id;
+                },
+            },
+            CancelReply:  {
+                '@click'() {
+                $('.comment-wrap').insertAdjacentElement('afterbegin', this.$refs.comment);
+                this.comment.parent = 0;
+                },
+            },
+            'x-ref': 'comment',
+            'x-init'(){
+                // console.log(this.comment)
+                this.$refs.comment.action = `${window.location}/comment`;//设置提交地址
+            },
+            '@submit.prevent'(e) {
+                let form = e.target;
+                fetch(form.action,{
+                    method: 'POST',
+                    body: new FormData(form)
+                }).then(r=>{
+                    if (r.status === 200) {
+                        alert("评论成功!");
+                        form.reset();
+                    }
+                })
+            },
         },
     }))
 })
@@ -231,39 +272,7 @@ let Diaspora = {
         const form = document.querySelector('form');
 
         // 设置表单action
-        const localpath = window.location.pathname
-        form.action = localpath + '/comment';
-        // 构建额外的参数
-        const extraData = {
-            timestamp: Date.now(),
-        };
-        // 构建FormData对象
-        const formData = new FormData(form);
-        if (form.parentElement.firstChild !== form) {
 
-        } else {
-            extraData.parent = "0"
-        }
-        extraData.cid = localpath.split("/")[localpath.length - 1]
-
-        // 追加额外参数
-        Object.keys(extraData).forEach(key => {
-            formData.append(key, extraData[key]);
-        });
-        // 提交表单
-        fetch(form.action, {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => {
-                if (response.status === 200) {
-                    // 成功提交
-                    alert('评论发表成功!');
-                } else {
-                    // 请求失败
-                    alert('评论发表失败,请重试!');
-                }
-            });
 
         // 阻止表单默认提交行为
         return false;
@@ -332,5 +341,3 @@ let Diaspora = {
 
     }
 }
-
-// Diaspora.init()

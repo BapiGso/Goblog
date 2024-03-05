@@ -1,19 +1,22 @@
 <div class="comment-wrap">
 
-    <form id="comment-form" method="post" name="comment-form" autocomplete="off">
-        <h2 class="comment-reply-title" id="reply-title">发表评论</h2>
+    <form id="comment-form" name="comment-form" autocomplete="off" x-bind="comment" method="post">
+        <h2>发表评论</h2>
         <p>
-            <input type="text" aria-label="author" name="author" id="author" placeholder="昵称*" required>
-            <input type="email" aria-label="email" name="mail" id="mail" placeholder="邮箱*" maxlength="100" required>
-            <input type="text" aria-label="url" name="url" id="url" placeholder="站点" maxlength="200">
+            <input type="text" aria-label="author" name="author" id="author" placeholder="昵称*" maxlength="50" required>
+            <input type="email" aria-label="email" name="mail" id="mail" placeholder="邮箱*" maxlength="50" required>
+            <input type="text" aria-label="url" name="url" id="url" placeholder="站点" maxlength="50">
+            <input type="hidden" name="parent" required x-model="comment.parent">
+            <input type="hidden" name="cid" required x-model="comment.cid">
         </p>
-        <textarea aria-label="comment" rows="5" id="textarea" name="text" maxlength="65525"  placeholder="说点什么..." required></textarea>
+        <textarea aria-label="comment" rows="5" id="textarea" name="text" maxlength="1000"  placeholder="说点什么..." required></textarea>
         <p id="buttongroup">
-            <button id="submit" type="submit">发表评论</button>
+            <button type="button" x-show="comment.parent!==0" x-bind="comment.CancelReply">取消回复</button>
+            <button id="submit" >发表评论</button>
         </p>
     </form>
 
-    <div class="comments-area" id="comments">
+    <div id="comments">
         {{ if ne (len .Comments) 0 }}
             <h2>评论列表</h2>
         {{ end }}
@@ -21,8 +24,8 @@
         {{range .Comments}}
             {{if eq .Parent 0}}</ol><ol class="comment-list">{{end}}
             <li class="{{if eq .Parent 0}}comment-parent{{else}}comment-child{{end}}" id="{{.Coid}}">
-                <div class="comment-body" id="div-comment-68">
-                    <img alt="{{.Author}}" class="avatar" src="https://gravatar.loli.net/avatar/{{.MD5Mail}}?s=40&amp;r=G&amp;d=identicon" width="40">
+                <div class="comment-body">
+                    <img alt="{{.Author}}" class="avatar" src="https://gravatar.loli.net/avatar/{{.MD5Mail}}?s=40&r=G&d=identicon" width="40">
                     <div class="comment-meta">
                         <cite class="{{if (eq .AuthorId 1)}}master{{end}}">
                             {{if not .Url}}
@@ -33,7 +36,7 @@
                         </cite>
                         <span>{{.UnixFormat}}</span>
                     </div>
-                    <span onclick="Diaspora.ReplyComment()">回复</span>
+                    <span x-bind="comment.Reply">回复</span>
                 </div>
                 <div class="comment-content"><p>{{.Text}}</p></div>
             </li>

@@ -18,7 +18,7 @@
                 <i class="icon-like"></i>
                 <p>{{ .Likes }}</p>
             </div>
-        </d>
+        </div>
     </div>
     {{end}}
 {{end}}

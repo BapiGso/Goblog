@@ -87,30 +87,5 @@ window.addEventListener('touchmove', function (e) {
 // preview.addEventListener('scroll',Diaspora.scroller);
 
 
-window.addEventListener("submit", function (e) {
-    e.preventDefault();
-    const form = document.querySelector('form');
-    const formData = new FormData(form);
-    const local = window.location.pathname
-    if (form.parentElement.firstElementChild !== form) {
-        //获取要回复评论的id
-        formData.append('parent', form.previousElementSibling.id);
-    }
-    formData.append('cid', local.split("/")[local.split("/").length - 1])
-    // 提交表单
-    fetch(local + '/comment', {
-        method: 'POST',
-        body: formData
-    })
-        .then(function (response) {
-            // 处理响应
-            console.log(response);
-        })
-        .catch(function (error) {
-            // 处理错误
-            console.error(error);
-        });
-})
-
 
 //todo 页面加载完后检查localstorage

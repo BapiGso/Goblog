@@ -50,7 +50,7 @@ func Insight(c echo.Context) error {
 		ua := useragent.Parse(v.UA)
 		if !ua.Bot {
 			insight.Views[v.Time%req.Past/(req.Past/12)]++
-			insight.Pages[v.URL]++
+			insight.Pages[v.Path]++
 			insight.Referrers[v.Referer]++
 			insight.Browsers[ua.Name]++
 			insight.OS[ua.OS]++

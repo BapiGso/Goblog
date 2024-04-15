@@ -9,9 +9,10 @@ document.addEventListener('alpine:init', () => {
             window.$ = (selector) => document.querySelector(selector);//封装一个简易的jquery选择器
             window.preview = Object.assign(document.createElement("div"), { id: "preview" });
             window.onpopstate=function (e) {
-                if (!e.state) location.href=location.origin;//如果没有state说明不是从首页来的，返回首页
+                if (!e.state) return  location.href=location.origin;//如果没有state说明不是从首页来的，返回首页
                 document.title = e.state.t;
-                if (e.state.u === location.origin) {//如果是后退到主页
+                //todo /page/2这种情况要特殊判断
+                if (e.state.u === location.origin ) {//如果是后退到主页
                     preview.style.transform = "translateX(100%)";
                     $('html').style.overflow = "";
                     (async function () {
@@ -86,15 +87,11 @@ document.addEventListener('alpine:init', () => {
                 '@click'() {
                     this.$refs.bgmPlayer.paused ? this.$refs.bgmPlayer.play() : this.$refs.bgmPlayer.pause();
                 },
-                'x-bind:class'(){
-                    // console.log(this.$refs.bgmPlayer.paused)
-                    return {'icon-pause':this.bgmPlayer.playing}
-                },
             },
         },
         comment:{
             parent: 0,
-            cid: window.location.pathname.split("/")[window.location.pathname.split("/").length - 1],
+            cid: 0,
             Reply: {
                 '@click'() {
                     let parent = event.target.parentElement.parentElement;
@@ -104,14 +101,16 @@ document.addEventListener('alpine:init', () => {
             },
             CancelReply:  {
                 '@click'() {
-                $('.comment-wrap').insertAdjacentElement('afterbegin', this.$refs.comment);
-                this.comment.parent = 0;
+                    $('.comment-wrap').insertAdjacentElement('afterbegin', this.$refs.comment);
+                    this.comment.parent = 0;
                 },
             },
             'x-ref': 'comment',
             'x-init'(){
                 // console.log(this.comment)
                 this.$refs.comment.action = `${window.location}/comment`;//设置提交地址
+                this.comment.cid = window.location.pathname.split("/")[window.location.pathname.split("/").length - 1];
+                // console.log(this.comment.cid)
             },
             '@submit.prevent'(e) {
                 let form = e.target;
@@ -120,7 +119,7 @@ document.addEventListener('alpine:init', () => {
                     body: new FormData(form)
                 }).then(r=>{
                     if (r.status === 200) {
-                        alert("评论成功!");
+                        alert("Comments will be published after review. Thank you");
                         form.reset();
                     }
                 })

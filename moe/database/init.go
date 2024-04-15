@@ -19,9 +19,8 @@ var DB = func() *sqlx.DB {
 	//}
 	db := sqlx.MustConnect("sqlite", "usr/smoe.db")
 	//读取sql文件创建表
-	_, err := db.Exec(sqlTable)
-	if err != nil {
-		slog.Error("创建表结构失败")
+	if _, err := db.Exec(sqlTable); err != nil {
+		slog.Any("创建表结构失败", err)
 	}
 	return db
 }()

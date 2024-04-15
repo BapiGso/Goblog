@@ -51,6 +51,7 @@ func setDefaults(p any) {
 				//	f.SetFloat(v)
 				//}
 				// handle other types
+			default:
 			}
 		}
 	}

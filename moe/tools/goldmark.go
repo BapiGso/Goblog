@@ -23,7 +23,6 @@ func init() {
 	b.AddOptions()
 	goldmark.WithParserOptions()
 	//c.Parser().AddOptions()
-
 }
 
 var GoldMark = goldmark.New(

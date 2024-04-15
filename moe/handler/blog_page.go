@@ -11,7 +11,7 @@ func Page(c echo.Context) error {
 		SELECT * FROM  smoe_contents 
 		WHERE type='page' AND slug = ?`, c.Param("page"))
 	if len(qpu.Contents) == 0 {
-		return echo.NotFoundHandler(c)
+		return echo.ErrNotFound
 	}
 	if err != nil {
 		return err

@@ -34,7 +34,7 @@ type responseRetainer struct {
 // todo 还没写完，后面再写吧，懒得弄了
 func CacheWithConfig(config CacheConfig) echo.MiddlewareFunc {
 	if config.Skipper == nil {
-		config.Skipper = DefaultBrotliConfig.Skipper
+		//config.Skipper = DefaultBrotliConfig.Skipper
 	}
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {

@@ -6,7 +6,7 @@ import (
 )
 
 func Manage(c echo.Context) error {
-	qpu := new(database.QPU)
+	qpu := &database.QPU{}
 	req := &struct {
 		Type       string `param:"type"       default:"post" `
 		CommStatus string `query:"commstatus" default:"approved" `
@@ -30,14 +30,14 @@ func Manage(c echo.Context) error {
 		}
 	case "page":
 		if err := database.DB.Select(&qpu.Contents, `
-		SELECT * FROM  typecho_contents 
+		SELECT * FROM  smoe_contents 
 		WHERE type='page'
-		ORDER BY "order" `); err != nil {
+		ORDER BY ROWID `); err != nil {
 			return err
 		}
 	case "comment":
 		if err := database.DB.Select(&qpu.Comments, `
-		SELECT * FROM  typecho_comments
+		SELECT * FROM  smoe_comments
 		WHERE status=?
 		ORDER BY ROWID DESC
 		LIMIT ? OFFSET ?`, req.CommStatus, 10+1, req.Page*10-10); err != nil {

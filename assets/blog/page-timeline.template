@@ -1,9 +1,7 @@
 {{template "header.template" "时间线"}}
 <body>
 <header id="top">
-    <div class="components">
-        <a class="logo-min" href="javascript:history.back()"></a>
-    </div>
+    <a class="logo-min" href="javascript:history.back()"></a>
 </header>
     <article class="page timeline" >
         <section>

@@ -1,9 +1,7 @@
 {{template "header.template" "追番"}}
 <body>
 <header id="top">
-    <div class="components">
-        <a class="logo-min" href="javascript:history.back()"></a>
-    </div>
+    <a class="logo-min" href="javascript:history.back()"></a>
 </header>
     <article class="page bangumi" >
         <section>
@@ -12,7 +10,7 @@
             {{range .Data}}
             {{if ne .Type 1}}
             <li>
-                <img alt="{{.Subject.Name}}" class="cover" src="{{with .Subject.Images}}{{.Small}}{{end}}">
+                <a href="//bgm.tv/subject/{{.SubjectID}}" target="_blank"><img alt="{{.Subject.Name}}" class="cover" src="{{with .Subject.Images}}{{.Small}}{{end}}"></a>
                 <p>{{if .Subject.NameCn}}{{.Subject.NameCn}}{{else}}{{.Subject.Name}}{{end}}</p>
             </li>
             {{end}}
@@ -23,7 +21,7 @@
             {{range .Data}}
             {{if eq .Type 1}}
             <li>
-                <img alt="{{.Subject.Name}}" class="cover" src="{{with .Subject.Images}}{{.Small}}{{end}}">
+                <a href="//bgm.tv/subject/{{.SubjectID}}" target="_blank"><img alt="{{.Subject.Name}}" class="cover" src="{{with .Subject.Images}}{{.Small}}{{end}}"></a>
                 <p>{{if .Subject.NameCn}}{{.Subject.NameCn}}{{else}}{{.Subject.Name}}{{end}}</p>
             </li>
             {{end}}

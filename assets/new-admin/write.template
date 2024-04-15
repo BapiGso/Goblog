@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-Hans">
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="/assets/root/favicon.ico">
@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/assets/new-admin/css/http_unpkg.com_spectre.css">
     <link rel="stylesheet" href="/assets/new-admin/css/http_unpkg.com_bytemd_dist_index.css" />
     <link rel="stylesheet" href="https://unpkg.com/github-markdown-css" />
+    <script src="/assets/new-admin/js/alpine.min.js" defer></script>
+    <script>window.process={env:{NODE_ENV:'production'}}//editor依赖这个process初始化</script>
     <style>
         *{
             margin: 0;
@@ -19,214 +21,165 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            #title,
+            >.form-input,
             >*{
-                margin-top: 20px;
+                margin: 12px 0 12px 0;
                 width: 80%;
             }
-            #editor{
-                .bytemd{
-                    height: 60vh;
-                }
-            }
-            #background{
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                .button-group{
-                    .popover{
-                        width: 100px;
-                    }
-                }
+            #editor>.bytemd{
+                height: 560px;
             }
         }
 
     </style>
 </head>
-<body>
-    <form name="write" id="write">
-        <input id="title" name="title" class="form-input" type="text" autocomplete="off" placeholder="标题">
+<body x-data="smoe">
+    <div class="toast toast-primary p-fixed d-invisible" :style="toast && { visibility:'visible' }">
+        <button class="btn btn-clear float-right" @click="toast=null"></button>
+        <p x-text="toast"></p>
+    </div>
+    <form @submit.prevent="release($el)">
+        <input name="title" class="form-input" type="text" autocomplete="off" placeholder="标题" :value="data.Contents?.[0].Title" required>
 
-        <div id="editor"></div>
+        <div id="editor"><input type="hidden" name="text" :value="data.Contents?.[0].Text"></div>
 
-        <div id="background">
-            <div class="popover popover-bottom">
-                <button class="btn" data-src="#fields-modal">设置封面和背景音乐</button>
-                <div class="modal" id="fields-modal">
-                    <button class="modal-overlay" aria-label="Close"></button>
+        <div class="columns">
+            <div class="col-mr-auto">
+                <button class="btn" @click.prevent="mediaSettingShow=!mediaSettingShow">设置封面&音乐</button>
+                <div class="modal" :class="!mediaSettingShow||'active'">
+                    <a class="modal-overlay" @click.prevent="mediaSettingShow=!mediaSettingShow"></a>
                     <div class="modal-container" role="document">
                         <div class="modal-header">
-                            <button class="btn btn-clear float-right" aria-label="Close"></button>
-                            <div class="modal-title h5">设置封面和背景音乐</div>
+                            <button class="btn btn-clear float-right" @click.prevent="mediaSettingShow=!mediaSettingShow"></button>
+                            <h4>设置封面和音乐</h4>
                         </div>
                         <div class="modal-body">
-                            <div class="content">
-                                <h4>背景音乐</h4>
-                                <p>
-                                    <input class="form-input" type="text" autocomplete="off" placeholder="音乐链接">
-                                </p>
-                                <p>
-                                    <audio src="audiofile.mp3" controls></audio>
-                                </p>
-                                <h4>上传封面或使用现有链接</h4>
-                                <input type="file">
-                                <input class="form-input" type="text" autocomplete="off" placeholder="封面链接">
+                            <label class="form-label">封面链接</label>
+                            <textarea class="form-input" name="coverList" rows="2" placeholder="封面链接,换行分隔,可粘贴到此处上传" @paste="uploadCover($event)" :value="data.Contents?.[0].CoverList"></textarea>
+                            <label class="form-label">音乐链接</label>
+                            <textarea class="form-input" name="musicList" rows="2" placeholder="音乐链接,换行分隔" :value="data.Contents?.[0].MusicList"></textarea>
+                            <label class="form-label">音乐试听</label>
+                            <audio controls></audio>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn" @click.prevent="otherSettingShow=!otherSettingShow">其他设置</button>
+                <div class="modal" :class="!otherSettingShow||'active'">
+                    <a class="modal-overlay" @click.prevent="otherSettingShow=!otherSettingShow"></a>
+                    <div class="modal-container" role="document">
+                        <div class="modal-header">
+                            <button class="btn btn-clear float-right" @click.prevent="otherSettingShow=!otherSettingShow"></button>
+                            <h4>其他设置</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group">
+                                <label class="form-switch">
+                                    <input type="checkbox" name="type" :checked="data.Contents?.[0].Type==='page'" value="page">独立页面<i class="form-icon"></i>
+                                </label>
+                                <input type="hidden" name="type" value="post">
+                                <div class="input-group">
+                                    <span class="input-group-addon">固定链接地址</span>
+                                    <input class="form-input" name="slug" :value="data.Contents?.[0].Slug" x-ref="slug" :readonly="data.Contents?.[0].Type==='post'">
+                                </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-primary" aria-label="Close">确认</button>
+                            <label class="form-switch form-group">
+                                <input type="checkbox" name="allowComment" @change="$el.value=Number($el.checked)" :checked="data.Contents?.[0].AllowComment===1" :value="data.Contents?.[0].AllowComment">
+                                <i class="form-icon"></i>允许评论
+                            </label>
+                            <label class="form-switch form-group">
+                                <input type="checkbox" name="allowFeed" @change="$el.value=Number($el.checked)" :checked="data.Contents?.[0].AllowFeed===1" :value="data.Contents?.[0].AllowFeed">
+                                <i class="form-icon"></i>允许Feed
+                            </label>
+                            <label class="form-label">发布日期</label>
+                            <input type="date" @change="$refs.creared=Math.floor(Date.now($el.value) / 1000)" :value="formatTime(data.Contents?.[0].Created)">
+                            <input type="hidden" name="created" :value="data.Contents?.[0].Created" x-ref="created">
                         </div>
                     </div>
                 </div>
-                <button class="btn" data-src="#fields-modal">其他设置（发布日期、slug、允许评论、允许rss等</button>
             </div>
-
-            <div class="button-group">
-                {{/* 如果数据不为0说明是修改文章，则不能修改type属性*/}}
-                {{if not .}}
-                <div class="popover popover-bottom">
-                    <input class="form-input" type="text" placeholder="slug" name="slug" disabled>
-                    <div class="popover-container">
-                        <label class="form-switch">
-                            <input type="checkbox">
-                            <i class="form-icon"></i>作为独立页面发布
-                        </label>
-                    </div>
-                </div>
-                {{end}}
-                <button type="submit" class="btn">保存草稿</button>
+            <div class="col-ml-auto btn-group btn-group-block">
+                <button type="submit" class="btn" @click="$el.form.status.value='private'">发布私密</button>
+                <button type="submit" class="btn" @click="$el.form.status.value='waiting'">保存草稿</button>
                 <button type="submit" class="btn btn-primary">发布文章</button>
+                <input type="hidden" :value="data.Contents?.[0].Status||'publish'" name="status">
             </div>
-        </div>
+        </div >
     </form>
-<script>
-    let process = {}
-    process.env={}
-    process.env.NODE_ENV='production'
-</script>
+
 <script  src="https://unpkg.com/bytemd"></script>
 <script  src="https://unpkg.com/@bytemd/plugin-gfm"></script>
 <script  src="https://unpkg.com/@bytemd/plugin-math"></script>
 <script  src="https://unpkg.com/@bytemd/plugin-medium-zoom"></script>
 <script>
-    window.addEventListener("submit", function (e) {
-        e.preventDefault();
-        let method = "POST"
-        {{if .}}method="PUT"{{end}}//如果有内容则为PUT修改文章
-        const form = document.querySelector('form');
-        const formData = new FormData(form);
-        formData.append("text",content.text||content.v[0])
-        formData.append("slug",content.slug||"")
-        fetch(window.location.href, {
-            method: method,
-            body: formData
-        })
-            .then(function (response) {
-                // 处理响应
-                console.log(response);
-            })
-            .catch(function (error) {
-                // 处理错误
-                console.error(error);
-            });
-    })
-</script>
-<script>
-    let content={}
-    content.v=[]
-    {{if .Contents}}
-    {{range .Contents }}
-    content.title=`{{.Title}}`
-    content.v=[{{- printf "%q," .Text -}}]
-    content.slug=`{{.Slug}}`
-    const form = document.querySelector('form')
-    form.title.value=content.title
-    // form.CoverList.value=content.coverList
-    // form.MusicList.value=content.musicList
-    {{end}}
-    {{end}}
-    const editor = new bytemd.Editor({
-        target: document.getElementById('editor'),
-        props: {
-            value: content.v[0]||"",
-            uploadImages: async (files) => {
-                const formData = new FormData();
-                formData.append("image", files[0]);
-                // console.log(files)
-                try {
-                    const response = await fetch("/admin/uploadImage", {
-                        method: "POST",
-                        body: formData,
-                    });
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('smoe', () => ({
+            init() {
+                window.editor = new bytemd.Editor({
+                    target: document.getElementById('editor'),
+                    props: {
+                        value: this.data.Contents?.[0].Text,
+                        uploadImages: async (files) => {
+                            const formData = new FormData();
+                            for (let i = 0; i < files.length; i++) {
+                                formData.append('files', files[i]);
+                            }
+                            const response = (await fetch("/admin/upload", {
+                                method: "POST",
+                                body: formData,
+                            }));
 
-                    if (!response.ok) {
-                        throw new Error("Failed to upload image");
-                    }
+                            if (!response.ok) {
+                                throw new Error("Failed to upload image");
+                            }
 
-                    const data = await response.json();
-                    return [
-                        {
-                            url: data.url,
-                            alt: data.alt,
-                            title: data.title,
-                        },
-                    ];
-                } catch (error) {
-                    console.error("Error uploading image:", error);
-                    return [];
-                }
+                            const data = await response.json();
+                            console.log(data)
+                            return data
+                        }},
+                        plugins:[
+                            bytemdPluginGfm(),
+                            bytemdPluginMath(),
+                            bytemdPluginMediumZoom(),
+                        ],
+                })
+                editor.$on('change', (e) => {
+                    editor.$set({ value: e.detail.value })
+                    document.querySelector('form').text.value = e.detail.value;
+                })
             },
-            plugins:[
-                bytemdPluginGfm(),
-                bytemdPluginMath(),
-                bytemdPluginMediumZoom(),
-            ],
-
-        },
-
-    })
-    editor.$on('change', (e) => {
-        editor.$set({ value: e.detail.value })
-        content.text = e.detail.value;
+            data: JSON.parse(JSON.stringify({{.}})),
+            mediaSettingShow:false,
+            otherSettingShow:false,
+            toast:null,
+            uploadCover(e) {
+                const formData = new FormData();
+                for (let i = 0; i < e.clipboardData.items.length; i++) {
+                    formData.append('files', e.clipboardData.items[i].getAsFile());
+                }
+                fetch("/admin/upload?type=cover", {
+                    method: "POST",
+                    body: formData,
+                }).then(res => res.json()).then(d => {
+                    e.target.value = d.map(item => item.url).join('\n');
+                })
+            },
+            release(el){
+                 fetch(el.action, {
+                    method: this.data.Contents ?'PUT':'POST',
+                    body: new FormData(el),
+                }).then(res=>{
+                     this.toast = res.status
+                 })
+            },
+            formatTime(timestamp) {
+                let date = new Date(timestamp * 1000);
+                let year = date.getFullYear();
+                let month = ('0' + (date.getMonth() + 1)).slice(-2);
+                let day = ('0' + date.getDate()).slice(-2);
+            return (year + '-' + month + '-' + day);
+        }
+        }))
     })
 </script>
-    <script>
-        // 选择所有带有data-src属性的按钮
-        document.querySelectorAll('button[data-src]').forEach(button => {
-            button.addEventListener('click', () => {
-                const src = button.dataset.src;
-                // 判断src内容
-                if (src.startsWith('#') || src.startsWith('.')) {
-                    // 如果是id或class选择器
-                    document.querySelector(src).classList.add('active');
-                } else {
-                    // 否则就是fetch
-                    fetch(src)
-                        .then(response => response.text())
-                        .then(html => {
-                            const modal = document.createElement('div');
-                            modal.innerHTML = html;
-                            document.body.appendChild(modal);
-                            // Assuming there's a script tag in the fetched HTML
-                            const scriptTags = modal.querySelectorAll('script');
-                            // Iterate through script tags and execute their content using eval
-                            scriptTags.forEach(scriptTag => {
-                                const scriptCode = scriptTag.textContent || scriptTag.innerText;
-                                eval(scriptCode);
-                            });
-                        })
-                }
-            });
-        });
-
-        document.querySelectorAll('button[aria-label]').forEach(closeButton => {
-            closeButton.addEventListener('click', () => {
-                // 移除active类 instead of 移除元素
-                document.querySelectorAll(".modal").forEach(modal => {
-                    modal.classList.remove('active')
-                });
-            });
-        });
-    </script>
 </body>
 </html>

@@ -11,11 +11,11 @@ import (
 
 type Contents struct {
 	Cid          int    `db:"cid"`
-	Mid          int    `db:"mid"`
+	Mid          int    `db:"mid"`   //分类用的
 	Title        string `db:"title"` //用*string代替可能为null的值
 	Slug         string `db:"slug"`
 	Created      int64  `db:"created"`
-	Text         []byte `db:"text"`
+	Text         string `db:"text"`
 	Type         string `db:"type"`
 	Status       string `db:"status"`
 	AllowComment uint   `db:"allowComment"`
@@ -29,24 +29,23 @@ type Contents struct {
 // MD2HTML markdown转换为html
 func (c Contents) MD2HTML() string {
 	var buf bytes.Buffer
-	_ = tools.GoldMark.Convert(c.Text, &buf)
+	_ = tools.GoldMark.Convert(*(*[]byte)(unsafe.Pointer(&c.Text)), &buf)
 	return buf.String()
 }
 
 // MDSub 截取前95个字符串作为摘要
 func (c Contents) MDSub() string {
-	text := *(*string)(unsafe.Pointer(&c.Text))
-	length := len([]rune(text))
+	length := len([]rune(c.Text))
 	if length <= 70 {
-		return text
+		return c.Text
 	}
-	r := string([]rune(text)[:70])
+	r := string([]rune(c.Text)[:70])
 	return r
 }
 
 // MDCount 计算文章字数
 func (c Contents) MDCount() int {
-	r := utf8.RuneCount(c.Text)
+	r := utf8.RuneCount(*(*[]byte)(unsafe.Pointer(&c.Text)))
 	return r
 }
 

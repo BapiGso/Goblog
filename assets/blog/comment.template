@@ -11,7 +11,7 @@
         </p>
         <textarea aria-label="comment" rows="5" id="textarea" name="text" maxlength="1000"  placeholder="说点什么..." required></textarea>
         <p id="buttongroup">
-            <button type="button" x-show="comment.parent!==0" x-bind="comment.CancelReply">取消回复</button>
+            <button type="button" x-show="!comment.parent===0"  x-bind="comment.CancelReply">取消回复</button>
             <button id="submit" >发表评论</button>
         </p>
     </form>

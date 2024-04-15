@@ -4,7 +4,6 @@ import (
 	"SMOE/moe/database"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
-	"net/http"
 	"strings"
 )
 
@@ -12,8 +11,13 @@ import (
 func Index(c echo.Context) error {
 	//判断页数查数据库
 	qpu := new(database.QPU)
-	pageNum, err := validateNum(c.Param("num"))
-	if err != nil {
+	req := &struct {
+		PageNum int `param:"num" validate:"gte=0" default:"1"`
+	}{}
+	if err := c.Bind(req); err != nil {
+		return err
+	}
+	if err := c.Validate(req); err != nil {
 		return err
 	}
 	//查询文章和独立页面
@@ -30,7 +34,7 @@ func Index(c echo.Context) error {
 		WHERE type='page'
 		ORDER BY "created" DESC 
 		)
-		`, "publish", 6, pageNum*5-5); err != nil {
+		`, "publish", 6, req.PageNum*5-5); err != nil {
 		return err
 	}
 	if !strings.Contains(c.Request().Header.Get(echo.HeaderAccept), echo.MIMETextHTML) {
@@ -42,9 +46,5 @@ func Index(c echo.Context) error {
 // Deprecated: use x-request-with instead of
 func IndexAjax(c echo.Context) error {
 	_ = c.Get("db").(*sqlx.DB)
-	_, err := validateNum(c.Param("num"))
-	if err != nil {
-		return c.JSON(http.StatusForbidden, err)
-	}
 	return c.Render(200, "index-primary_ajax.template", nil)
 }

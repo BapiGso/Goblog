@@ -1,9 +1,7 @@
 {{template "header.template" (index .Contents 0).Title}}
 <body>
     <header id="top">
-        <div class="components">
-            <a class="logo-min" href="javascript:history.back()"></a>
-        </div>
+        <a class="logo-min" href="javascript:history.back()"></a>
     </header>
 
     {{with index .Contents 0}}

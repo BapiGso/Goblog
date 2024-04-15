@@ -1,7 +1,7 @@
 {{template "header.template"}}
 <body x-data="smoe">
     <nav>
-        <ul id="menu-menu" class="menu">
+        <ul class="menu">
             {{ range .Contents }}
                 {{if eq .Type "page"}}
                     <li id="{{.Slug}}">

@@ -128,7 +128,7 @@ func InsertContent(data map[string]any) error {
 		Title:        data["Title"].(string),
 		Slug:         data["Slug"].(string),
 		Created:      time.Now().Unix(),
-		Text:         []byte(data["Text"].(string)),
+		Text:         data["Text"].(string),
 		Type:         data["Type"].(string),
 		Status:       "publish",
 		AllowComment: 1,
@@ -181,7 +181,7 @@ func UpdateContent(data map[string]any) error {
 		Cid:   data["Cid"].(int),
 		Title: data["Title"].(string),
 		Slug:  data["Slug"].(string),
-		Text:  []byte(data["Text"].(string)),
+		Text:  data["Text"].(string),
 	}
 	tx, err := DB.Beginx()
 	if err != nil {

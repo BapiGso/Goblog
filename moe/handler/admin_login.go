@@ -24,7 +24,7 @@ func LoginGet(c echo.Context) error {
 }
 
 func LoginPost(c echo.Context) error {
-	qpu := new(database.QPU)
+	qpu := &database.QPU{}
 	req := &struct {
 		Name     string `form:"user" validate:"required,min=1,max=200"`
 		Pwd      string `form:"pwd" validate:"required,min=8,max=200"`

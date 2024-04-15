@@ -255,27 +255,14 @@ html.mu .logo {
     pointer-events: none;
 }
 
-.line {
+
+.line1,
+.line2,
+.line3{
     fill: none;
     stroke: #8400ff;
     stroke-width: 7;
-    transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
-    stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.line1 {
-    d: path("M 20,29 H 80 C 80,29 94,28 94,66 94,78 91,81 85,81 79,81 75,75 75,75 L 25,25");
-    stroke-dasharray: 60 207;
-}
-
-.line2 {
-    d: path("M 20,50 H 80");
-    stroke-dasharray: 60 60;
-}
-
-.line3 {
-    d: path("M 20,71 H 80 C 80,71 94,71 94,33 94,22 91,18 85,18 79,18 75,25 75,25 L 25,75");
-    stroke-dasharray: 60 207;
+    transition: all 600ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html.mu .line1,
@@ -443,8 +430,7 @@ html.mu .line2 {
 }
 
 
-.icon-play,
-.icon-pause {
+.play {
     width: 18px;
     height: 18px;
     cursor: pointer;
@@ -454,42 +440,28 @@ html.mu .line2 {
     padding: 0;
 }
 
-.icon-pause svg,
-.icon-play svg{
+.play svg{
     pointer-events:none;
     cursor: pointer;
-}
-
-.line4,
-.left,
-.right {
-    pointer-events:none;
     fill: #666;
-    transition: all .5s ease;
 }
 
-.icon-play .left {
-    d: path('M0 1 0 49 22.5 37 22.5 12Z');
+.like{
+    width: 18px;
+    height: 18px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' stroke='%23666'%3E%3Cpath d='M2 9.137C2 14 6.02 16.591 8.962 18.911 10 19.729 11 20.5 12 20.5s2-.77 3.038-1.59C17.981 16.592 22 14 22 9.138c0-4.863-5.5-8.312-10-3.636C7.5.825 2 4.274 2 9.137z' fill='%23666'/%3E%3C/svg%3E");
 }
 
-.icon-play .right {
-    d: path('M44 24 44 24 22 37 22 12Z');
-}
-
-.icon-pause .left {
-    d: path('M0 1 0 49 12 49 12 1Z');
-}
-
-.icon-pause .right {
-    d: path('M35 0 35 50 23 50 23 0Z');
-}
-
-.icon-day .line4 {
-    d: path('M115,86.7H89.9a2.6,2.6,0,0,1,.5-5.1h7.3c3.3,0,3.3-5.2,0-5.1H92.4C118.8,36,73.5-16.3,29.6,4.4H4.9c-3.3-.1-3.4,5.1,0,5.1H20.7a47.7,47.7,0,0,0-6,5.1H8.9c-4.3.5-2.6,6.1,1.4,5.1C-23.5,63.8,31.1,122.4,77.5,91.8H115C118.3,91.8,118.3,86.6,115,86.7Z')
-}
-
-.icon-night .line4 {
-    d: path('M65,82.5a46.2,46.2,0,0,1-26.1-7.7A49.1,49.1,0,0,1,17.7,30,46.3,46.3,0,0,1,28.2,5,50.6,50.6,0,0,0,7.8,23.1,50.3,50.3,0,0,0,2.1,35.8,47.8,47.8,0,0,0,0,50C.2,63.3,4.7,74.3,11.9,82.5A50.1,50.1,0,0,0,39,98.5a50.5,50.5,0,0,0,31.4-2.7A49.3,49.3,0,0,0,95,71.8a47.1,47.1,0,0,1-6.5,4.5,68.9,68.9,0,0,1-7.3,3.4,50.9,50.9,0,0,1-7.9,2.1A56.9,56.9,0,0,1,65,82.5Z');
+.night{
+    width: 18px;
+    height: 18px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg fill='%23666' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' stroke='%23666'%3E%3Cpath d='M22 10A6.99 6.99 0 0 0 9.191 6.118a6.905 6.905 0 0 0-1.486-.112A7.212 7.212 0 0 0 1 13.271 7.737 7.737 0 0 0 8.729 21H18a5.006 5.006 0 0 0 5-5 5.96 5.96 0 0 0-1.358-3.8A6.931 6.931 0 0 0 22 10zm-7-5a5 5 0 0 1 4.94 5.772A6.074 6.074 0 0 0 17 10a5.582 5.582 0 0 0-2.457.523 7.189 7.189 0 0 0-3.364-3.745A4.977 4.977 0 0 1 15 5zm3 14H8.729A5.735 5.735 0 0 1 3 13.271 5.194 5.194 0 0 1 7.787 8a5.074 5.074 0 0 1 5.148 4.233 1 1 0 0 0 1.607.635 3.931 3.931 0 0 1 5.214.242A3.981 3.981 0 0 1 21 16a3 3 0 0 1-3 3z'/%3E%3C/svg%3E");
 }
 
 .icon-letter{
@@ -564,31 +536,14 @@ nav {
     margin: 20px;
     display: inline-block;
     position: relative;
-    transition: all 0.5s;
+    background: linear-gradient(to right, #7e2f2b, #146420) no-repeat right bottom;
+    background-size: 0 2px;
+    transition: background-size .5s ease;
 }
 
-.menu li::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 100%;
-    width: 0;
-    height: 100%;
-    border-bottom: 2px solid #000;
-    transition: 0.2s all;
-}
-
-.menu li:hover::before {
-    width: 100%;
-    top: 0;
-    left: 0;
-    transition-delay: 0.1s;
-    border-bottom-color: #000;
-    z-index: -1;
-}
-
-.menu li:hover ~ li::before {
-    left: 0;
+.menu li:hover{
+    background: linear-gradient(to right, #7e2f2b, #146420) no-repeat left bottom;
+    background-size: 100% 2px;
 }
 
 .menu a {
@@ -870,10 +825,6 @@ section:before {
     margin-right: 20px;
 }
 
-.stuff .likeThis {
-    pointer-events: none;
-}
-
 .stuff .icon-like {
     display: none;
 }
@@ -1033,6 +984,7 @@ section ol li {
     margin: 0;
     padding: 0;
     height: 32px;
+    line-height: normal;
 }
 
 

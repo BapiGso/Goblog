@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="/assets/root/favicon.ico">
+    <script src="/assets/new-admin/js/alpine.min.js" defer></script>
     <title>はくぎょくろう</title>
     <style>
         body{

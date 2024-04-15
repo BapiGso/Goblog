@@ -1,6 +1,7 @@
 package database
 
 import (
+	"encoding/json"
 	"sync"
 )
 
@@ -31,4 +32,14 @@ func NewQPU() *QPU {
 // 记得清空数据，因为sqlx的select方法是append，而不是clear后scan
 func FreeQPU(q *QPU) {
 	qpuPool.Put(q)
+}
+
+// Json 转为json字符串返回以供Alpine JS调用
+func (q *QPU) Json() string {
+	marshal, err := json.Marshal(q)
+	if err != nil {
+		return err.Error()
+	}
+
+	return string(marshal)
 }

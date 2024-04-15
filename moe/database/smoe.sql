@@ -68,12 +68,12 @@ CREATE TABLE smoe_users (    "uid" INTEGER NOT NULL PRIMARY KEY,
 CREATE UNIQUE INDEX smoe_users_name ON smoe_users ("name");
 CREATE UNIQUE INDEX smoe_users_mail ON smoe_users ("mail");
 
-CREATE TABLE "smoe_access_log" (
-                                   "id"	INTEGER NOT NULL,
-                                   "ua"	varchar(512) NOT NULL,
-                                   "url"	varchar(255) NOT NULL,
-                                   "path"	varchar(255) NOT NULL,
-                                   "ip"	INTEGER NOT NULL,
-                                   "referer"	varchar(255) NOT NULL,
-                                   "time"	INTEGER NOT NULL,
-                                   PRIMARY KEY("id" AUTOINCREMENT)
+CREATE TABLE "smoe_insights" (
+                                "id"	INTEGER NOT NULL,
+                                "ua"	varchar(512) NOT NULL,
+                                "url"	varchar(255) NOT NULL,
+                                "path"  varchar(255) NOT NULL,
+                                "ip"	INTEGER NOT NULL,
+                                "referer"	varchar(255) NOT NULL,
+                                "time"	INTEGER NOT NULL,
+                                PRIMARY KEY("id" AUTOINCREMENT))
